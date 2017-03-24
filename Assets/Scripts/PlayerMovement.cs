@@ -36,9 +36,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		moveTowardsDesiredDirection ();
 
-		bool boosting = Input.GetAxisRaw ("Boost") != 0f;
-
-		if (boosting) {
+		if (Input.GetAxisRaw("Boost") != 0) {
             if (timestamp <= Time.time) {
                 chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, boostPower));
                 timestamp = Time.time + boostCooldown;
