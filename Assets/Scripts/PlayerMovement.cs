@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public float DEFAULT_BOOST_POWER = 250;
-	public float DEFAULT_ROTATION_SPEED = 0.09f;
-	public float DEFAULT_COOLDOWN = 0.7f;
+	public const float DEFAULT_BOOST_POWER = 250;
+	public const float DEFAULT_ROTATION_SPEED = 0.09f;
+	public const float DEFAULT_COOLDOWN = 0.7f;
 
 	private float boostCooldown;
     private float boostPower;
@@ -49,6 +49,10 @@ public class PlayerMovement : MonoBehaviour {
     {
         return boostCooldown;
     }
+
+	public void setBoostCooldown(float cooldown) {
+		boostCooldown = cooldown;
+	}
 
 	void moveTowardsDesiredDirection(){
 		aimDirection = Vector3.RotateTowards (aimDirection, desiredDirection, rotationSpeed, 0f);
