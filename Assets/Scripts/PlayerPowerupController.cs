@@ -8,11 +8,13 @@ public class PlayerPowerupController : MonoBehaviour {
 	// Because it is used more often here
 	public enum PowerupType { BOOST, POWER };
 
-	public PlayerMovement Player;
+	public PlayerMovement playerMovement;
+	public PowerupParticleController particleController;
+
 	Dictionary<PowerupType, float> PowerupEndtimes = new Dictionary<PowerupType, float>();
 
 	// Decreases boost cooldown. Does not stack, extends duration
-	private const float BOOST_DURATION = 1.0f;
+	private const float BOOST_DURATION = 2.0f;
 	private const float BOOST_POWERUP_COOLDOWN = 0.1f;
 
 	// Increases the boost power. Stacks and refreshes duration
@@ -54,13 +56,17 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	// Remove the powerup from our counter and reset it's effects
 	private void EndPowerup(PowerupType type) {
+		// Disable particle effects
+		particleController.setParticleSystemEnabled (type, false);
+
+		// Remove gameplay effects
 		PowerupEndtimes.Remove (type);
 		switch (type) {
 		case PowerupType.BOOST:
-			Player.setBoostCooldown (PlayerMovement.DEFAULT_COOLDOWN);
+			playerMovement.setBoostCooldown (PlayerMovement.DEFAULT_COOLDOWN);
 			break;
 		case PowerupType.POWER:
-			Player.setBoostPower (Player.getBoostPower () - POWER_DELTA);
+			playerMovement.setBoostPower (playerMovement.getBoostPower () - POWER_DELTA);
 			break;
 		default:
 			break;
@@ -69,17 +75,18 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	// Enable the effects of a particular powerup
 	private void ActivatePowerup(PowerupType type) {
+		// Enable particle effects for this powerup
+		particleController.setParticleSystemEnabled (type, true);
+
+		// Enable gameplay effects
 		switch (type) {
 		case PowerupType.BOOST:
 			AddPowerupTime (PowerupType.BOOST, BOOST_DURATION);
-			Player.setBoostCooldown (BOOST_POWERUP_COOLDOWN);
+			playerMovement.setBoostCooldown (BOOST_POWERUP_COOLDOWN);
 			break;
 		case PowerupType.POWER:
 			RefreshPowerupTime (type, POWER_DURATION);
-			Player.setBoostPower (Player.getBoostPower () + POWER_DELTA);
-			break;
-		default:
-			Debug.Log ("wat");
+			playerMovement.setBoostPower (playerMovement.getBoostPower () + POWER_DELTA);
 			break;
 		}
 	}
