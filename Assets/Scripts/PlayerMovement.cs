@@ -54,6 +54,14 @@ public class PlayerMovement : MonoBehaviour {
 		boostCooldown = cooldown;
 	}
 
+	public float getBoostPower(){
+		return boostPower;
+	}
+
+	public void setBoostPower(float power) {
+		boostPower = power;
+	}
+
 	void moveTowardsDesiredDirection(){
 		aimDirection = Vector3.RotateTowards (aimDirection, desiredDirection, rotationSpeed, 0f);
 		transform.rotation = Quaternion.LookRotation (aimDirection, new Vector3 (0, 1, 0));
