@@ -11,7 +11,7 @@ public class PowerupController : MonoBehaviour {
 	}
 
 	// Occurs when this object is picked up by a player.
-	// Used to control grab audio or visual effects
+	// Used to control grab audio or visual
 	public void Pickup() {
 		Destroy (gameObject);	
 	}

@@ -19,7 +19,7 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	// Increases the boost power. Stacks and refreshes duration
 	private const float POWER_DELTA = 200.0f;
-	private const float POWER_DURATION = 5.0f;
+	private const float POWER_DURATION = 10.0f;
 
 	// Use this for initialization
 	void Start () {		
@@ -61,14 +61,13 @@ public class PlayerPowerupController : MonoBehaviour {
 
 		// Remove gameplay effects
 		PowerupEndtimes.Remove (type);
+
 		switch (type) {
 		case PowerupType.BOOST:
 			playerMovement.setBoostCooldown (PlayerMovement.DEFAULT_COOLDOWN);
 			break;
 		case PowerupType.POWER:
-			playerMovement.setBoostPower (playerMovement.getBoostPower () - POWER_DELTA);
-			break;
-		default:
+			playerMovement.setBoostPower (PlayerMovement.DEFAULT_BOOST_POWER);
 			break;
 		}
 	}
