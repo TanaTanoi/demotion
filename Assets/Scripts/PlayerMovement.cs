@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 desiredDirection;
 
     private Rigidbody chairRigidbody;
+    private Animator animator;
 
     // Use this for initialization
     void Start () {
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour {
         boostPower = DEFAULT_BOOST_POWER;
         rotationSpeed = DEFAULT_ROTATION_SPEED;
 
+        animator = GetComponentInChildren<Animator>();
         chairRigidbody = GetComponent<Rigidbody>();
     }
 	
@@ -35,9 +37,11 @@ public class PlayerMovement : MonoBehaviour {
 		desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f , verticalInput));
 
 		moveTowardsDesiredDirection ();
-
-		if (Input.GetAxisRaw("Boost") > 0) {
+        float speed = Input.GetAxisRaw("Boost");
+        animator.SetFloat("speed", speed);
+		if (speed > 0) {
             if (timestamp <= Time.time) {
+                animator.SetFloat("speed", speed);
                 chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, boostPower));
                 timestamp = Time.time + boostCooldown;
             }
