@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerPowerupController : MonoBehaviour {
 
-	// The enum is declared here (as opposed to PowerupController)
+	// The enum is declared here(as opposed to PowerupController)
 	// Because it is used more often here
 	public enum PowerupType { BOOST, POWER };
 
@@ -22,52 +22,52 @@ public class PlayerPowerupController : MonoBehaviour {
 	private const float POWER_DURATION = 10.0f;
 
 	// Use this for initialization
-	void Start () {		
+	void Start() {		
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (PowerupEndtimes.Count > 0) {
-			CheckPowerups ();
+	void Update() {
+		if(PowerupEndtimes.Count > 0) {
+			CheckPowerups();
 		}
 	}
 
 	// On collision with a powerup, add it
 	void OnTriggerEnter(Collider other) {
 		PowerupController powerup = other.gameObject.GetComponent<PowerupController>();
-		if ( powerup != null) {
-			ActivatePowerup (powerup.type);
-			powerup.Pickup ();
+		if( powerup != null) {
+			ActivatePowerup(powerup.type);
+			powerup.Pickup();
 		}
 	}
 
 	// Checks if any powerups are expired, then removes them
 	private void CheckPowerups() {
-		HashSet<PowerupType> toRemove = new HashSet<PowerupType> ();
+		HashSet<PowerupType> toRemove = new HashSet<PowerupType>();
 		foreach(KeyValuePair<PowerupType, float> pair in PowerupEndtimes) {
-			if (pair.Value - Time.time < 0.0f) {
-				toRemove.Add (pair.Key);
+			if(pair.Value - Time.time < 0.0f) {
+				toRemove.Add(pair.Key);
 			}
 		}
-		foreach (PowerupType type in toRemove) {
-			EndPowerup (type);
+		foreach(PowerupType type in toRemove) {
+			EndPowerup(type);
 		}
 	}
 
 	// Remove the powerup from our counter and reset it's effects
 	private void EndPowerup(PowerupType type) {
 		// Disable particle effects
-		particleController.setParticleSystemEnabled (type, false);
+		particleController.setParticleSystemEnabled(type, false);
 
 		// Remove gameplay effects
-		PowerupEndtimes.Remove (type);
+		PowerupEndtimes.Remove(type);
 
-		switch (type) {
+		switch(type) {
 		case PowerupType.BOOST:
-			playerMovement.setBoostCooldown (PlayerMovement.DEFAULT_COOLDOWN);
+			playerMovement.setBoostCooldown(playerMovement.DEFAULT_COOLDOWN);
 			break;
 		case PowerupType.POWER:
-			playerMovement.setBoostPower (PlayerMovement.DEFAULT_BOOST_POWER);
+			playerMovement.setBoostPower(playerMovement.DEFAULT_BOOST_POWER);
 			break;
 		}
 	}
@@ -75,32 +75,32 @@ public class PlayerPowerupController : MonoBehaviour {
 	// Enable the effects of a particular powerup
 	private void ActivatePowerup(PowerupType type) {
 		// Enable particle effects for this powerup
-		particleController.setParticleSystemEnabled (type, true);
+		particleController.setParticleSystemEnabled(type, true);
 
 		// Enable gameplay effects
-		switch (type) {
+		switch(type) {
 		case PowerupType.BOOST:
-			AddPowerupTime (PowerupType.BOOST, BOOST_DURATION);
-			playerMovement.setBoostCooldown (BOOST_POWERUP_COOLDOWN);
+			AddPowerupTime(PowerupType.BOOST, BOOST_DURATION);
+			playerMovement.setBoostCooldown(BOOST_POWERUP_COOLDOWN);
 			break;
 		case PowerupType.POWER:
-			RefreshPowerupTime (type, POWER_DURATION);
-			playerMovement.setBoostPower (playerMovement.getBoostPower () + POWER_DELTA);
+			RefreshPowerupTime(type, POWER_DURATION);
+			playerMovement.setBoostPower(playerMovement.getBoostPower() + POWER_DELTA);
 			break;
 		}
 	}
 
-	// Add additional time to a powerup (e.g. picking up two 5s will give 10s)
+	// Add additional time to a powerup(e.g. picking up two 5s will give 10s)
 	private void AddPowerupTime(PowerupType type, float duration) {
-		if (PowerupEndtimes.ContainsKey (type)) {
-			PowerupEndtimes [type] = PowerupEndtimes [type] + duration;
+		if(PowerupEndtimes.ContainsKey(type)) {
+			PowerupEndtimes[type] = PowerupEndtimes[type] + duration;
 		} else {
-			PowerupEndtimes [type] = Time.time + duration;
+			PowerupEndtimes[type] = Time.time + duration;
 		}
 	}
 
-	// Refresh the time of a powerup (e.g. picking up two 5s will give 5s)
+	// Refresh the time of a powerup(e.g. picking up two 5s will give 5s)
 	private void RefreshPowerupTime(PowerupType type, float duration) {
-		PowerupEndtimes [type] = Time.time + duration;
+		PowerupEndtimes[type] = Time.time + duration;
 	}
 }

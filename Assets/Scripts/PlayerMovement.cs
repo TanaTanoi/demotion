@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public static float DEFAULT_BOOST_POWER = 250;
-	public static float DEFAULT_ROTATION_SPEED = 0.09f;
-	public static float DEFAULT_COOLDOWN = 0.7f;
+	public float DEFAULT_BOOST_POWER = 250;
+	public float DEFAULT_ROTATION_SPEED = 0.09f;
+	public float DEFAULT_COOLDOWN = 0.7f;
 
 	private float boostCooldown;
     private float boostPower;
