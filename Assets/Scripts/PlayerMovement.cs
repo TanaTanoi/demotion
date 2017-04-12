@@ -8,13 +8,14 @@ public class PlayerMovement : MonoBehaviour {
 	public float DEFAULT_ROTATION_SPEED = 0.09f;
 	public float DEFAULT_COOLDOWN = 0.7f;
 
+    public float deadzone = 0.25f;
+
 	private float boostCooldown;
     private float boostPower;
     private float rotationSpeed;
 
 	private float timestamp = 0.0f;
     private Vector3 aimDirection = Vector3.forward;
-    private Vector3 desiredDirection;
 
     private Rigidbody chairRigidbody;
     private Animator animator;
@@ -31,13 +32,18 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float horizontalInput = Input.GetAxis ("Horizontal");
-		float verticalInput = Input.GetAxis ("Vertical");
+		float horizontalInput = Input.GetAxisRaw ("Horizontal_C1");
+        float verticalInput = Input.GetAxisRaw ("Vertical_C1");
+        
+        Vector3 stickInput = new Vector3(horizontalInput, 0f, verticalInput);
+        if (stickInput.magnitude < deadzone)
+            stickInput = Vector3.zero;
+        stickInput = Vector3.Normalize(stickInput);
 
-		desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f , verticalInput));
+        pointDirection(stickInput);
+        //rotateDirection(stickInput);
 
-		moveTowardsDesiredDirection ();
-        float speed = Input.GetAxisRaw("Boost");
+        float speed = Input.GetAxisRaw("Boost_C1");
         animator.SetFloat("speed", speed);
 		if (speed > 0) {
             if (timestamp <= Time.time) {
@@ -66,7 +72,7 @@ public class PlayerMovement : MonoBehaviour {
 		boostPower = power;
 	}
 
-	void moveTowardsDesiredDirection(){
+	void pointDirection(Vector3 desiredDirection){
 		aimDirection = Vector3.RotateTowards (aimDirection, desiredDirection, rotationSpeed, 0f);
 		transform.rotation = Quaternion.LookRotation (aimDirection, new Vector3 (0, 1, 0));
 	}
