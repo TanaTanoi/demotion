@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float DEFAULT_ROTATION_SPEED = 0.09f;
 	public float DEFAULT_COOLDOWN = 0.7f;
 
-    public float deadzone = 0.25f;
+    public float deadzone = 0.25f;  // Deadzone for controller analog stick
 
 	private float boostCooldown;
     private float boostPower;
