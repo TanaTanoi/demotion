@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OptionsMenuManager : MonoBehaviour {
 
-    public Image[] optionSubMenus;
+    public GameObject[] optionSubMenus;
     
 	// Use this for initialization
 	void Start () {
