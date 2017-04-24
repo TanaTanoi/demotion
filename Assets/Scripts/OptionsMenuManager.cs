@@ -30,7 +30,7 @@ public class OptionsMenuManager : MonoBehaviour {
      */
     public void SwitchToVisualMenu()
     {
-        SwitchMenu(VisualMenu);
+        //MenuController.SwitchMenu(VisualMenu, selectedMenu);
     }
 
     /**
@@ -38,7 +38,7 @@ public class OptionsMenuManager : MonoBehaviour {
      */
     public void SwitchToAudioMenu()
     {
-        SwitchMenu(AudioMenu);
+        //MenuController.SwitchMenu(AudioMenu, selectedMenu);
     }
 
     /**
@@ -46,7 +46,7 @@ public class OptionsMenuManager : MonoBehaviour {
      */
     public void SwitchToControlsMenu()
     {
-        SwitchMenu(ControlsMenu);
+        //.SwitchMenu(ControlsMenu, selectedMenu);
     }
 
     /**
@@ -54,21 +54,7 @@ public class OptionsMenuManager : MonoBehaviour {
      */
     public void SwitchToDataMenu()
     {
-        SwitchMenu(DataMenu);
+        //MenuController.SwitchMenu(DataMenu, selectedMenu);
     }
 
-    /**
-     * If there is a change in menu,
-     * deactivates the old menu
-     * and activates the new one.
-     */
-    private void SwitchMenu(GameObject menu)
-    {
-        if(selectedMenu != menu)
-        {
-            selectedMenu.SetActive(false);
-            selectedMenu = menu;
-            selectedMenu.SetActive(true);
-        }
-    }
 }

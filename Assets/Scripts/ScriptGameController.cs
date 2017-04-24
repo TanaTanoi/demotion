@@ -5,11 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ScriptGameController : MonoBehaviour {
 
-    private Scene menuScene;
-    private Scene gameScene;
-    private Scene setupScene;
-    private Scene creditsScene;
-
     private bool isPaused = false;
 
 
@@ -30,17 +25,6 @@ public class ScriptGameController : MonoBehaviour {
         }
         //Set default input controls based on operating system game is runnning on.
 	}
-
-    private void Start()
-    {
-        menuScene = SceneManager.GetSceneByName("MenuScene");
-        gameScene = SceneManager.GetSceneByName("GameScene");
-        setupScene = SceneManager.GetSceneByName("SetupScene");
-        creditsScene = SceneManager.GetSceneByName("CreditsScene");
-    }
-
-    // Update is called once per frame
-    
 	
 	// Update is called once per frame
 	void Update () {
@@ -69,14 +53,4 @@ public class ScriptGameController : MonoBehaviour {
         // Open 
     }
 
-
-    /**
-     * Transitions to the menu scene
-     */
-    void goToMenu()
-    {
-
-        //SceneManager.LoadSceneAsync(, LoadSceneMode.Single);
-
-    }
 }
