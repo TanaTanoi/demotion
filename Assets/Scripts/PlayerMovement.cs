@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 aimDirection = Vector3.forward;
 
     private Rigidbody chairRigidbody;
+    
     private Animator animator;
 
     // Use this for initialization
@@ -32,8 +33,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float horizontalInput = Input.GetAxisRaw ("Horizontal_C1");
-        float verticalInput = Input.GetAxisRaw ("Vertical_C1");
+        
+		float horizontalInput = Input.GetAxisRaw ("Horizontal_KB");
+        float verticalInput = Input.GetAxisRaw ("Vertical_KB");
         
         Vector3 stickInput = new Vector3(horizontalInput, 0f, verticalInput);
         if (stickInput.magnitude < deadzone)
@@ -43,7 +45,7 @@ public class PlayerMovement : MonoBehaviour {
         pointDirection(stickInput);
         //rotateDirection(stickInput);
 
-        float speed = Input.GetAxisRaw("Boost_C1");
+        float speed = Input.GetAxisRaw("Boost_KB");
         animator.SetFloat("speed", speed);
 		if (speed > 0) {
             if (timestamp <= Time.time) {
