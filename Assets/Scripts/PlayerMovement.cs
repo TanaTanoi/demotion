@@ -42,8 +42,8 @@ public class PlayerMovement : MonoBehaviour {
             stickInput = Vector3.zero;
         stickInput = Vector3.Normalize(stickInput);
 
-        pointDirection(stickInput);
-        //rotateDirection(stickInput);
+        //pointDirection(stickInput);
+        rotateDirection(horizontalInput);
 
         float speed = Input.GetAxisRaw("Boost_KB");
         animator.SetFloat("speed", speed);
@@ -73,6 +73,11 @@ public class PlayerMovement : MonoBehaviour {
 	public void setBoostPower(float power) {
 		boostPower = power;
 	}
+
+    void rotateDirection(float direction)
+    {
+        transform.Rotate(new Vector3(0, direction * rotationSpeed, 0), Space.Self);
+    }
 
 	void pointDirection(Vector3 desiredDirection){
 		aimDirection = Vector3.RotateTowards (aimDirection, desiredDirection, rotationSpeed, 0f);
