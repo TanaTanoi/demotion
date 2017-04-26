@@ -54,6 +54,8 @@ public class PlayerMovement : MonoBehaviour {
                 timestamp = Time.time + boostCooldown;
             }
 		}
+        //Lock x and z rotation
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 	}
 
 
@@ -76,7 +78,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void rotateDirection(float direction)
     {
-        transform.Rotate(new Vector3(0, direction * rotationSpeed, 0), Space.Self);
+        transform.Rotate(new Vector3(0, direction * rotationSpeed, 0), Space.World);
     }
 
 	void pointDirection(Vector3 desiredDirection){
