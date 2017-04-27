@@ -36,7 +36,8 @@ public class PlayerMovement : MonoBehaviour {
         
 		float horizontalInput = Input.GetAxisRaw ("Horizontal_KB");
         float verticalInput = Input.GetAxisRaw ("Vertical_KB");
-        
+       
+
         Vector3 stickInput = new Vector3(horizontalInput, 0f, verticalInput);
         if (stickInput.magnitude < deadzone)
             stickInput = Vector3.zero;
@@ -56,6 +57,8 @@ public class PlayerMovement : MonoBehaviour {
 		}
         //Lock x and z rotation
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+
+
 	}
 
 
