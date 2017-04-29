@@ -16,13 +16,15 @@ public class tmpPickupController : MonoBehaviour {
     {
         inventory = null;
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("PIKCUP?");
         if(other.CompareTag("Pickup"))
         {
-            AddToInventory(other.transform.gameObject);
-            Destroy(other.transform.gameObject);
+            if (AddToInventory(other.transform.gameObject))
+            {
+                Destroy(other.transform.gameObject);
+            }
         }
     }
 
@@ -35,10 +37,30 @@ public class tmpPickupController : MonoBehaviour {
     {
         if(inventory == null)
         {
+            Debug.Log("Adding to inventory");
             inventory = pickup;
+            HUDInvImage.sprite = pickup.GetComponent<tmpPickup>().icon;
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Throws the currently held item infront of the player
+     */
+    public void ThrowItem()
+    {
+        if(inventory == null)
+        {
+            return;
+        }
+
+        GameObject ball = Instantiate(inventory);
+        Rigidbody ballRB = ball.GetComponent<Rigidbody>();
+        ballRB.useGravity = true;
+        ballRB.AddForce(Vector3.forward);
+
+        inventory = null;
     }
 }

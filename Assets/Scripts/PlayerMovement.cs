@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 aimDirection = Vector3.forward;
 
     private Rigidbody chairRigidbody;
-    
+    private tmpPickupController pickupControl;
     private Animator animator;
 
     // Use this for initialization
@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour {
 
         animator = GetComponentInChildren<Animator>();
         chairRigidbody = GetComponent<Rigidbody>();
+        
     }
 	
 	// Update is called once per frame
@@ -36,7 +37,12 @@ public class PlayerMovement : MonoBehaviour {
         
 		float horizontalInput = Input.GetAxisRaw ("Horizontal_KB");
         float verticalInput = Input.GetAxisRaw ("Vertical_KB");
-       
+        float activeInput = Input.GetAxisRaw("Active_KB");
+
+        if(activeInput != 0)
+        {
+            pickupControl.ThrowItem();
+        }
 
         Vector3 stickInput = new Vector3(horizontalInput, 0f, verticalInput);
         if (stickInput.magnitude < deadzone)
