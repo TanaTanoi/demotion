@@ -57,8 +57,6 @@ public class PlayerMovement : MonoBehaviour {
 		}
         //Lock x and z rotation
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-
-
 	}
 
 

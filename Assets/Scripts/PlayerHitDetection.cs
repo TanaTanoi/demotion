@@ -13,14 +13,10 @@ public class PlayerHitDetection : MonoBehaviour {
         
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-
-    }
 
     void OnCollisionEnter(Collision collision)
     {
-
+        Debug.Log("Collision: " +Time.time);
         // If we have been hit with enough force, play a sound. 
         if(collision.relativeVelocity.magnitude > hitThreshold)
         {
