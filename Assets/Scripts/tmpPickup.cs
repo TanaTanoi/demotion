@@ -6,6 +6,5 @@ using UnityEngine;
 public class tmpPickup : MonoBehaviour {
 
     public Sprite icon;
-    public GameObject ball;
 
 }

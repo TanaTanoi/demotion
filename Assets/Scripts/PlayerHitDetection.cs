@@ -5,13 +5,13 @@ using UnityEngine;
 public class PlayerHitDetection : MonoBehaviour {
 
     public float hitThreshold;
-    public ParticleSystem particleSystem;
+    public ParticleSystem partSys;
     public int particles;
     private GameController gameControl;
 
     private void Start()
     {
-        
+        gameControl = FindObjectOfType<GameController>();
     }
 
 
@@ -21,7 +21,8 @@ public class PlayerHitDetection : MonoBehaviour {
         if(collision.relativeVelocity.magnitude > hitThreshold)
         {
             //Play hit sound here
-            particleSystem.Emit(particles);
+            partSys.Emit(particles);
+            gameControl.RemoveLife(GetComponentInParent<PlayerInput>().playerNumber);
         }
     }
 }

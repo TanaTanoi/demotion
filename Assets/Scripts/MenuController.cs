@@ -21,7 +21,7 @@ public class MenuController : MonoBehaviour {
     {
         if (Input.GetAxisRaw("Pause_KB") != 0)
         {
-            togglePause();
+            TogglePause();
         }
     }
 
@@ -33,13 +33,12 @@ public class MenuController : MonoBehaviour {
     private void OnApplicationPause(bool pause)
     {
         isPaused = pause;
-        //Set time speed to 0 or something to actually pause the game
     }
 
     /**
      * Re
      */
-    public void togglePause()
+    public void TogglePause()
     {
         isPaused = !isPaused;
         SwitchMenu(this.transform.FindChild("Pause_Panel").gameObject);

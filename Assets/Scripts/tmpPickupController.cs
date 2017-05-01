@@ -8,22 +8,23 @@ public class tmpPickupController : MonoBehaviour {
 
 
     // Inventory is one slot only
-    private GameObject inventory;
+    public GameObject inventory = null;
 
     public Image HUDInvImage;
 
     private void Start()
     {
-        inventory = null;
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Pickup"))
         {
-            if (AddToInventory(other.transform.gameObject))
+            
+            if (AddToInventory(other.gameObject))
             {
-               Destroy(other.transform.gameObject);
+                other.transform.gameObject.SetActive(false);
             }
         }
     }
@@ -38,9 +39,8 @@ public class tmpPickupController : MonoBehaviour {
         if(inventory == null)
         {
             Debug.Log("Adding to inventory");
-            tmpPickup pickup = item.GetComponent<tmpPickup>();
-            inventory = pickup.ball;
-            HUDInvImage.sprite = pickup.icon;
+            inventory = item;
+            HUDInvImage.sprite = item.GetComponent<tmpPickup>().icon;
             HUDInvImage.color = new Color(255,255,255,255);
             return true;
         }
@@ -55,12 +55,14 @@ public class tmpPickupController : MonoBehaviour {
     {
         if(inventory == null)
         {
+            Debug.Log("Cannot drop nothing");
             return;
         }
-        Debug.Log("Throwing a thing!");
-        GameObject ball = Instantiate(inventory, new Vector3(0, 7, 2), Quaternion.identity);
-        Rigidbody ballRB = ball.GetComponent<Rigidbody>();
-        ballRB.AddForce(Vector3.forward);
+        Debug.Log("Dropping a thing!");
+        inventory.transform.position = transform.position + new Vector3(0.2f, 0.0f, 2.0f);
+        inventory.SetActive(true);
+        Rigidbody invRB = inventory.GetComponent<Rigidbody>();
+        invRB.AddForce(Vector3.forward);
 
         inventory = null;
         HUDInvImage.sprite = null;
