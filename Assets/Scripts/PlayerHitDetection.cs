@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerHitDetection : MonoBehaviour {
 
     public float hitThreshold;
-
+    public ParticleSystem particleSystem;
+    public int particles;
     private GameController gameControl;
 
     private void Start()
@@ -16,17 +17,11 @@ public class PlayerHitDetection : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision: " +Time.time);
         // If we have been hit with enough force, play a sound. 
         if(collision.relativeVelocity.magnitude > hitThreshold)
         {
             //Play hit sound here
-
-            // If we have been hit by a hostile lance then lose a life or something
-            if(collision.gameObject.CompareTag("Lance"))
-            {
-                Debug.Log("I've been attacked!");
-            }
+            particleSystem.Emit(particles);
         }
     }
 }
