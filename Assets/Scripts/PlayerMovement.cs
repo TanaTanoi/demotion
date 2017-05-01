@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour {
 
         animator = GetComponentInChildren<Animator>();
         chairRigidbody = GetComponent<Rigidbody>();
-        
+        pickupControl = FindObjectOfType<tmpPickupController>();
     }
 	
 	// Update is called once per frame
@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour {
 
         if(activeInput != 0)
         {
+            Debug.Log("Throw!");
             pickupControl.ThrowItem();
         }
 

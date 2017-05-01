@@ -23,7 +23,7 @@ public class tmpPickupController : MonoBehaviour {
         {
             if (AddToInventory(other.transform.gameObject))
             {
-                Destroy(other.transform.gameObject);
+               // Destroy(other.transform.gameObject);
             }
         }
     }
@@ -55,12 +55,13 @@ public class tmpPickupController : MonoBehaviour {
         {
             return;
         }
-
+        Debug.Log("Throwing a thing!");
         GameObject ball = Instantiate(inventory);
         Rigidbody ballRB = ball.GetComponent<Rigidbody>();
         ballRB.useGravity = true;
         ballRB.AddForce(Vector3.forward);
 
         inventory = null;
+        HUDInvImage.sprite = null;
     }
 }
