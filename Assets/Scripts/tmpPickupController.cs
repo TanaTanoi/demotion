@@ -49,7 +49,7 @@ public class tmpPickupController : MonoBehaviour {
     /**
      * Throws the currently held item infront of the player
      */
-    public void ThrowItem()
+    public void DropItem()
     {
         if(inventory == null)
         {

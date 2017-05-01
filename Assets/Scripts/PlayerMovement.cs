@@ -41,8 +41,8 @@ public class PlayerMovement : MonoBehaviour {
 
         if(activeInput != 0)
         {
-            Debug.Log("Throw!");
-            pickupControl.ThrowItem();
+            Debug.Log("Drop!");
+            pickupControl.DropItem();
         }
 
         Vector3 stickInput = new Vector3(horizontalInput, 0f, verticalInput);
