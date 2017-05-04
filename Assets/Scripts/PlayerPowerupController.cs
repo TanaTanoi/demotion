@@ -18,7 +18,7 @@ public class PlayerPowerupController : MonoBehaviour {
 	private const float BOOST_POWERUP_COOLDOWN = 0.1f;
 
 	// Increases the boost power. Stacks and refreshes duration
-	private const float POWER_DELTA = 200.0f;
+	private const float POWER_DELTA = 400.0f;
 	private const float POWER_DURATION = 10.0f;
 
 	// Use this for initialization
@@ -37,7 +37,7 @@ public class PlayerPowerupController : MonoBehaviour {
 		PowerupController powerup = other.gameObject.GetComponent<PowerupController>();
 		if ( powerup != null) {
 			ActivatePowerup (powerup.type);
-			powerup.Pickup ();
+			powerup.Pickup (gameObject);
 		}
 	}
 
