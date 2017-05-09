@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 desiredDirection;
 
     private Rigidbody chairRigidbody;
+    private PlayerInput playerIn;
+
     // Use this for initialization
     void Start () {
 		boostCooldown = DEFAULT_COOLDOWN;
@@ -25,18 +27,19 @@ public class PlayerMovement : MonoBehaviour {
         rotationSpeed = DEFAULT_ROTATION_SPEED;
 
         chairRigidbody = GetComponent<Rigidbody>();
+        playerIn = GetComponent<PlayerInput>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-		float horizontalInput = Input.GetAxis ("Horizontal");
-		float verticalInput = Input.GetAxis ("Vertical");
+		float horizontalInput = Input.GetAxis (playerIn.horizontal);
+		float verticalInput = Input.GetAxis (playerIn.vertical);
 
 		desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f , verticalInput));
 
 		moveTowardsDesiredDirection ();
 
-		if (Input.GetAxisRaw("Boost") != 0) {
+		if (Input.GetAxisRaw(playerIn.boost) != 0) {
             if (timestamp <= Time.time) {
                 playerAnimator.SetTrigger("Push");
                 chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, boostPower));
