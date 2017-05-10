@@ -3,28 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerItemController : MonoBehaviour {
+namespace Item {
+    public enum Type { THROWABLE, SUPER_BOOST }
+}
 
-    public enum ItemType { THROWABLE }
+public class PlayerItemController : MonoBehaviour {
 
     public GameObject throwableItem;
 
-    public Animator playerAnimator;
+    public ModelController playerAnimator;
     public Transform throwingHand;
 
-    private ItemType currentItem;
+    private Item.Type currentItem;
     private float chargeLeft = 0; // How much usage is left in this powerup
     private float nextUsableTime = 0.0f;
+    private PlayerMovement playerMovement;
+    private PlayerParticleController particleController;
 
     private int itemsActivated = 0;
-    public TextMesh itemDisplayText;
-    public Image itemDisplayImage;
 
-	// Use this for initialization
-	void Start () {
-        SetDisplayToCharge();
-	}
-	
+    void Start() {
+        playerMovement = GetComponentInParent<PlayerMovement>();
+        particleController = GetComponentInChildren<PlayerParticleController>();
+    }
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetButtonDown("Fire2") && CanUseItem()) {
@@ -42,18 +44,23 @@ public class PlayerItemController : MonoBehaviour {
 		ItemController item = other.gameObject.GetComponent<ItemController>();
 		if ( item != null && chargeLeft <= 0) {
             currentItem = item.type;
-            chargeLeft = 5.0f;
+            chargeLeft = PlayerStats.TOTAL_ITEM_CHARGE;
             item.Pickup(gameObject);
-            SetDisplayToCharge();
 		}
 	}
 
     void ActivatePowerup() {
+        particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
-            case ItemType.THROWABLE:
+            case Item.Type.THROWABLE:
                 IEnumerator c = ThrowItem();
                 StartCoroutine(c);
-                chargeLeft -= 1.0f;
+                chargeLeft -= PlayerStats.TOTAL_ITEM_CHARGE / PlayerStats.THROW_USES;
+                break;
+            case Item.Type.SUPER_BOOST:
+                SetItemCooldown(PlayerStats.SUPER_BOOST_COOLDOWN);
+                playerMovement.Boost(PlayerStats.SUPER_BOOST_POWER);
+                chargeLeft -= PlayerStats.TOTAL_ITEM_CHARGE / PlayerStats.SUPER_BOOST_USES;
                 break;
         }
     }
@@ -67,27 +74,16 @@ public class PlayerItemController : MonoBehaviour {
         nextUsableTime = Time.time + cooldown;
     }
 
-    private void SetDisplayToCharge() {
-        if(chargeLeft > 0) {
-            itemDisplayImage.enabled = true;
-            itemDisplayText.text = chargeLeft + "";
-        } else {
-            itemDisplayImage.enabled = false;
-            itemDisplayText.text = "";
-        }
-    }
-
     IEnumerator ThrowItem() {
-        SetItemCooldown(0.6f);
+        SetItemCooldown(PlayerStats.THROW_COOLDOWN);
 
         GameObject throwable = Instantiate(throwableItem);
         throwable.transform.parent = throwingHand;
         throwable.transform.localPosition = Vector3.zero;
         throwable.GetComponent<Rigidbody>().isKinematic = true;
         throwable.GetComponent<SphereCollider>().enabled = false;
-        playerAnimator.SetTrigger("Throw");
+        playerAnimator.Throw();
         yield return new WaitForSeconds(0.5f);
-        SetDisplayToCharge();
         throwable.GetComponent<Rigidbody>().isKinematic = false;
         throwable.GetComponent<SphereCollider>().enabled = true;
         throwable.transform.SetParent(null);

@@ -23,7 +23,7 @@ public class TargetDummyScript : MonoBehaviour {
                 tip.Trigger();
             }
             foreach(ParticleSystem ps in particleSystems) {
-                ps.Play();
+                //ps.Play();
             }
         }
     }

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupParticleController : MonoBehaviour {
+public class PlayerParticleController : MonoBehaviour {
 
 	public ParticleSystem boostPSystem;
 	public ParticleSystem powerPSystem;
 
+    public ParticleSystem superboostPSystem;
+
 	// Enable or disable a particle system for a particular powerup
-	public void setParticleSystemEnabled(Powerup.Type type, bool setEnabled) {
+	public void setPowerupParticleSystemEnabled(Powerup.Type type, bool setEnabled) {
 		ParticleSystem pSystem = null;
 	
 		switch (type) {
@@ -25,6 +27,17 @@ public class PowerupParticleController : MonoBehaviour {
 		} else {
 			pSystem.Stop ();
 		}
-
 	}
+
+    public void playItemParticleSystem(Item.Type type) {
+        switch (type) {
+            case Item.Type.THROWABLE:
+                break;
+            case Item.Type.SUPER_BOOST:
+                superboostPSystem.Play();
+                break;
+        }
+
+    }
+        
 }

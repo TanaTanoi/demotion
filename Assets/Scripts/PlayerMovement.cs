@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public const float DEFAULT_BOOST_POWER = 450;
-	public const float DEFAULT_ROTATION_SPEED = 0.09f;
-	public const float DEFAULT_COOLDOWN = 0.7f;
-    public Animator playerAnimator;
+    private ModelController playerAnimator;
 
 	private float boostCooldown;
     private float boostPower;
@@ -20,10 +17,11 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody chairRigidbody;
     // Use this for initialization
     void Start () {
-		boostCooldown = DEFAULT_COOLDOWN;
-        boostPower = DEFAULT_BOOST_POWER;
-        rotationSpeed = DEFAULT_ROTATION_SPEED;
+		boostCooldown = PlayerStats.DEFAULT_COOLDOWN;
+        boostPower = PlayerStats.DEFAULT_BOOST_POWER;
+        rotationSpeed = PlayerStats.DEFAULT_ROTATION_SPEED;
 
+        playerAnimator = GetComponentInChildren<ModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
     }
 	
@@ -38,13 +36,17 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (Input.GetAxisRaw("Boost") != 0) {
             if (timestamp <= Time.time) {
-                playerAnimator.SetTrigger("Push");
-                chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, boostPower));
+                Boost(boostPower);
                 timestamp = Time.time + boostCooldown;
             }
 		}
 	}
 
+
+    public void Boost(float power) {
+        playerAnimator.Push();
+        chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
+    }
 
     public float getBoostCooldown()
     {

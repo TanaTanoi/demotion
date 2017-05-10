@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemController : Pickupable {
 
-    public PlayerItemController.ItemType type;
+    public Item.Type type;
 
 	// Use this for initialization
 	void Start () {
