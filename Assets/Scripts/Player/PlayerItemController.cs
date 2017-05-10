@@ -29,11 +29,11 @@ public class PlayerItemController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Fire2") && CanUseItem()) {
+        if (Input.GetAxisRaw(playerMovement.GetPlayerInput().activate) > 0 && CanUseItem()) {
             ActivatePowerup();
             itemsActivated++;
         }
-	}
+    }
 
     public int ItemsActivated() {
         return itemsActivated;

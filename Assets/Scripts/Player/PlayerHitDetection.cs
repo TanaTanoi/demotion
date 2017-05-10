@@ -22,7 +22,7 @@ public class PlayerHitDetection : MonoBehaviour {
         {
             //Play hit sound here
             partSys.Emit(particles);
-            gameControl.RemoveLife(GetComponentInParent<PlayerInput>().playerNumber);
+            //gameControl.RemoveLife(GetComponentInParent<PlayerInput>().playerNumber);
         }
     }
 }

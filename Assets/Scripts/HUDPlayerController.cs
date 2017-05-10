@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDPlayerController : MonoBehaviour {
-    public PlayerInput.PlayerNumber playerNumber;
+    
     public GameObject[] lives;
     public int respawnTime = 10;
     private int currentLives;
@@ -21,7 +21,7 @@ public class HUDPlayerController : MonoBehaviour {
         if(currentLives == -1)
         {
             //Player dies and must respawn
-            Debug.Log("Player: " + playerNumber + " is out of lives! Respawning in " + respawnTime + " seconds..");
+            Debug.Log("Player: is out of lives! Respawning in " + respawnTime + " seconds..");
         }
     }
 }
