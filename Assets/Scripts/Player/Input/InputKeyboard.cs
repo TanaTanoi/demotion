@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class InputKeyboard : PlayerInput {
 
-    public InputKeyboard(PlayerNumber pNum) : base(pNum) {}
-
     void Start()
     {
         horizontal = "Horizontal_KB";
@@ -16,7 +14,7 @@ public class InputKeyboard : PlayerInput {
 
     public override void turn(float rotationSpeed)
     {
-        transform.Rotate(new Vector3(0, rotationSpeed*Time.deltaTime, 0), Space.World);
+        transform.Rotate(new Vector3(0, rotationSpeed, 0), Space.World);
         
     }
 }

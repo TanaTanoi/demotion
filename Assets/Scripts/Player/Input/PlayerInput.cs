@@ -13,9 +13,9 @@ public abstract class PlayerInput : MonoBehaviour
 
     public PlayerNumber playerNumber;
 
-    public PlayerInput(PlayerNumber pNum)
+    public PlayerInput()
     {
-        playerNumber = pNum;
+        
     }
     
    

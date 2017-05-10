@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
 
     public GameObject[] playersHUD;
 
-    private PlayerInput[] players;
+    public static int players = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour {
         //Debug.Log("There are " + players.Length + " players in this game.");
         timerText.text = "Time: " + (int)timeLeft;
 
-        for(int i = 0; i < players.Length; i++)
+        for(int i = 0; i < players; i++)
         {
             playersHUD[i].SetActive(true);
         }

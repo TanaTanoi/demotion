@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class InputMouse : PlayerInput {
 
-    public InputMouse(PlayerNumber pNum) : base(pNum) {}
-
     public int floorMask;
     public float camRayLength = 100f;
+
+    private Rigidbody playerRigidbody;
 
     private void Start()
     {
         floorMask = LayerMask.GetMask("Floor");
+        playerRigidbody = GetComponent<Rigidbody>();
 
         horizontal = "Horizontal_MS";
         vertical = "Vertical_MS";
@@ -22,14 +23,26 @@ public class InputMouse : PlayerInput {
     // turn towards the mouse
     public override void turn(float rotationSpeed)
     {
-        Plane aeroplane = new Plane(Vector3.up, transform.position);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float hitdist = 0.0f;
-        if(aeroplane.Raycast(ray, out hitdist))
+        // Create a ray from the mouse cursor on screen in the direction of the camera.
+        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // Create a RaycastHit variable to store information about what was hit by the ray.
+        RaycastHit floorHit;
+
+        // Perform the raycast and if it hits something on the floor layer...
+        if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
         {
-            Vector3 targetPoint = ray.GetPoint(hitdist);
-            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            // Create a vector from the player to the point on the floor the raycast from the mouse hit.
+            Vector3 playerToMouse = floorHit.point - transform.position;
+
+            // Ensure the vector is entirely along the floor plane.
+            playerToMouse.y = 0f;
+
+            // Create a quaternion (rotation) based on looking down the vector from the player to the mouse.
+            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
+
+            // Set the player's rotation to this new rotation.
+            playerRigidbody.MoveRotation(newRotation);
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
 	public float DEFAULT_BOOST_POWER = 450;
-	public float DEFAULT_ROTATION_SPEED = 0.09f;
+	public float DEFAULT_ROTATION_SPEED = 3f;
 	public float DEFAULT_COOLDOWN = 0.7f;
     public Animator playerAnimator;
 
@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour {
     private PlayerInput playerIn;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
 		boostCooldown = DEFAULT_COOLDOWN;
         boostPower = DEFAULT_BOOST_POWER;
         rotationSpeed = DEFAULT_ROTATION_SPEED;
