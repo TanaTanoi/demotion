@@ -20,14 +20,17 @@ public class PlayerItemController : MonoBehaviour {
     public TextMesh itemDisplayText;
     public Image itemDisplayImage;
 
+    private PlayerInput playerIn;
+
 	// Use this for initialization
 	void Start () {
         SetDisplayToCharge();
+        playerIn = GetComponent<PlayerInput>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Fire2") && CanUseItem()) {
+		if(Input.GetAxisRaw(playerIn.activate) > 0 && CanUseItem()) {
             ActivatePowerup();
             itemsActivated++;
         }

@@ -14,8 +14,8 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        players = FindObjectsOfType<PlayerInput>();
-        Debug.Log("There are " + players.Length + " players in this game.");
+        //players = FindObjectsOfType<PlayerInput>();
+        //Debug.Log("There are " + players.Length + " players in this game.");
         timerText.text = "Time: " + (int)timeLeft;
 
         for(int i = 0; i < players.Length; i++)
@@ -37,21 +37,6 @@ public class GameController : MonoBehaviour {
 
      
 
-    public void RemoveLife(PlayerInput.PlayerNumber pNum)
-    {
-        switch (pNum)
-        {
-            case PlayerInput.PlayerNumber.Player1:
-                
-                break;
-            case PlayerInput.PlayerNumber.Player2:
-                break;
-            case PlayerInput.PlayerNumber.Player3:
-                break;
-            case PlayerInput.PlayerNumber.Player4:
-                break;
-        }
-    }
 
     
 }

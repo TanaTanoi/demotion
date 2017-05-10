@@ -56,10 +56,10 @@ public class PlayerPowerupController : MonoBehaviour {
 
 		switch (type) {
 		case Powerup.Type.BOOST:
-			playerMovement.setBoostCooldown (PlayerMovement.DEFAULT_COOLDOWN);
+			playerMovement.setBoostCooldown (playerMovement.DEFAULT_COOLDOWN);
 			break;
 		case Powerup.Type.POWER:
-			playerMovement.setBoostPower (PlayerMovement.DEFAULT_BOOST_POWER);
+			playerMovement.setBoostPower (playerMovement.DEFAULT_BOOST_POWER);
 			break;
 		}
 	}
