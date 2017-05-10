@@ -49,8 +49,7 @@ public class PlayerMovement : MonoBehaviour {
         float horizontalInput = Input.GetAxis(playerIn.horizontal);
         float verticalInput = Input.GetAxis(playerIn.vertical);
 
-        //if(horizontalInput != 0 || verticalInput != 0) {
-        playerIn.turn(rotationSpeed*horizontalInput);
+        playerIn.turn(rotationSpeed, horizontalInput, verticalInput);
 
         //desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
         if (Input.GetAxisRaw(playerIn.boost) != 0)

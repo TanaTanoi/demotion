@@ -21,7 +21,7 @@ public class InputMouse : PlayerInput {
     }
 
     // turn towards the mouse
-    public override void turn(float rotationSpeed)
+    public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
     {
         // Create a ray from the mouse cursor on screen in the direction of the camera.
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -41,8 +41,8 @@ public class InputMouse : PlayerInput {
             // Create a quaternion (rotation) based on looking down the vector from the player to the mouse.
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
 
-            // Set the player's rotation to this new rotation.
-            playerRigidbody.MoveRotation(newRotation);
+            //playerRigidbody.MoveRotation(Quaternion.Slerp();
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed*Time.deltaTime);
         }
     }
 

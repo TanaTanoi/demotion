@@ -17,10 +17,11 @@ public abstract class PlayerInput : MonoBehaviour
     {
         
     }
-    
-   
 
-    public abstract void turn(float rotationSpeed);
-    
+
+
+    public abstract void turn(float rotationSpeed, float horizontalInput, float verticalInput);
+
+
 
 }
