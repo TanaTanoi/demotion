@@ -7,12 +7,14 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	private PlayerMovement playerMovement;
 	private PlayerParticleController particleController;
+	private PlayerStats stats;
 
 	Dictionary<Powerup.Type, float> PowerupEndtimes = new Dictionary<Powerup.Type, float>();
 
     void Start() {
         particleController = GetComponentInChildren<PlayerParticleController>();
         playerMovement = GetComponentInParent<PlayerMovement>();
+		stats = playerMovement.stats;
     }
 
 	void Update () {
@@ -53,10 +55,10 @@ public class PlayerPowerupController : MonoBehaviour {
 
 		switch (type) {
 		case Type.BOOST:
-			playerMovement.setBoostCooldown (PlayerStats.DEFAULT_COOLDOWN);
+			playerMovement.setBoostCooldown (stats.DEFAULT_COOLDOWN);
 			break;
 		case Type.POWER:
-			playerMovement.setBoostPower (PlayerStats.DEFAULT_BOOST_POWER);
+			playerMovement.setBoostPower (stats.DEFAULT_BOOST_POWER);
 			break;
 		}
 	}
@@ -69,12 +71,12 @@ public class PlayerPowerupController : MonoBehaviour {
 		// Enable gameplay effects
 		switch (type) {
 		case Type.BOOST:
-			AddPowerupTime (Type.BOOST, PlayerStats.BOOST_DURATION);
-			playerMovement.setBoostCooldown (PlayerStats.BOOST_POWERUP_COOLDOWN);
+			AddPowerupTime (Type.BOOST, stats.BOOST_DURATION);
+			playerMovement.setBoostCooldown (stats.BOOST_POWERUP_COOLDOWN);
 			break;
 		case Type.POWER:
-			RefreshPowerupTime (type, PlayerStats.POWER_DURATION);
-			playerMovement.setBoostPower (playerMovement.getBoostPower () + PlayerStats.POWER_DELTA);
+			RefreshPowerupTime (type, stats.POWER_DURATION);
+			playerMovement.setBoostPower (playerMovement.getBoostPower () + stats.POWER_DELTA);
 			break;
 		}
 	}

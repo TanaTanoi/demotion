@@ -11,6 +11,7 @@ namespace Item {
 public class PlayerItemController : MonoBehaviour {
 
     public GameObject throwableItem;
+	private PlayerStats stats;
 
     public ModelController playerAnimator;
     public Transform throwingHand;
@@ -26,6 +27,7 @@ public class PlayerItemController : MonoBehaviour {
     void Start() {
         playerMovement = GetComponentInParent<PlayerMovement>();
         particleController = GetComponentInChildren<PlayerParticleController>();
+		stats = playerMovement.stats;
     }
 
 	// Update is called once per frame
@@ -45,7 +47,7 @@ public class PlayerItemController : MonoBehaviour {
 		ItemController item = other.gameObject.GetComponent<ItemController>();
 		if ( item != null && chargeLeft <= 0) {
             currentItem = item.type;
-            chargeLeft = PlayerStats.TOTAL_ITEM_CHARGE;
+            chargeLeft = stats.TOTAL_ITEM_CHARGE;
             item.Pickup(gameObject);
 		}
 	}
@@ -56,12 +58,12 @@ public class PlayerItemController : MonoBehaviour {
             case Item.Type.THROWABLE:
                 IEnumerator c = ThrowItem();
                 StartCoroutine(c);
-                chargeLeft -= PlayerStats.TOTAL_ITEM_CHARGE / PlayerStats.THROW_USES;
+				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
             case Item.Type.SUPER_BOOST:
-                SetItemCooldown(PlayerStats.SUPER_BOOST_COOLDOWN);
-                playerMovement.Boost(PlayerStats.SUPER_BOOST_POWER);
-                chargeLeft -= PlayerStats.TOTAL_ITEM_CHARGE / PlayerStats.SUPER_BOOST_USES;
+				SetItemCooldown(stats.SUPER_BOOST_COOLDOWN);
+				playerMovement.Boost(stats.SUPER_BOOST_POWER);
+				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.SUPER_BOOST_USES;
                 break;
         }
     }
@@ -76,7 +78,7 @@ public class PlayerItemController : MonoBehaviour {
     }
 
     IEnumerator ThrowItem() {
-        SetItemCooldown(PlayerStats.THROW_COOLDOWN);
+		SetItemCooldown(stats.THROW_COOLDOWN);
 
         GameObject throwable = Instantiate(throwableItem);
         throwable.transform.parent = throwingHand;

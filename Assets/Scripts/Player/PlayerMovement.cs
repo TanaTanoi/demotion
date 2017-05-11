@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
+	public PlayerStats stats;
+	public InputType inputType = InputType.Keyboard;
 
 	private float boostCooldown;
     private float boostPower;
@@ -15,14 +17,13 @@ public class PlayerMovement : MonoBehaviour {
     private ModelController playerAnimator;
     private Rigidbody chairRigidbody;
 
-    public InputType inputType = InputType.Keyboard;
     private PlayerInput playerIn;
 
     // Use this for initialization
     void Start () {
-		boostCooldown = PlayerStats.DEFAULT_COOLDOWN;
-        boostPower = PlayerStats.DEFAULT_BOOST_POWER;
-        rotationSpeed = PlayerStats.DEFAULT_ROTATION_SPEED * 10;
+		boostCooldown = stats.DEFAULT_COOLDOWN;
+		boostPower = stats.DEFAULT_BOOST_POWER;
+		rotationSpeed = stats.DEFAULT_ROTATION_SPEED * 10;
 
         playerAnimator = GetComponentInChildren<ModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
