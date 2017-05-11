@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemSpawnPlatform : MonoBehaviour {
+    public ParticleSystem spawnEffect;
+
     private Vector3 spawnPosition;
     private GameObject currentItem;
-
+    
 	void Start () {
         spawnPosition = transform.GetChild(0).transform.position;
 	}
@@ -25,6 +27,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
     }
 
     private GameObject CreateItem(Item.Type type) {
+        spawnEffect.Play();
         switch(type) {
             case Item.Type.SUPER_BOOST:
                 // change once we have different models for them etc
