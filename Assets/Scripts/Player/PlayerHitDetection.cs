@@ -30,7 +30,7 @@ public class PlayerHitDetection : MonoBehaviour {
             //Play hit sound here
             Debug.Log("I got hit!");
             //gameControl.RemoveLife(GetComponentInParent<PlayerInput>().playerNumber);
-            GetComponentInChildren<Rigidbody>().AddRelativeForce(Vector3.up);
+            GetComponentInChildren<Rigidbody>().AddRelativeForce(new Vector3(0f, 200f, 0f));
             vulnerablility = Time.time + invulnerabilityDuration;
         }
     }
