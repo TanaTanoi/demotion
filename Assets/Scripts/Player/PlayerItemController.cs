@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Item {
-    public enum Type { THROWABLE, SUPER_BOOST }
+    // Count isn't an item type, it is simply used to track how many items there are
+    public enum Type { THROWABLE, SUPER_BOOST, Count }
 }
 
 public class PlayerItemController : MonoBehaviour {

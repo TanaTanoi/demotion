@@ -5,13 +5,14 @@ using Powerup;
 
 public class PlayerPowerupController : MonoBehaviour {
 
-	public PlayerMovement playerMovement;
+	private PlayerMovement playerMovement;
 	private PlayerParticleController particleController;
 
 	Dictionary<Powerup.Type, float> PowerupEndtimes = new Dictionary<Powerup.Type, float>();
 
     void Start() {
         particleController = GetComponentInChildren<PlayerParticleController>();
+        playerMovement = GetComponentInParent<PlayerMovement>();
     }
 
 	void Update () {
