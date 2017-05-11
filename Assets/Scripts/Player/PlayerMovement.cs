@@ -47,6 +47,9 @@ public class PlayerMovement : MonoBehaviour {
         float horizontalInput = Input.GetAxis(playerIn.horizontal);
         float verticalInput = Input.GetAxis(playerIn.vertical);
 
+        //gyroscope back to the correct orientation
+        transform.rotation = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+
         playerIn.turn(rotationSpeed, horizontalInput, verticalInput);
 
         //desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
