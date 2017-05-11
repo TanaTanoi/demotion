@@ -63,9 +63,11 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    /**
+     * Boosts the player forward!
+     */
     public void Boost(float power)
     {
-
         chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }
 
