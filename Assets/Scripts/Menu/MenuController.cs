@@ -19,7 +19,7 @@ public class MenuController : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetAxisRaw("Pause_KB") != 0)
+        if (Input.GetAxisRaw("Pause") != 0)
         {
             TogglePause();
         }
