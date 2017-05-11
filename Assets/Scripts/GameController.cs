@@ -21,6 +21,9 @@ public class GameController : MonoBehaviour {
 
     //private Dictionary<int, GameObject> playersDict; //reimple
 
+    private bool paused = true;
+    private MenuController menuControl;
+
     private void Awake()
     {
         // Don't kill me :(
@@ -30,14 +33,17 @@ public class GameController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //playersDict = new Dictionary<int, GameObject>(); // reimplement after playtesting day
-
+        menuControl = FindObjectOfType<MenuController>();
         RestartGame();
     }
 
     // Update is called once per frame
     void Update() {
         UpdateTime();
-        
+        if(Input.GetAxisRaw("Pause") != 0)
+        {
+            TogglePause();
+        }
     }
 
     /**
@@ -71,14 +77,34 @@ public class GameController : MonoBehaviour {
             PauseGame();
         }
     }
+
+    public void TogglePause()
+    {
+        paused = !paused;
+        if (paused)
+            PauseGame();
+        else
+            ResumeGame();
+    }
      
     /**
      * Pauses the game and opens the pause menu
      */
-    void PauseGame()
+    public void PauseGame()
     {
+        paused = true;
         Time.timeScale = 0;
         //FindObjectOfType<MenuController>().TogglePause();
+        // show the hud
+        menuControl.Pause();
+    }
+
+    public void ResumeGame()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        // Hide the hud
+        menuControl.Resume();
     }
 
     /**

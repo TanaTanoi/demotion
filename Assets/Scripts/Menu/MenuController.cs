@@ -17,14 +17,6 @@ public class MenuController : MonoBehaviour {
         SwitchMenu(selectedPanel);
     }
 
-    private void Update()
-    {
-        if (Input.GetAxisRaw("Pause") != 0)
-        {
-            TogglePause();
-        }
-    }
-
     private void OnApplicationFocus(bool focus)
     {
         isPaused = !focus;
@@ -36,12 +28,16 @@ public class MenuController : MonoBehaviour {
     }
 
     /**
-     * Re
+     * Bring up the pause menu
      */
-    public void TogglePause()
+    public void Pause()
     {
-        isPaused = !isPaused;
         SwitchMenu(this.transform.FindChild("Pause_Panel").gameObject);
+    }
+
+    public void Resume()
+    {
+        SwitchMenu(this.transform.FindChild("HUD").gameObject);
     }
 
     /**
