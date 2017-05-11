@@ -8,10 +8,9 @@ public class PlayerMovement : MonoBehaviour {
 	private float boostCooldown;
     private float boostPower;
     private float rotationSpeed;
-    
+    private float deadZone = 0.25f;
+
 	private float nextBoostTime = 0.0f;
-    private Vector3 aimDirection = Vector3.forward;
-    private Vector3 desiredDirection;
 
     private ModelController playerAnimator;
     private Rigidbody chairRigidbody;
@@ -27,7 +26,7 @@ public class PlayerMovement : MonoBehaviour {
 
         playerAnimator = GetComponentInChildren<ModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
-        chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D 
+        chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
         switch(inputType)
         {
             case InputType.Controller:
@@ -51,7 +50,7 @@ public class PlayerMovement : MonoBehaviour {
         playerIn.turn(rotationSpeed, horizontalInput, verticalInput);
 
         //desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
-        if (Input.GetAxisRaw(playerIn.boost) != 0)
+        if (Input.GetAxisRaw(playerIn.boost) > deadZone)
         {
             if (nextBoostTime <= Time.time)
             {
@@ -63,7 +62,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void Boost(float power)
     {
-        playerAnimator.Push();
+
         chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }
 
@@ -86,12 +85,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void setBoostPower(float power) {
 		boostPower = power;
-	}
-
-	void RotateController()
-    {
-		aimDirection = Vector3.RotateTowards (aimDirection, desiredDirection, rotationSpeed, 0f);
-		transform.rotation = Quaternion.LookRotation (aimDirection, new Vector3 (0, 1, 0));
 	}
 
 }

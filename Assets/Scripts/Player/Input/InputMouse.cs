@@ -7,12 +7,9 @@ public class InputMouse : PlayerInput {
     public int floorMask;
     public float camRayLength = 100f;
 
-    private Rigidbody playerRigidbody;
-
     private void Start()
     {
         floorMask = LayerMask.GetMask("Floor");
-        playerRigidbody = GetComponent<Rigidbody>();
 
         horizontal = "Horizontal_MS";
         vertical = "Vertical_MS";
