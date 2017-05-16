@@ -20,8 +20,14 @@ public class PlayerParticleController : MonoBehaviour {
 		case Powerup.Type.POWER:
 			pSystem = powerPSystem;
 			break;
+		case Powerup.Type.STICKY:
+			pSystem = null;
+			break;
 		}
-
+		if (pSystem == null) {
+			return;
+		}
+			
 		if (setEnabled) {
 			pSystem.Play();
 		} else {
@@ -32,6 +38,7 @@ public class PlayerParticleController : MonoBehaviour {
     public void playItemParticleSystem(Item.Type type) {
         switch (type) {
             case Item.Type.THROWABLE:
+				// no particle system
                 break;
             case Item.Type.SUPER_BOOST:
                 superboostPSystem.Play();

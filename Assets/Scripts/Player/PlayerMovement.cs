@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour {
     void Start () {
 		boostCooldown = stats.DEFAULT_COOLDOWN;
 		boostPower = stats.DEFAULT_BOOST_POWER;
-		rotationSpeed = stats.DEFAULT_ROTATION_SPEED * 10;
+		rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
 
         playerAnimator = GetComponentInChildren<ModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour {
                 playerIn = gameObject.AddComponent <InputMouse>() as InputMouse;
                 break;
         }
+		Debug.Log (playerIn);
     }
 
     // Update is called once per frame
@@ -75,6 +76,12 @@ public class PlayerMovement : MonoBehaviour {
     public PlayerInput GetPlayerInput() {
         return playerIn;
     }
+
+	public void SetRotationSpeed(float rotationSpeed)
+	{
+		this.rotationSpeed = rotationSpeed;
+	}
+
 
     public float getBoostCooldown()
     {
