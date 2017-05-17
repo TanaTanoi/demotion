@@ -37,7 +37,7 @@ public class PlayerParticleController : MonoBehaviour {
 
     public void playItemParticleSystem(Item.Type type) {
         switch (type) {
-            case Item.Type.THROWABLE:
+            case Item.Type.STICKY_THROWABLE:
 				// no particle system
                 break;
             case Item.Type.SUPER_BOOST:

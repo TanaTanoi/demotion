@@ -40,7 +40,6 @@ public class PlayerMovement : MonoBehaviour {
                 playerIn = gameObject.AddComponent <InputMouse>() as InputMouse;
                 break;
         }
-		Debug.Log (playerIn);
     }
 
     // Update is called once per frame

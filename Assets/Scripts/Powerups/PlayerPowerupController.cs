@@ -63,6 +63,9 @@ public class PlayerPowerupController : MonoBehaviour {
 		case Type.STICKY:
 			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			break;
+		case Type.BANANA:
+			playerMovement.GetComponent<Rigidbody> ().angularDrag = 10;
+			break;
 		}
 	}
 
@@ -84,6 +87,13 @@ public class PlayerPowerupController : MonoBehaviour {
 		case Type.STICKY:
 			AddPowerupTime (Type.STICKY, stats.STICKY_DURATION);
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
+			break;
+		case Type.BANANA:
+			AddPowerupTime (Type.BANANA, 3);
+			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
+			rb.angularDrag = 0;
+			rb.AddRelativeTorque (Vector3.up * 1000);
+			// TODO add spin. Rigidbody 
 			break;
 		}
 	}
@@ -107,5 +117,5 @@ namespace Powerup {
 	// The enum is declared here (as opposed to PowerupController)
 	// Because it is used more often here
     // (Count is not a powerup, simply used to define the number of item there are (e.g. PowerupPowerup.Type.Count))
-	public enum Type { BOOST, POWER, STICKY, Count };
+	public enum Type { BOOST, POWER, STICKY, BANANA, Count };
 }
