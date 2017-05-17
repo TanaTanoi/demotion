@@ -19,6 +19,8 @@ public class PlayerHitDetection : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+		Debug.Log("The player hit something");
+		Debug.Log (this.gameObject);
         // Do nothing if not hit with a lance or is still invulnerable
         if (!collision.collider.CompareTag("Lance")) return;
         if (Time.time < vulnerablility) return;
