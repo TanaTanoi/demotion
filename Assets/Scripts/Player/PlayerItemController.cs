@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Item {
     // Count isn't an item type, it is simply used to track how many items there are
-    public enum Type { THROWABLE, SUPER_BOOST, Count }
+    public enum Type { STICKY_THROWABLE, SUPER_BOOST, Count }
 }
 
 public class PlayerItemController : MonoBehaviour {
@@ -55,8 +55,10 @@ public class PlayerItemController : MonoBehaviour {
     void ActivatePowerup() {
         particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
-            case Item.Type.THROWABLE:
-                IEnumerator c = ThrowItem();
+		case Item.Type.STICKY_THROWABLE:
+			GameObject throwable = Instantiate (throwableItem);
+			throwable.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
+				IEnumerator c = ThrowItem(throwable);
                 StartCoroutine(c);
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
@@ -77,10 +79,11 @@ public class PlayerItemController : MonoBehaviour {
         nextUsableTime = Time.time + cooldown;
     }
 
-    IEnumerator ThrowItem() {
+	// Throws the given item (assumes it is instanciated)
+	IEnumerator ThrowItem(GameObject throwable) {
 		SetItemCooldown(stats.THROW_COOLDOWN);
 
-        GameObject throwable = Instantiate(throwableItem);
+
         throwable.transform.parent = throwingHand;
         throwable.transform.localPosition = Vector3.zero;
         throwable.GetComponent<Rigidbody>().isKinematic = true;
