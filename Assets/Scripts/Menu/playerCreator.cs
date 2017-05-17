@@ -12,20 +12,20 @@ public class playerCreator : MonoBehaviour {
 
 
 	void Start () {
-	Ins	
+
 	}
 	void FixedUpdate () {
 
 	}
 
-	public GameObject InstantiatePlayer(Vector3 Pos, InputType Input, int Customization){
-		this.Pos = Pos;
-		this.Input = Input;
-		this.Customization = Customization;
-		CurrentPrefab = Instantiate(Prefab,Pos);	
-		return CurrentPrefab;
+	//public GameObject InstantiatePlayer(Vector3 Pos, InputType Input, int Customization){
+		//this.Pos = Pos;
+		//this.Input = Input;
+		//this.Customization = Customization;
+		//CurrentPrefab = Instantiate(Prefab,Pos);	
+		//return CurrentPrefab;
 
 
 
-	}
+	//}
 }
