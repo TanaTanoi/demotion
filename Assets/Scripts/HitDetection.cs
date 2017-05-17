@@ -21,4 +21,10 @@ public class HitDetection : MonoBehaviour {
 			Destroy (collision.gameObject);
 		}
 	}
+
+	void OnTriggerEnter(Collider other){
+		if (other.gameObject.tag == "Player") {
+			Destroy (other.gameObject.GetComponent("Character"));
+		}
+	}
 }
