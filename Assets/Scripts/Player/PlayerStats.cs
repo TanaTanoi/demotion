@@ -6,7 +6,7 @@ using System.Collections;
 public class PlayerStats : ScriptableObject {
     // Player stats
     public float DEFAULT_BOOST_POWER = 450;
-	public float DEFAULT_ROTATION_SPEED = 0.5f;
+	public float DEFAULT_ROTATION_SPEED = 5f;
 	public float DEFAULT_COOLDOWN = 0.7f;
 
     // Powerup stats
@@ -27,4 +27,7 @@ public class PlayerStats : ScriptableObject {
 
     public float THROW_USES = 5;
     public float THROW_COOLDOWN = 0.6f;
+
+	public float STICKY_DURATION = 3.0f;
+	public float STICKY_POWERDOWN_ROTATION_SPEED = 2f;
 }
