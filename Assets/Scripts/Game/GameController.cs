@@ -50,7 +50,7 @@ public class GameController : MonoBehaviour {
 	void Start() {
 		// Call the player factory to create player 1
 		//GameObject player1 = PlayerCreator.InstanciatePlayer(Vector3.zero, InputType.Keyboard, 0);
-		playersDict.Add(1, player1);
+		//playersDict.Add(1, player1);
 
 	}
 
