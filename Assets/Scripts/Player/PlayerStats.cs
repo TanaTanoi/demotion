@@ -5,7 +5,7 @@ using System.Collections;
 [CreateAssetMenu(fileName = "Data", menuName = "Player/Stats", order = 1)]
 public class PlayerStats : ScriptableObject {
     // Player stats
-    public float DEFAULT_BOOST_POWER = 450;
+    public float DEFAULT_BOOST_POWER = 900000000000000000;
 	public float DEFAULT_ROTATION_SPEED = 5f;
 	public float DEFAULT_COOLDOWN = 0.7f;
 

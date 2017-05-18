@@ -22,7 +22,8 @@ public class PlayerMovement : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		boostCooldown = stats.DEFAULT_COOLDOWN;
-		boostPower = stats.DEFAULT_BOOST_POWER;
+		//boostPower = stats.DEFAULT_BOOST_POWER;
+		boostPower = 2000;
 		rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
 
         playerAnimator = GetComponentInChildren<ModelController>();
@@ -69,7 +70,8 @@ public class PlayerMovement : MonoBehaviour {
      */
     public void Boost(float power)
     {
-        chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
+		Debug.Log (power);
+		chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }
 
     public PlayerInput GetPlayerInput() {
