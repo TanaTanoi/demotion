@@ -1,24 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PlayerCreator : MonoBehaviour {
 	public GameObject Prefab;
 	//private GameObject CurrentPrefab;
+
     private PlayerMovement playerMovement;
-    //public InputType chooseInput = InputType.Keyboard;
- 
+    public int PlayerCust = 1;
 
-	void Start () {
-        //InstantiatePlayer(gameObject.transform,chooseInput);
-	}
 
-	public GameObject CreatePlayer(Transform spawnPosition, InputType input/*, int Customization*/){
+	public GameObject CreatePlayer(Transform Pos ,InputType Input, int Customization){
+
+        string matPath = "Assets/Materials&Textures/Player/player"+Customization+".mat";
+        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
 
         GameObject CurrentPrefab = Instantiate(Prefab, spawnPosition);
 
-        CurrentPrefab.GetComponentInChildren<PlayerMovement>().setInput(input);
+        CurrentPrefab.GetComponentInChildren<PlayerMovement>().setInput(Input);
+        CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 
-		return CurrentPrefab;
+
+        return CurrentPrefab;
 	}
 }
