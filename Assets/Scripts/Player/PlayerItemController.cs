@@ -13,7 +13,7 @@ public class PlayerItemController : MonoBehaviour {
     public GameObject throwableItem;
 	private PlayerStats stats;
 
-    public ModelController playerAnimator;
+	public ModelController playerAnimator;
     public Transform throwingHand;
 
     private Item.Type currentItem;

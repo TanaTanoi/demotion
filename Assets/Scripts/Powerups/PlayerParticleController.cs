@@ -7,7 +7,12 @@ public class PlayerParticleController : MonoBehaviour {
 	public ParticleSystem boostPSystem;
 	public ParticleSystem powerPSystem;
 
-    public ParticleSystem superboostPSystem;
+	private TrailRenderer trails;
+
+	void Start(){
+		trails = GetComponent<TrailRenderer> ();
+	}
+		
 
 	// Enable or disable a particle system for a particular powerup
 	public void setPowerupParticleSystemEnabled(Powerup.Type type, bool setEnabled) {
@@ -40,8 +45,10 @@ public class PlayerParticleController : MonoBehaviour {
             case Item.Type.STICKY_THROWABLE:
 				// no particle system
                 break;
-            case Item.Type.SUPER_BOOST:
-                superboostPSystem.Play();
+		case Item.Type.SUPER_BOOST:
+			trails.enabled = true;
+			new WaitForSeconds (3f);
+			trails.enabled = false;
                 break;
         }
 
