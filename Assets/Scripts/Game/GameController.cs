@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour {
 
-	public enum GameMode { DEATHMATCH, SCORE }
+public class GameController : MonoBehaviour {
 
 	// Singleton GameController
 	public static GameController instance = null;
 
-    // PLAYER SETTINGS
+    /*== PLAYER SETTINGS ==*/
 	// Dictionary between the player number and the player object.
 	private Dictionary<int, GameObject> playersDict;
 	// Empty game object holding the possible spawn points for other players
@@ -21,11 +20,16 @@ public class GameController : MonoBehaviour {
     private bool paused = true;
 	private bool playing = false;
 
-	// MENU settings
+	/*== MENU settings ==*/
+
 	// MenuController handles all the UI elements
     private MenuController menuControl;
 	// List of HUD elements where the players' lives are shown. // Change this to not drag and drop?
 	public GameObject[] playersHUD = new GameObject[4];
+
+
+    // REMOVE ME!!
+    public GameObject prefabToSpawn; // This will be replaced with the return from the PlayerCreator
 
 
 	// Round Settings
@@ -33,7 +37,7 @@ public class GameController : MonoBehaviour {
 	private static GameMode mode;
 	public Text timerText;
 
-
+    /*=== Initialisation ===*/
     private void Awake()
     {
 		// GameController is a singleton therefore we need to ensure there is only one
@@ -48,14 +52,21 @@ public class GameController : MonoBehaviour {
     }
 
 	void Start() {
-		// Call the player factory to create player 1
-		//GameObject player1 = PlayerCreator.InstanciatePlayer(Vector3.zero, InputType.Keyboard, 0);
-		//playersDict.Add(1, player1);
+        InitialiseControls();
 
 	}
 
+    /**
+     * Gets the number of input controllers connected
+     */
+    void InitialiseControls()
+    {
+        string[] controllers = Input.GetJoystickNames();
+
+    }
+
 	/**
-	 * The start of a new Round
+	 * The start of a new round
 	 */
 	void StartGame(GameMode gameMode) {
 		mode = gameMode;
@@ -70,9 +81,13 @@ public class GameController : MonoBehaviour {
 				TogglePause ();
 			}
 		}
-    }
 
+        
+    }
+    /*=== End Initialisation ===*/
     
+
+    /*=== Game Logic ===*/
 
     public void TogglePause()
     {
@@ -104,9 +119,9 @@ public class GameController : MonoBehaviour {
     }
 
     /**
-     * Restarts the game, resetting the time, players, lives, etc
+     * Creates a new game from the game settings
      */
-    public void RestartGame()
+    public void NewGame()
     {
 //        // Pause the game
 //        PauseGame();
@@ -115,6 +130,8 @@ public class GameController : MonoBehaviour {
 //        {
 //            playersHUD[i].SetActive(true);
 //        }
+
+        // Spawn all the players
     }
 
 	/**
@@ -139,19 +156,12 @@ public class GameController : MonoBehaviour {
 
 	}
 
-	/**
-	 * Sets the Game mode
-	 */
-	public void SetGameMode(GameMode gameMode) {
-		mode = gameMode;
-	}
+    /**
+     * Increases the score of the given player
+     */
+    public void IncreaseScore(int playerNumber)
+    {
 
-	/**
-	 * Sets the duration of the round
-	 */
-	public void SetRoundDuration(int duration) {
-		roundDuration = duration;
-	}
-
-    
+    }
+    /*=== End Game Logic ===*/
 }
