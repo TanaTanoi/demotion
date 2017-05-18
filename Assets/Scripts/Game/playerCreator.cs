@@ -6,12 +6,13 @@ public class playerCreator : MonoBehaviour {
 	public GameObject Prefab;
 	//private GameObject CurrentPrefab;
     private PlayerMovement playerMovement;
+    public InputType chooseInput = InputType.Keyboard;
  
 
 
 
 	void Start () {
-        InstantiatePlayer(gameObject.transform,InputType.Keyboard);
+        InstantiatePlayer(gameObject.transform,chooseInput);
 	}
 	void FixedUpdate () {
 
