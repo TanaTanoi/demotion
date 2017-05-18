@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public PlayerStats stats;
-	public InputType inputType = InputType.Keyboard;
+    public PlayerStats stats;
+    public InputType inputType = InputType.Mouse;
 
-	private float boostCooldown;
+    private float boostCooldown;
     private float boostPower;
     private float rotationSpeed;
     private float deadZone = 0.25f;
 
-	private float nextBoostTime = 0.0f;
+    private float nextBoostTime = 0.0f;
 
     private ModelController playerAnimator;
     private Rigidbody chairRigidbody;
@@ -20,26 +20,15 @@ public class PlayerMovement : MonoBehaviour {
     private PlayerInput playerIn;
 
     // Use this for initialization
-    void Start () {
-		boostCooldown = stats.DEFAULT_COOLDOWN;
-		boostPower = stats.DEFAULT_BOOST_POWER;
-		rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
+    void Start() {
+        boostCooldown = stats.DEFAULT_COOLDOWN;
+        boostPower = stats.DEFAULT_BOOST_POWER;
+        rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
 
         playerAnimator = GetComponentInChildren<ModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
-        switch(inputType)
-        {
-            case InputType.Controller:
-                playerIn = gameObject.AddComponent<InputController>() as InputController;
-                break;
-            case InputType.Keyboard:
-                playerIn = gameObject.AddComponent <InputKeyboard>() as InputKeyboard;
-                break;
-            case InputType.Mouse:
-                playerIn = gameObject.AddComponent <InputMouse>() as InputMouse;
-                break;
-        }
+        //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change
     }
 
     // Update is called once per frame
@@ -62,8 +51,23 @@ public class PlayerMovement : MonoBehaviour {
                 nextBoostTime = Time.time + boostCooldown;
             }
         }
+
     }
 
+    public void setInput(InputType inputCurrent){       
+        switch (inputCurrent)
+        {
+            case InputType.Controller:
+                playerIn = gameObject.AddComponent<InputController>() as InputController;
+                break;
+            case InputType.Keyboard:
+                playerIn = gameObject.AddComponent<InputKeyboard>() as InputKeyboard;
+                break;
+            case InputType.Mouse:
+                playerIn = gameObject.AddComponent<InputMouse>() as InputMouse;
+                break;
+        }
+    }
     /**
      * Boosts the player forward!
      */
