@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+    public enum GameMode { DEATHMATCH, HIGHSCORE };
+
 	// Singleton GameController
 	public static GameController instance = null;
 
@@ -15,27 +17,25 @@ public class GameController : MonoBehaviour {
 	private Dictionary<int, GameObject> playersDict;
 	// Empty game object holding the possible spawn points for other players
 	public Transform spawnPoints;
+    private PlayerCreator playerCreator;
 
-	// Game status
+	/*== GAME STATUS ==*/
     private bool paused = true;
 	private bool playing = false;
 
-	/*== MENU settings ==*/
-
+	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
     private MenuController menuControl;
-	// List of HUD elements where the players' lives are shown. // Change this to not drag and drop?
-	public GameObject[] playersHUD = new GameObject[4];
+    public Text timerText;
+	// Access the player hud elements here from a child object of something
+    // also get the textbox for the timer here
 
-
-    // REMOVE ME!!
-    public GameObject prefabToSpawn; // This will be replaced with the return from the PlayerCreator
-
-
-	// Round Settings
-	private float roundDuration;
-	private static GameMode mode;
-	public Text timerText;
+	/*== ROUND SETTINGS ==*/
+	private GameMode mode;
+    private float roundDuration;
+    private int maxLives;
+    private int maxScore;
+    
 
     /*=== Initialisation ===*/
     private void Awake()
@@ -46,14 +46,15 @@ public class GameController : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
-
+        
         // Don't kill me :(
         DontDestroyOnLoad(gameObject);
     }
 
 	void Start() {
+        playerCreator = GetComponent<PlayerCreator>();
         InitialiseControls();
-
+        
 	}
 
     /**
@@ -62,14 +63,14 @@ public class GameController : MonoBehaviour {
     void InitialiseControls()
     {
         string[] controllers = Input.GetJoystickNames();
-
+        playerCreator.CreatePlayer(spawnPoints.GetChild(0), InputType.Keyboard);
     }
 
 	/**
 	 * The start of a new round
 	 */
-	void StartGame(GameMode gameMode) {
-		mode = gameMode;
+	void StartGame() {
+
 
 	}
 
@@ -148,18 +149,37 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+    /**
+     * Called from a player when they hit another player.
+     * Will lose lives or increase score depending on the game mode.
+     */
+    public void OnHit(int hitter, int hitee)
+    {
+        switch(mode)
+        {
+            case GameMode.DEATHMATCH:
+                LoseLife(hitee);
+                break;
+            case GameMode.HIGHSCORE:
+                break;
+        }
+    }
+
 	/**
      * Reduces the lives remaining of the given player
      */
-	public void LoseLife(int playerNumber)
+	private void LoseLife(int playerNumber)
 	{
+        GameObject player;
+        playersDict.TryGetValue(playerNumber, out player);
+        
 
 	}
 
     /**
      * Increases the score of the given player
      */
-    public void IncreaseScore(int playerNumber)
+    private void IncreaseScore(int playerNumber)
     {
 
     }

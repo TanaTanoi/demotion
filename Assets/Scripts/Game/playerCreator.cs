@@ -2,31 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playerCreator : MonoBehaviour {
+public class PlayerCreator : MonoBehaviour {
 	public GameObject Prefab;
 	//private GameObject CurrentPrefab;
     private PlayerMovement playerMovement;
-    public InputType chooseInput = InputType.Keyboard;
+    //public InputType chooseInput = InputType.Keyboard;
  
 
-
-
 	void Start () {
-        InstantiatePlayer(gameObject.transform,chooseInput);
-	}
-	void FixedUpdate () {
-
+        //InstantiatePlayer(gameObject.transform,chooseInput);
 	}
 
-	public GameObject InstantiatePlayer(Transform Pos ,InputType Input/*, int Customization*/){
+	public GameObject CreatePlayer(Transform spawnPosition, InputType input/*, int Customization*/){
 
-        GameObject CurrentPrefab = Instantiate(Prefab, Pos);
+        GameObject CurrentPrefab = Instantiate(Prefab, spawnPosition);
 
-        CurrentPrefab.GetComponentInChildren<PlayerMovement>().setInput(Input);
+        CurrentPrefab.GetComponentInChildren<PlayerMovement>().setInput(input);
 
 		return CurrentPrefab;
-
-
-
 	}
 }
