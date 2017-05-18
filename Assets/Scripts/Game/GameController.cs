@@ -63,7 +63,7 @@ public class GameController : MonoBehaviour {
     void InitialiseControls()
     {
         string[] controllers = Input.GetJoystickNames();
-        playerCreator.CreatePlayer(spawnPoints.GetChild(0), InputType.Keyboard);
+        playerCreator.CreatePlayer(spawnPoints.GetChild(0), InputType.Keyboard,1);
     }
 
 	/**
