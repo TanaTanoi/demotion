@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour {
         playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length + 2), 2, 4);
         for(int i = 0; i < playerCount; i++)
         {
-            playerCreator.CreatePlayer(spawnPoints.GetChild(i), InputType.Controller, 1);
+            playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, InputType.Controller, 1);
         }
     }
 

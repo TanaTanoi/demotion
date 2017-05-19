@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemSpawnPlatform : MonoBehaviour {
-    public ParticleSystem spawnEffect;
-
+    private ParticleSystem spawnEffect;
     private Vector3 spawnPosition;
     private GameObject currentItem;
     
 	void Start () {
         spawnPosition = transform.GetChild(0).transform.position;
+        spawnEffect = GetComponentInChildren<ParticleSystem>();
 	}
 
     public bool HasItem() {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PoweurpSpawner : MonoBehaviour {
+public class PowerupSpawner : MonoBehaviour {
     Bounds bounds;
     public AnimationCurve powerupFrequency;
     [Tooltip ("Time before max spawn frequency reached")]
@@ -14,6 +14,11 @@ public class PoweurpSpawner : MonoBehaviour {
     public float startingDelay = 10.1f;
     [Tooltip ("Delay before the first powerup")]
     public float delayBeforeFirstPowerup = 0f;
+
+    private Powerup.Type[] buffs = new Powerup.Type[] {
+        Powerup.Type.BOOST,
+        Powerup.Type.POWER
+    };
 
     private float startTime; // The time the spawning started
     void Start () {
@@ -43,7 +48,7 @@ public class PoweurpSpawner : MonoBehaviour {
     }
 
     private Powerup.Type RandomPowerupType() {
-        return (Powerup.Type) Random.Range(0, (int)Powerup.Type.Count);
+        return buffs[Random.Range(0, buffs.Length)];
     }
 
 

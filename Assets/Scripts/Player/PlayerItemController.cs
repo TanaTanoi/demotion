@@ -13,7 +13,7 @@ public class PlayerItemController : MonoBehaviour {
     public GameObject throwableItem;
 	private PlayerStats stats;
 
-	public ModelController playerAnimator;
+	public PlayerModelController playerAnimator;
     public Transform throwingHand;
 
     private Item.Type currentItem;
@@ -89,17 +89,17 @@ public class PlayerItemController : MonoBehaviour {
 	// Throws the given item (assumes it is instanciated)
 	IEnumerator ThrowItem(GameObject throwable) {
 		SetItemCooldown(stats.THROW_COOLDOWN);
-
-
         throwable.transform.parent = throwingHand;
         throwable.transform.localPosition = Vector3.zero;
+        throwable.transform.position = transform.position + transform.forward * 1f; // TODO remove once thrown from hand
         throwable.GetComponent<Rigidbody>().isKinematic = true;
         throwable.GetComponent<SphereCollider>().enabled = false;
         playerAnimator.Throw();
         yield return new WaitForSeconds(0.5f);
         throwable.GetComponent<Rigidbody>().isKinematic = false;
-        throwable.GetComponent<SphereCollider>().enabled = true;
         throwable.transform.SetParent(null);
         throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
+        yield return new WaitForSeconds(0.2f);
+        throwable.GetComponent<SphereCollider>().enabled = true;
     }
 }
