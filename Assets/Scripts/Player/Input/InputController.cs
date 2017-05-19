@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InputController : PlayerInput {
+    private static int nextID;
+    private int id;
+
+    public InputController()
+    {
+        id = nextID++;
+    }
 
     private void Start()
     {
-        horizontal = "Horizontal_C1"; // Want to add player number, however the input is determined by the joystick number not the player  number
-        vertical = "Vertical_C1";
-        boost = "Boost_C1";
-        activate = "Activate_C1";
+        horizontal = string.Format("Horizontal_C%d", id);
+        vertical = string.Format("Vertical_C%d", id);
+        boost = string.Format("Boost_C%d", id);
+        activate = string.Format("Activate_C%d", id);
     }
 
     public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)

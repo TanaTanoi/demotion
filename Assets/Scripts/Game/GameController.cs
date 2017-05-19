@@ -15,8 +15,9 @@ public class GameController : MonoBehaviour {
     /*== PLAYER SETTINGS ==*/
 	// Dictionary between the player number and the player object.
 	private Dictionary<int, GameObject> playersDict;
-	// Empty game object holding the possible spawn points for other players
-	public Transform spawnPoints;
+    private int playerCount;
+    // Empty game object holding the possible spawn points for other players
+    public Transform spawnPoints;
     private PlayerCreator playerCreator;
 
 	/*== GAME STATUS ==*/
@@ -32,7 +33,7 @@ public class GameController : MonoBehaviour {
 
 	/*== ROUND SETTINGS ==*/
 	private GameMode mode;
-    private float roundDuration = 999999;
+    private float roundDuration = 999999; // Dont forget to change me ======
     private int maxLives;
     private int maxScore;
     
@@ -54,17 +55,19 @@ public class GameController : MonoBehaviour {
 	void Start() {
         menuControl = FindObjectOfType<MenuController>();
         playerCreator = GetComponent<PlayerCreator>();
-        InitialiseControls();
+        InitialiseControllers();
         ResumeGame();
 	}
 
     /**
      * Gets the number of input controllers connected
      */
-    void InitialiseControls()
+    void InitialiseControllers()
     {
-        string[] controllers = Input.GetJoystickNames();
-        playerCreator.CreatePlayer(spawnPoints.GetChild(0), InputType.Keyboard,1);
+        // Get the number of possible players between 2 and 4.
+        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length), 2, 4);
+        // Set the controllers for each player to the appropriate thingymagig
+        playerCreator.CreatePlayer(spawnPoints.GetChild(0), new InputController(), 1);
     }
 
 	/**
