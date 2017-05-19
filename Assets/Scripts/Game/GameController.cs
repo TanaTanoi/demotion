@@ -52,9 +52,12 @@ public class GameController : MonoBehaviour {
     }
 
 	void Start() {
-        playerCreator = GetComponent<PlayerCreator>();
-        InitialiseControls();
         
+        playerCreator = GetComponent<PlayerCreator>();
+        if (playing)
+        {
+            InitialiseControls();
+        }
 	}
 
     /**
