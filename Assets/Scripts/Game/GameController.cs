@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour {
 
 	/*== GAME STATUS ==*/
     private bool paused = true;
-	private bool playing = true;
+	public bool playing = true; // debugging, should be private
 
 	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
@@ -52,12 +52,9 @@ public class GameController : MonoBehaviour {
     }
 
 	void Start() {
-        
+        menuControl = FindObjectOfType<MenuController>();
         playerCreator = GetComponent<PlayerCreator>();
-        if (playing)
-        {
-            InitialiseControls();
-        }
+        
 	}
 
     /**
@@ -95,11 +92,15 @@ public class GameController : MonoBehaviour {
 
     public void TogglePause()
     {
-        paused = !paused;
-        if (paused)
-            PauseGame();
-        else
-            ResumeGame();
+        // Can only pause the game if we are playing
+        if (playing)
+        {
+            paused = !paused;
+            if (paused)
+                PauseGame();
+            else
+                ResumeGame();
+        }
     }
      
     /**

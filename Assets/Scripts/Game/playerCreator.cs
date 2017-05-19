@@ -10,19 +10,14 @@ public class PlayerCreator : MonoBehaviour {
     private PlayerMovement PlayerMovement;
     public InputType ChooseInput = InputType.Keyboard;
     public int PlayerCust = 1;
-
-
-
-
+    private int playerCount;
 
     void Start()
     {
-        //CreatePlayer(gameObject.transform, ChooseInput, PlayerCust);
+        // Get the number of possible players between 2 and 4.
+        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length), 2, 4);
     }
-    void FixedUpdate()
-    {
 
-    }
 
     public GameObject CreatePlayer(Transform Pos, InputType Input, int Customization)
     {
@@ -37,8 +32,10 @@ public class PlayerCreator : MonoBehaviour {
 
 
         return CurrentPrefab;
+    }
 
-
-
+    public int GetPlayerCount()
+    {
+        return playerCount;
     }
 }

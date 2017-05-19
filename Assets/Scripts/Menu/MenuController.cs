@@ -32,12 +32,12 @@ public class MenuController : MonoBehaviour {
      */
     public void Pause()
     {
-        SwitchMenu(this.transform.FindChild("Pause_Panel").gameObject);
+        SwitchMenu(this.transform.Find("Pause_Panel").gameObject);
     }
 
     public void Resume()
     {
-        SwitchMenu(this.transform.FindChild("HUD").gameObject);
+        SwitchMenu(this.transform.Find("HUD").gameObject);
     }
 
     /**
