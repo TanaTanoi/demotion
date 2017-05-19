@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour {
 
 	/*== GAME STATUS ==*/
     private bool paused = true;
-	private bool playing = false;
+	private bool playing = true;
 
 	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
