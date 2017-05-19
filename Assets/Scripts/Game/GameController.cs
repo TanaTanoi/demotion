@@ -20,19 +20,19 @@ public class GameController : MonoBehaviour {
     private PlayerCreator playerCreator;
 
 	/*== GAME STATUS ==*/
-    private bool paused = true;
+    private bool paused = false;
 	public bool playing = true; // debugging, should be private
 
 	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
     private MenuController menuControl;
-    public Text timerText;
+    private Text timerText;
 	// Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
 
 	/*== ROUND SETTINGS ==*/
 	private GameMode mode;
-    private float roundDuration;
+    private float roundDuration = 999999;
     private int maxLives;
     private int maxScore;
     
@@ -54,7 +54,8 @@ public class GameController : MonoBehaviour {
 	void Start() {
         menuControl = FindObjectOfType<MenuController>();
         playerCreator = GetComponent<PlayerCreator>();
-        
+        InitialiseControls();
+        ResumeGame();
 	}
 
     /**
@@ -92,15 +93,10 @@ public class GameController : MonoBehaviour {
 
     public void TogglePause()
     {
-        // Can only pause the game if we are playing
-        if (playing)
-        {
-            paused = !paused;
-            if (paused)
-                PauseGame();
-            else
-                ResumeGame();
-        }
+        if (!paused)
+            PauseGame();
+        else
+            ResumeGame();
     }
      
     /**
@@ -145,7 +141,7 @@ public class GameController : MonoBehaviour {
 	void UpdateTime()
 	{
 		roundDuration -= Time.deltaTime;
-		timerText.text = "Time: " + (int)roundDuration;
+		//timerText.text = "Time: " + (int)roundDuration;
 
 		if (roundDuration <= 0)
 		{
