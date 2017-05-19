@@ -6,17 +6,13 @@ public class InputController : PlayerInput {
     private static int nextID;
     private int id;
 
-    public InputController()
-    {
-        id = nextID++;
-    }
-
     private void Start()
     {
-        horizontal = string.Format("Horizontal_C%d", id);
-        vertical = string.Format("Vertical_C%d", id);
-        boost = string.Format("Boost_C%d", id);
-        activate = string.Format("Activate_C%d", id);
+        id = ++nextID;
+        horizontal = string.Format("Horizontal_C{0}", id);
+        vertical = string.Format("Vertical_C{0}", id);
+        boost = string.Format("Boost_C{0}", id);
+        activate = string.Format("Activate_C{0}", id);
     }
 
     public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)

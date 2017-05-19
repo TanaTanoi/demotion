@@ -57,8 +57,19 @@ public class PlayerMovement : MonoBehaviour {
     /**
      * Sets the player's input type to the input provided
      */
-    public void SetInput(PlayerInput input){
-        playerIn = input;
+    public void SetInput(InputType input){
+        switch(input)
+        {
+            case InputType.Keyboard:
+                playerIn = gameObject.AddComponent<InputKeyboard>() as InputKeyboard;
+                break;
+            case InputType.Mouse:
+                playerIn = gameObject.AddComponent<InputMouse>() as InputMouse;
+                break;
+            case InputType.Controller:
+                playerIn = gameObject.AddComponent<InputController>() as InputController;
+                break;
+        }
     }
 
 	// Spins the player some amount

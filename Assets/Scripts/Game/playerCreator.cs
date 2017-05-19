@@ -9,29 +9,16 @@ public class PlayerCreator : MonoBehaviour {
     //private GameObject CurrentPrefab;
     private PlayerMovement PlayerMovement;
     public InputType chooseInput = InputType.Keyboard;
-    private PlayerInput pInput;
     public int PlayerCust = 1;
-
+    
 
     void Start()
     {
-        // This should only be done for debugging
-        switch(chooseInput)
-        {
-            case InputType.Keyboard:
-                pInput = new InputKeyboard();
-                break;
-            case InputType.Mouse:
-                pInput = new InputMouse();
-                break;
-            case InputType.Controller:
-                pInput = new InputController();
-                break;
-        }
+        
     }
 
 
-    public GameObject CreatePlayer(Transform Pos, PlayerInput input, int Customization)
+    public GameObject CreatePlayer(Transform Pos, InputType input, int Customization)
     {
 
         string matPath = "Assets/Materials&Textures/Player/player" + Customization + ".mat";
@@ -45,4 +32,5 @@ public class PlayerCreator : MonoBehaviour {
 
         return CurrentPrefab;
     }
+
 }
