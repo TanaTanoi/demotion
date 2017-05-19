@@ -46,12 +46,21 @@ public class PlayerParticleController : MonoBehaviour {
 				// no particle system
                 break;
 		case Item.Type.SUPER_BOOST:
-			trails.enabled = true;
-			new WaitForSeconds (3f);
-			trails.enabled = false;
+			trails.time = 1;
+			StartCoroutine ("BoostTrail");
                 break;
         }
 
     }
+
+	IEnumerator BoostTrail() {
+		
+		while (trails.time > 0) {
+			yield return new WaitForSeconds(0.1f);
+			trails.time = trails.time - 0.1f;
+		}
+
+		trails.time = 0;
+	}
         
 }
