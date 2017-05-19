@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private float boostCooldown;
     private float boostPower;
-    private float rotationSpeed;
+	private float rotationSpeed; // If rotation speed is zero, the player can't move
     private float deadZone = 0.25f;
 
     private float nextBoostTime = 0.0f;
@@ -37,20 +37,20 @@ public class PlayerMovement : MonoBehaviour {
         float horizontalInput = Input.GetAxis(playerIn.horizontal);
         float verticalInput = Input.GetAxis(playerIn.vertical);
 
-        //gyroscope back to the correct orientation
-        transform.rotation = Quaternion.Euler(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+		if (rotationSpeed > 0) {
+			//gyroscope back to the correct orientation
+			transform.rotation = Quaternion.Euler (0.0f, transform.rotation.eulerAngles.y, 0.0f);
+			playerIn.turn (rotationSpeed, horizontalInput, verticalInput);
+		
 
-        playerIn.turn(rotationSpeed, horizontalInput, verticalInput);
-
-        //desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
-        if (Input.GetAxisRaw(playerIn.boost) > deadZone)
-        {
-            if (nextBoostTime <= Time.time)
-            {
-                Boost(boostPower);
-                nextBoostTime = Time.time + boostCooldown;
-            }
-        }
+			//desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
+			if (Input.GetAxisRaw (playerIn.boost) > deadZone) {
+				if (nextBoostTime <= Time.time) {
+					Boost (boostPower);
+					nextBoostTime = Time.time + boostCooldown;
+				}
+			}
+		}
 
     }
 
@@ -68,6 +68,25 @@ public class PlayerMovement : MonoBehaviour {
                 break;
         }
     }
+
+	// Spins the player some amount
+	public void SpinPlayer(float power){
+		float time = power / 100f; // approx the amount of time the user is in the air
+		Debug.Log (time);
+		IEnumerator c = DisablePlayerInput (time);
+		StartCoroutine (c);
+		chairRigidbody.AddForce (Vector3.up * power * 2);
+		chairRigidbody.AddRelativeTorque (Vector3.up * power, ForceMode.VelocityChange);
+	}
+
+	private IEnumerator DisablePlayerInput(float time){
+		float temp = rotationSpeed;
+		rotationSpeed = 0;
+		yield return new WaitForSeconds(time);
+		rotationSpeed = temp;
+	}
+		
+
     /**
      * Boosts the player forward!
      */

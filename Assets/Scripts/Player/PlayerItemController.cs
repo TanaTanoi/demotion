@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Item {
     // Count isn't an item type, it is simply used to track how many items there are
-    public enum Type { STICKY_THROWABLE, SUPER_BOOST, Count }
+    public enum Type { STICKY_THROWABLE, BANANA_THROWABLE, SUPER_BOOST, Count }
 }
 
 public class PlayerItemController : MonoBehaviour {
@@ -56,17 +56,24 @@ public class PlayerItemController : MonoBehaviour {
         particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
 		case Item.Type.STICKY_THROWABLE:
-			GameObject throwable = Instantiate (throwableItem);
-			throwable.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
-				IEnumerator c = ThrowItem(throwable);
-                StartCoroutine(c);
+			GameObject sticky = Instantiate (throwableItem);
+			sticky.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
+			IEnumerator stickyC = ThrowItem(sticky);
+			StartCoroutine(stickyC);
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
-            case Item.Type.SUPER_BOOST:
-				SetItemCooldown(stats.SUPER_BOOST_COOLDOWN);
-				playerMovement.Boost(stats.SUPER_BOOST_POWER);
-				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.SUPER_BOOST_USES;
-                break;
+		case Item.Type.BANANA_THROWABLE:
+			GameObject banana = Instantiate (throwableItem);
+			banana.AddComponent<PowerupController> ().type = Powerup.Type.BANANA;
+			IEnumerator bananaC = ThrowItem(banana);
+			StartCoroutine(bananaC);
+			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
+			break;
+        case Item.Type.SUPER_BOOST:
+			SetItemCooldown(stats.SUPER_BOOST_COOLDOWN);
+			playerMovement.Boost(stats.SUPER_BOOST_POWER);
+			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.SUPER_BOOST_USES;
+            break;
         }
     }
 

@@ -89,11 +89,9 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
-			AddPowerupTime (Type.BANANA, 3);
+			playerMovement.SpinPlayer (stats.BANANA_POWER);
 			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
-			rb.angularDrag = 0;
-			rb.AddRelativeTorque (Vector3.up * 1000);
-			// TODO add spin. Rigidbody 
+			rb.AddForce (rb.velocity * -0.9f);
 			break;
 		}
 	}
