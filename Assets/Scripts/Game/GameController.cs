@@ -65,9 +65,11 @@ public class GameController : MonoBehaviour {
     void InitialiseControllers()
     {
         // Get the number of possible players between 2 and 4.
-        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length), 2, 4);
-        // Set the controllers for each player to the appropriate thingymagig
-        playerCreator.CreatePlayer(spawnPoints.GetChild(0), InputType.Controller, 1);
+        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length + 2), 2, 4);
+        for(int i = 0; i < playerCount; i++)
+        {
+            playerCreator.CreatePlayer(spawnPoints.GetChild(i), InputType.Controller, 1);
+        }
     }
 
 	/**
