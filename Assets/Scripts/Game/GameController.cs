@@ -57,10 +57,10 @@ public class GameController : MonoBehaviour {
     /**
      * Gets the number of input controllers connected
      */
-    void InitialiseControllers()
+    void SpawnPlayers()
     {
         // Get the number of possible players between 2 and 4.
-        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length), 2, 4) + 2; // Need to change this to get the joystick number so player 1 is mapped to joystick 1
+        
         for(int i = 0; i < playerCount; i++)
         {
             playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, InputType.Controller, 1);
@@ -77,7 +77,6 @@ public class GameController : MonoBehaviour {
         this.roundDuration = roundDuration;
         this.maxLives = maxLives;
         this.maxScore = maxScore;
-        InitialiseControllers();
 
         StartGame();
     }
@@ -104,6 +103,7 @@ public class GameController : MonoBehaviour {
         //TODO display start round splash: 3..2..1..Joust (or something)
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = roundDuration;  // Reset the round duration
+        SpawnPlayers();
 	}
 
     // Update is called once per frame
