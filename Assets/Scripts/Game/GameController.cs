@@ -10,9 +10,9 @@ public class GameController : MonoBehaviour {
 	public static GameController instance = null;
 
     /*== PLAYER SETTINGS ==*/
-	// Dictionary between the player number and the player object.
+    // Dictionary between the player number and the player object.
+    private Dictionary<int, InputType> IDtoInput;
 	private Dictionary<int, GameObject> playersDict;
-    private int playerCount;
     // Empty game object holding the possible spawn points for other players
     public Transform spawnPoints;
     private PlayerCreator playerCreator;
@@ -55,29 +55,31 @@ public class GameController : MonoBehaviour {
 	}
 
     /**
-     * Gets the number of input controllers connected
+     * Spawns all the players
      */
-    void SpawnPlayers()
+    void SpawnAllPlayers()
     {
-        // Get the number of possible players between 2 and 4.
-        
-        for(int i = 0; i < playerCount; i++)
+        for(int i = 0; i < IDtoInput.Count; i++)
         {
-            playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, InputType.Controller, 1);
+            InputType inType;
+            IDtoInput.TryGetValue(i, out inType);
+            //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
+            playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, 1));
         }
     }
 
     /**
      * Creates a new game from the game settings
      */
-    public void ApplyGameMode(GameSetup.GameMode mode, int numberRounds, float roundDuration, int maxLives, int maxScore)
+    public void ApplyGameMode(Dictionary<int, InputType> IDtoInput, GameSetup.GameMode mode, int numberRounds, float roundDuration, int maxLives, int maxScore)
     {
+        this.IDtoInput = new Dictionary<int, InputType>(IDtoInput);
         this.mode = mode;
         this.numberRounds = numberRounds;
         this.roundDuration = roundDuration;
         this.maxLives = maxLives;
         this.maxScore = maxScore;
-
+        
         StartGame();
     }
     /*=== END INITIALISATION ===*/
@@ -103,7 +105,7 @@ public class GameController : MonoBehaviour {
         //TODO display start round splash: 3..2..1..Joust (or something)
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = roundDuration;  // Reset the round duration
-        SpawnPlayers();
+        SpawnAllPlayers();
 	}
 
     // Update is called once per frame
