@@ -21,7 +21,7 @@ public class FanWindScript : MonoBehaviour {
     private void OnTriggerStay(Collider other)
     {
         Rigidbody otherRB = other.GetComponentInParent<Rigidbody>();
-        otherRB.AddForceAtPosition(new Vector3(0,0,-windForce), otherRB.centerOfMass);
+        otherRB.AddForceAtPosition(transform.forward * windForce, otherRB.centerOfMass);
         //Debug.Log("Windy here!");
     }
 }

@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private float nextBoostTime = 0.0f;
 
-    private ModelController playerAnimator;
+    private PlayerModelController playerAnimator;
     private Rigidbody chairRigidbody;
 
     private PlayerInput playerIn;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour {
         boostPower = stats.DEFAULT_BOOST_POWER;
         rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
 
-        playerAnimator = GetComponentInChildren<ModelController>();
+        playerAnimator = GetComponentInChildren<PlayerModelController>();
         chairRigidbody = GetComponent<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
         //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change

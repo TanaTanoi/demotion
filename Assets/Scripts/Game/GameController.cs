@@ -1,44 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
 public class GameController : MonoBehaviour {
 
-    public enum GameMode { DEATHMATCH, HIGHSCORE };
-
 	// Singleton GameController
 	public static GameController instance = null;
 
     /*== PLAYER SETTINGS ==*/
-	// Dictionary between the player number and the player object.
+    // Dictionary between the player number and the player object.
+    private Dictionary<int, InputType> IDtoInput;
 	private Dictionary<int, GameObject> playersDict;
-    private int playerCount;
     // Empty game object holding the possible spawn points for other players
     public Transform spawnPoints;
     private PlayerCreator playerCreator;
 
 	/*== GAME STATUS ==*/
     private bool paused = false;
-	public bool playing = true; // debugging, should be private
 
 	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
     private MenuController menuControl;
     private Text timerText;
-	// Access the player hud elements here from a child object of something
+    // Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
 
-	/*== ROUND SETTINGS ==*/
-	private GameMode mode;
-    private float roundDuration = 999999; // Dont forget to change me ======
+    /*== ROUND SETTINGS ==*/ // REMOVE THIS AND ACCESS FROM GAMESETUP.cs
+    private GameSetup.GameMode mode;
+    private int numberRounds;
+    private float roundDuration;
+    private float respawnTime;
     private int maxLives;
     private int maxScore;
-    
 
-    /*=== Initialisation ===*/
+    private float currentRoundDuration;
+
+
+    /*=== INITIALISATION ===*/
     private void Awake()
     {
 		// GameController is a singleton therefore we need to ensure there is only one
@@ -47,97 +47,76 @@ public class GameController : MonoBehaviour {
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
-        
-        // Don't kill me :(
-        DontDestroyOnLoad(gameObject);
     }
 
 	void Start() {
+        //Find the menu and the player creator
         menuControl = FindObjectOfType<MenuController>();
         playerCreator = GetComponent<PlayerCreator>();
-        InitialiseControllers();
-        ResumeGame();
 	}
 
     /**
-     * Gets the number of input controllers connected
+     * Spawns all the players
      */
-    void InitialiseControllers()
+    void SpawnAllPlayers()
     {
-        // Get the number of possible players between 2 and 4.
-        playerCount = (int)Mathf.Clamp((Input.GetJoystickNames().Length + 2), 2, 4);
-        for(int i = 0; i < playerCount; i++)
+        for(int i = 0; i < IDtoInput.Count; i++)
         {
-            playerCreator.CreatePlayer(spawnPoints.GetChild(i), InputType.Controller, 1);
+            InputType inType;
+            IDtoInput.TryGetValue(i, out inType);
+            //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
+            playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, 1));
         }
-    }
-
-	/**
-	 * The start of a new round
-	 */
-	void StartGame() {
-
-
-	}
-
-    // Update is called once per frame
-    void Update() {
-		if (playing) {
-			UpdateTime ();
-			if (Input.GetAxisRaw ("Pause") != 0) {
-				TogglePause ();
-			}
-		}
-
-        
-    }
-    /*=== End Initialisation ===*/
-    
-
-    /*=== Game Logic ===*/
-
-    public void TogglePause()
-    {
-        if (!paused)
-            PauseGame();
-        else
-            ResumeGame();
-    }
-     
-    /**
-     * Pauses the game and opens the pause menu
-     */
-    public void PauseGame()
-    {
-        paused = true;
-        Time.timeScale = 0;
-        //FindObjectOfType<MenuController>().TogglePause();
-        // show the hud
-        menuControl.Pause();
-    }
-
-    public void ResumeGame()
-    {
-        paused = false;
-        Time.timeScale = 1;
-        // Hide the hud
-        menuControl.Resume();
     }
 
     /**
      * Creates a new game from the game settings
      */
-    public void NewGame()
+    public void ApplyGameMode(Dictionary<int, InputType> IDtoInput, GameSetup.GameMode mode, int numberRounds, float roundDuration, float respawnTime, int maxLives, int maxScore)
     {
-//        // Pause the game
-//        PauseGame();
-//        // Enable player HUDS for each player in the game
-//		for (int i = 0; i < ; i++)
-//        {
-//            playersHUD[i].SetActive(true);
-//        }
+        this.IDtoInput = new Dictionary<int, InputType>(IDtoInput);
+        this.mode = mode;
+        this.numberRounds = numberRounds;
+        this.roundDuration = roundDuration;
+        this.maxLives = maxLives;
+        this.maxScore = maxScore;
+        
+        StartGame();
+    }
+    /*=== END INITIALISATION ===*/
 
-        // Spawn all the players
+    /*=== GAME LOGIC ===*/
+    /**
+     * Starts a new game with the current settings, should only be called after applying game mode
+     */
+    void StartGame()
+    {
+        // Play each round
+        for(int i = 0; i < numberRounds; i++)
+        {
+            StartRound(i);
+            //TODO Display scoreboard here ==
+        }
+    }
+
+    /**
+	 * The start of a new round
+	 */
+    void StartRound(int roundNumber) {
+        //TODO display start round splash: 3..2..1..Joust (or something)
+        Debug.Log(string.Format("Starting round {0}", roundNumber));
+        currentRoundDuration = roundDuration;  // Reset the round duration
+        SpawnAllPlayers();
+	}
+
+    // Update is called once per frame
+    void FixedUpdate() {
+		if (!paused) {
+			UpdateTime ();
+			if (Input.GetAxisRaw ("Pause") != 0) {
+				TogglePause ();
+			}
+		}
     }
 
 	/**
@@ -145,8 +124,8 @@ public class GameController : MonoBehaviour {
      */
 	void UpdateTime()
 	{
-		roundDuration -= Time.deltaTime;
-		//timerText.text = "Time: " + (int)roundDuration;
+		currentRoundDuration -= Time.deltaTime;
+		timerText.text = "Time: " + (int)roundDuration;
 
 		if (roundDuration <= 0)
 		{
@@ -162,10 +141,11 @@ public class GameController : MonoBehaviour {
     {
         switch(mode)
         {
-            case GameMode.DEATHMATCH:
+            case GameSetup.GameMode.DEATHMATCH:
                 LoseLife(hitee);
                 break;
-            case GameMode.HIGHSCORE:
+            case GameSetup.GameMode.HIGHSCORE:
+                IncreaseScore(hitter);
                 break;
         }
     }
@@ -188,5 +168,38 @@ public class GameController : MonoBehaviour {
     {
 
     }
-    /*=== End Game Logic ===*/
+    /*=== END GAME LOGIC ===*/
+
+    /*=== PAUSE LOGIC ===*/
+    /**
+     * Pause/unpause the game
+     */
+    public void TogglePause()
+    {
+        if (!paused)
+            PauseGame();
+        else
+            ResumeGame();
+    }
+
+    /**
+     * Pauses the game, swaps to the pause menu
+     */
+    public void PauseGame()
+    {
+        paused = true;
+        Time.timeScale = 0;
+        menuControl.Pause();
+    }
+
+    /**
+     * Unpause the game, swaps back to the in game HUD
+     */
+    public void ResumeGame()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        menuControl.Resume();
+    }
+    /*=== END PAUSE LOGIC ===*/
 }
