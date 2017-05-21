@@ -27,10 +27,11 @@ public class GameController : MonoBehaviour {
     // Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
 
-    /*== ROUND SETTINGS ==*/
+    /*== ROUND SETTINGS ==*/ // REMOVE THIS AND ACCESS FROM GAMESETUP.cs
     private GameSetup.GameMode mode;
     private int numberRounds;
     private float roundDuration;
+    private float respawnTime;
     private int maxLives;
     private int maxScore;
 
@@ -71,7 +72,7 @@ public class GameController : MonoBehaviour {
     /**
      * Creates a new game from the game settings
      */
-    public void ApplyGameMode(Dictionary<int, InputType> IDtoInput, GameSetup.GameMode mode, int numberRounds, float roundDuration, int maxLives, int maxScore)
+    public void ApplyGameMode(Dictionary<int, InputType> IDtoInput, GameSetup.GameMode mode, int numberRounds, float roundDuration, float respawnTime, int maxLives, int maxScore)
     {
         this.IDtoInput = new Dictionary<int, InputType>(IDtoInput);
         this.mode = mode;
