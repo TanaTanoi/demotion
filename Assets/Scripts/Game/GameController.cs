@@ -141,7 +141,7 @@ public class GameController : MonoBehaviour {
     {
         switch(mode)
         {
-            case GameSetup.GameMode.DEATHMATCH:
+            case GameSetup.GameMode.DEMOTION:
                 LoseLife(hitee);
                 break;
             case GameSetup.GameMode.HIGHSCORE:

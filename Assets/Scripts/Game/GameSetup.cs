@@ -4,54 +4,51 @@ using UnityEngine;
 
 public class GameSetup : MonoBehaviour {
     //Game type enums
-    public enum GameMode { DEATHMATCH, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS };
+    public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
     /**
-     * ==========
+     * ========================================
      * GAME MODES:
      * ----------
      * Default settings:
-     *   - Round duration
-     *   - Number of rounds
-     *   - Respawn time
+     *   . Round duration
+     *   . Number of rounds
+     *   . Respawn time
      * 
-     * DEATHMATCH:
-     *   Team with the most kills at the end of the match wins.
+     * DEMOTION:
+     *   Team with the most demotions at the end of the match wins.
      *     RELEVANT SETTINGS:
-     *       - Default settings
+     *       . Default settings
      *       
      *       
      * HIGHSCORE:
      *   Team with the highest score at the end of the match wins.
      *     RELEVANT SETTINGS:
-     *       - Default settings
+     *       . Default settings
      *       
      *       
      * LAST WORKER SITTING:
      *   Last team in the game is the winner.
      *     RELEVANT SETTINGS:
-     *       + Round duration
-     *       + Number of rounds
+     *       . Default settings
      *       + Maximum lives
+     *       - Respawn time
      *       
      *       
-     * 
      * FIRST TO KILLS:
      *   Team who reaches a certain number of kills first is the winner (of the round?).
      *     RELEVANT SETTINGS:
-     *       - Round duration
-     *       - Number of rounds
-     *       - Target kills
+     *       . Default settings
+     *       + Target kills
      *   
      *   
      * FIRST TO SCORE:
      *   Team that reaches a certain score first is the winners (of the round?).
      *     RELEVANT SETTINGS:
-     *       - Round duration
-     *       - Number of rounds
-     *       - Target score
-     *       - 
+     *       . Default settings
+     *       + Target score
      * 
-     * ==========
+     * 
+     * ========================================
      */
 
     private GameController control;
@@ -66,7 +63,8 @@ public class GameSetup : MonoBehaviour {
     private float roundDuration;
     private float respawnTime;
     private int maxLives;
-    private int maxScore;
+    private int targetScore;
+    private int targetKills;
     
 
 
@@ -120,7 +118,7 @@ public class GameSetup : MonoBehaviour {
      */
     public void NewGame() {
         control = gameObject.AddComponent<GameController>() as GameController;
-        control.ApplyGameMode(playerIDtoInputDict, mode, numberRounds, roundDuration, respawnTime, maxLives, maxScore);
+        control.ApplyGameMode(playerIDtoInputDict, mode, numberRounds, roundDuration, respawnTime, maxLives, targetScore);
     }
 
     /*== Setter functions for the UI to alter values ==*/
@@ -135,18 +133,33 @@ public class GameSetup : MonoBehaviour {
         roundDuration = duration;
     }
 
-    public void SetRoundQuantity(int quantity)
+    public void SetRoundQuantity(float quantity)
     {
-        numberRounds = quantity;
+        numberRounds = (int)quantity;
     }
 
-    public void SetMaxLive(int lives)
+    public void SetMaxLive(float lives)
     {
-        maxLives = lives;
+        maxLives = (int)lives;
     }
 
-    public void SetMaxScore(int score)
+    public void SetTargetScore(float score)
     {
-        maxScore = score;
+        targetScore = (int)score;
+    }
+
+    public void SetTargetKills(float kills)
+    {
+        targetKills = (int)kills;
+    }
+
+    public void SetRespawnTime(float respawnTime)
+    {
+        this.respawnTime = (int)respawnTime;
+    }
+
+    public void SetGameMode(int modeIndex)
+    {
+        mode = (GameMode)modeIndex;
     }
 }
