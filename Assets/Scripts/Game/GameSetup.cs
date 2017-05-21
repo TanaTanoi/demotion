@@ -51,29 +51,21 @@ public class GameSetup : MonoBehaviour {
      * ========================================
      */
 
+    public GameObject playerPrefab;
+
     private GameController control;
-
-    // Player settings
-    private Dictionary<int, InputType> playerIDtoInputDict;  // Dictionary between player ID number (p1,p2,etc) and their control method
-    private int playerCount;
-
-    // Gamemode settings
-    private GameMode mode;
-    private int numberRounds;
-    private float roundDuration;
-    private float respawnTime;
-    private int maxLives;
-    private int targetScore;
-    private int targetKills;
-    
-
-
+    private GameSettings settings;
     private bool settingUp = false;
 
     // Use this for initialization
     void Awake() {
         //Don't destroy this
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        settings = new GameSettings();
     }
 
     /**
@@ -101,15 +93,16 @@ public class GameSetup : MonoBehaviour {
      */
     void InitialisePlayerControls()
     {
+        settings.IDtoInput = new Dictionary<int, InputType>();
         string[] controllers = Input.GetJoystickNames();
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
-        playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
+        settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
         // Add all the players into the ID to Input dictionary
-        playerIDtoInputDict.Add(0, InputType.Keyboard);
-        playerIDtoInputDict.Add(1, InputType.Mouse);
-        for (int i = 2; i < playerCount; i++)
+        settings.IDtoInput.Add(0, InputType.Keyboard);
+        settings.IDtoInput.Add(1, InputType.Mouse);
+        for (int i = 2; i < settings.playerCount; i++)
         {
-            playerIDtoInputDict.Add(i, InputType.Controller);
+            settings.IDtoInput.Add(i, InputType.Controller);
         }
     }
 
@@ -118,48 +111,48 @@ public class GameSetup : MonoBehaviour {
      */
     public void NewGame() {
         control = gameObject.AddComponent<GameController>() as GameController;
-        control.ApplyGameMode(playerIDtoInputDict, mode, numberRounds, roundDuration, respawnTime, maxLives, targetScore);
+        control.enabled = false;
+        control.SetGameSettings(settings, playerPrefab);
     }
 
     /*== Setter functions for the UI to alter values ==*/
-
     public void SetGameMode(GameMode mode)
     {
-        this.mode = mode;
+        settings.mode = mode;
     }
 
     public void SetRoundDuration(float duration)
     {
-        roundDuration = duration;
+        settings.roundDuration = duration;
     }
 
     public void SetRoundQuantity(float quantity)
     {
-        numberRounds = (int)quantity;
+        settings.numberRounds = (int)quantity;
     }
 
     public void SetMaxLive(float lives)
     {
-        maxLives = (int)lives;
+        settings.maxLives = (int)lives;
     }
 
     public void SetTargetScore(float score)
     {
-        targetScore = (int)score;
+        settings.targetScore = (int)score;
     }
 
     public void SetTargetKills(float kills)
     {
-        targetKills = (int)kills;
+        settings.targetKills = (int)kills;
     }
 
     public void SetRespawnTime(float respawnTime)
     {
-        this.respawnTime = (int)respawnTime;
+        settings.respawnTime = (int)respawnTime;
     }
 
     public void SetGameMode(int modeIndex)
     {
-        mode = (GameMode)modeIndex;
+        settings.mode = (GameMode)modeIndex;
     }
 }

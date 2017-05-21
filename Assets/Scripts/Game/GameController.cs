@@ -6,12 +6,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-	// Singleton GameController
-	public static GameController instance = null;
-
     /*== PLAYER SETTINGS ==*/
     // Dictionary between the player number and the player object.
-    private Dictionary<int, InputType> IDtoInput;
 	private Dictionary<int, GameObject> playersDict;
     // Empty game object holding the possible spawn points for other players
     public Transform spawnPoints;
@@ -19,6 +15,8 @@ public class GameController : MonoBehaviour {
 
 	/*== GAME STATUS ==*/
     private bool paused = false;
+    private GameSetup setup;
+    private GameSettings settings;
 
 	/*== MENU SETTINGS ==*/
 	// MenuController handles all the UI elements
@@ -27,62 +25,40 @@ public class GameController : MonoBehaviour {
     // Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
 
-    /*== ROUND SETTINGS ==*/ // REMOVE THIS AND ACCESS FROM GAMESETUP.cs
-    private GameSetup.GameMode mode;
-    private int numberRounds;
-    private float roundDuration;
-    private float respawnTime;
-    private int maxLives;
-    private int maxScore;
-
     private float currentRoundDuration;
 
 
     /*=== INITIALISATION ===*/
     private void Awake()
     {
-		// GameController is a singleton therefore we need to ensure there is only one
-		if (instance == null) {
-			instance = this;
-		} else if (instance != this) {
-			Destroy (gameObject);
-		}
+        menuControl = FindObjectOfType<MenuController>();
+        playerCreator = gameObject.AddComponent<PlayerCreator>() as PlayerCreator;
+        setup = GetComponent<GameSetup>();
     }
 
-	void Start() {
-        //Find the menu and the player creator
-        menuControl = FindObjectOfType<MenuController>();
-        playerCreator = GetComponent<PlayerCreator>();
-	}
+
+    public void SetGameSettings(GameSettings settings, GameObject playerPrefab)
+    {
+        
+        this.settings = settings;
+        playerCreator.SetPlayerPrefab(playerPrefab);
+    }
 
     /**
      * Spawns all the players
      */
     void SpawnAllPlayers()
     {
-        for(int i = 0; i < IDtoInput.Count; i++)
+
+        for(int i = 0; i < settings.IDtoInput.Count; i++)
         {
             InputType inType;
-            IDtoInput.TryGetValue(i, out inType);
+            settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
             playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, 1));
         }
     }
 
-    /**
-     * Creates a new game from the game settings
-     */
-    public void ApplyGameMode(Dictionary<int, InputType> IDtoInput, GameSetup.GameMode mode, int numberRounds, float roundDuration, float respawnTime, int maxLives, int maxScore)
-    {
-        this.IDtoInput = new Dictionary<int, InputType>(IDtoInput);
-        this.mode = mode;
-        this.numberRounds = numberRounds;
-        this.roundDuration = roundDuration;
-        this.maxLives = maxLives;
-        this.maxScore = maxScore;
-        
-        StartGame();
-    }
     /*=== END INITIALISATION ===*/
 
     /*=== GAME LOGIC ===*/
@@ -92,7 +68,7 @@ public class GameController : MonoBehaviour {
     void StartGame()
     {
         // Play each round
-        for(int i = 0; i < numberRounds; i++)
+        for(int i = 0; i < settings.numberRounds; i++)
         {
             StartRound(i);
             //TODO Display scoreboard here ==
@@ -105,7 +81,7 @@ public class GameController : MonoBehaviour {
     void StartRound(int roundNumber) {
         //TODO display start round splash: 3..2..1..Joust (or something)
         Debug.Log(string.Format("Starting round {0}", roundNumber));
-        currentRoundDuration = roundDuration;  // Reset the round duration
+        currentRoundDuration = settings.roundDuration;  // Reset the round duration
         SpawnAllPlayers();
 	}
 
@@ -125,10 +101,11 @@ public class GameController : MonoBehaviour {
 	void UpdateTime()
 	{
 		currentRoundDuration -= Time.deltaTime;
-		timerText.text = "Time: " + (int)roundDuration;
+		//timerText.text = "Time: " + (int)settings.roundDuration;
 
-		if (roundDuration <= 0)
+		if (settings.roundDuration <= 0)
 		{
+            Debug.Log(menuControl != null);
 			PauseGame();
 		}
 	}
@@ -139,7 +116,7 @@ public class GameController : MonoBehaviour {
      */
     public void OnHit(int hitter, int hitee)
     {
-        switch(mode)
+        switch(settings.mode)
         {
             case GameSetup.GameMode.DEMOTION:
                 LoseLife(hitee);

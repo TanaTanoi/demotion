@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class PlayerCreator : MonoBehaviour {
 
-    public GameObject Prefab;
+    public GameObject prefab;
     //private GameObject CurrentPrefab;
     private PlayerMovement PlayerMovement;
     public InputType chooseInput = InputType.Keyboard;
@@ -23,7 +23,7 @@ public class PlayerCreator : MonoBehaviour {
         string matPath = "Assets/Materials&Textures/Player/player" + Customization + ".mat";
         Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
 
-        GameObject CurrentPrefab = Instantiate(Prefab);
+        GameObject CurrentPrefab = Instantiate(prefab);
         CurrentPrefab.transform.position = Pos;
 
         CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetInput(input);
@@ -31,6 +31,11 @@ public class PlayerCreator : MonoBehaviour {
 
 
         return CurrentPrefab;
+    }
+
+    public void SetPlayerPrefab(GameObject playerPrefab)
+    {
+        prefab = playerPrefab;
     }
 
 }
