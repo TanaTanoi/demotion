@@ -51,8 +51,6 @@ public class GameSetup : MonoBehaviour {
      * ========================================
      */
 
-    public GameObject playerPrefab;
-
     private GameController control;
     private GameSettings settings;
     private bool settingUp = false;
@@ -110,9 +108,10 @@ public class GameSetup : MonoBehaviour {
      * Creates a new GameController and assigns the gamemode and settings
      */
     public void NewGame() {
-        control = gameObject.AddComponent<GameController>() as GameController;
-        control.enabled = false;
-        control.SetGameSettings(settings, playerPrefab);
+        control = GameController.instance;
+        if(control == null)
+            Debug.Log("The Gamesetup has not found the game controller" );
+        control.SetGameSettings(settings);
     }
 
     /*== Setter functions for the UI to alter values ==*/

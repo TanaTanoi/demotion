@@ -5,22 +5,21 @@ using UnityEngine.UI;
 
 
 public class GameController : MonoBehaviour {
+    public static GameController instance;
 
     /*== PLAYER SETTINGS ==*/
-    // Dictionary between the player number and the player object.
-	private Dictionary<int, GameObject> playersDict;
-    // Empty game object holding the possible spawn points for other players
-    public Transform spawnPoints;
+	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
+    public GameObject playerPrefab;
     private PlayerCreator playerCreator;
+    private Transform spawnPoints;
 
-	/*== GAME STATUS ==*/
+    /*== GAME STATUS ==*/
     private bool paused = false;
     private GameSetup setup;
     private GameSettings settings;
 
 	/*== MENU SETTINGS ==*/
-	// MenuController handles all the UI elements
-    private MenuController menuControl;
+    public MenuController menuControl;  // MenuController handles all the UI elements
     private Text timerText;
     // Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
@@ -29,19 +28,28 @@ public class GameController : MonoBehaviour {
 
 
     /*=== INITIALISATION ===*/
+
+
     private void Awake()
     {
-        menuControl = FindObjectOfType<MenuController>();
+        if(instance == null)
+        {
+            instance = this;
+        } else if(instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        spawnPoints = GameObject.Find("SpawnPoints").transform;
+        Debug.Log(spawnPoints != null);
         playerCreator = gameObject.AddComponent<PlayerCreator>() as PlayerCreator;
+        playerCreator.SetPlayerPrefab(playerPrefab);
         setup = GetComponent<GameSetup>();
     }
 
-
-    public void SetGameSettings(GameSettings settings, GameObject playerPrefab)
+    public void SetGameSettings(GameSettings settings)
     {
-        
         this.settings = settings;
-        playerCreator.SetPlayerPrefab(playerPrefab);
     }
 
     /**
@@ -102,10 +110,8 @@ public class GameController : MonoBehaviour {
 	{
 		currentRoundDuration -= Time.deltaTime;
 		//timerText.text = "Time: " + (int)settings.roundDuration;
-
-		if (settings.roundDuration <= 0)
+		if (currentRoundDuration <= 0)
 		{
-            Debug.Log(menuControl != null);
 			PauseGame();
 		}
 	}
@@ -134,8 +140,6 @@ public class GameController : MonoBehaviour {
 	{
         GameObject player;
         playersDict.TryGetValue(playerNumber, out player);
-        
-
 	}
 
     /**
