@@ -50,6 +50,8 @@ public class GameController : MonoBehaviour {
     public void SetGameSettings(GameSettings settings)
     {
         this.settings = settings;
+
+		StartGame ();
     }
 
     /**

@@ -64,6 +64,5 @@ public class MenuController : MonoBehaviour {
     public void SwitchScene(string scene)
     {
         SceneManager.LoadScene(scene);
-
     }
 }

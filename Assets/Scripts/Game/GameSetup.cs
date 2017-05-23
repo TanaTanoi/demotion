@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSetup : MonoBehaviour {
     //Game type enums
@@ -108,11 +109,15 @@ public class GameSetup : MonoBehaviour {
      * Creates a new GameController and assigns the gamemode and settings
      */
     public void NewGame() {
-        control = GameController.instance;
-        if(control == null)
-            Debug.Log("The Gamesetup has not found the game controller" );
-        control.SetGameSettings(settings);
+		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByBuildIndex(1));
     }
+
+	void sceneLoaded() {
+		control = GameController.instance;
+		control.SetGameSettings(settings);
+
+
+	}
 
     /*== Setter functions for the UI to alter values ==*/
     public void SetGameMode(GameMode mode)
