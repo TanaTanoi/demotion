@@ -1,0 +1,169 @@
+fileFormatVersion: 2
+guid: 3a575ddd56584463aacb6a9999520435
+timeCreated: 1495536698
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Arm_L
+    100002: Arm_R
+    100004: Armature_000
+    100006: Character_Final_01_003
+    100008: Chest
+    100010: Fingers_L_1
+    100012: Fingers_L_2
+    100014: Fingers_L_3
+    100016: Fingers_R_1
+    100018: Fingers_R_2
+    100020: Fingers_R_3
+    100022: Foot_L
+    100024: Foot_R
+    100026: ForeArm_L
+    100028: ForeArm_R
+    100030: Hand_L
+    100032: Hand_R
+    100034: Head
+    100036: Hips
+    100038: Leg_L
+    100040: Leg_R
+    100042: Mop
+    100044: Neck
+    100046: Shoulder_L
+    100048: Shoulder_R
+    100050: Spine
+    100052: //RootNode
+    100054: Thumb_L_1
+    100056: Thumb_L_2
+    100058: Thumb_L_3
+    100060: Thumb_R_1
+    100062: Thumb_R_2
+    100064: Thumb_R_3
+    100066: Toe_end_L
+    100068: Toe_end_R
+    100070: Toe_L
+    100072: Toe_R
+    100074: UpLeg_L
+    100076: UpLeg_R
+    400000: Arm_L
+    400002: Arm_R
+    400004: Armature_000
+    400006: Character_Final_01_003
+    400008: Chest
+    400010: Fingers_L_1
+    400012: Fingers_L_2
+    400014: Fingers_L_3
+    400016: Fingers_R_1
+    400018: Fingers_R_2
+    400020: Fingers_R_3
+    400022: Foot_L
+    400024: Foot_R
+    400026: ForeArm_L
+    400028: ForeArm_R
+    400030: Hand_L
+    400032: Hand_R
+    400034: Head
+    400036: Hips
+    400038: Leg_L
+    400040: Leg_R
+    400042: Mop
+    400044: Neck
+    400046: Shoulder_L
+    400048: Shoulder_R
+    400050: Spine
+    400052: //RootNode
+    400054: Thumb_L_1
+    400056: Thumb_L_2
+    400058: Thumb_L_3
+    400060: Thumb_R_1
+    400062: Thumb_R_2
+    400064: Thumb_R_3
+    400066: Toe_end_L
+    400068: Toe_end_R
+    400070: Toe_L
+    400072: Toe_R
+    400074: UpLeg_L
+    400076: UpLeg_R
+    4300000: Character_Final_01_003
+    4300002: Mop
+    7400000: Default Take
+    7400002: Idle
+    7400004: Push
+    7400006: StandingCelebrate1
+    7400008: StandingCelebrate2
+    7400010: StandingDespair
+    7400012: StandingJump
+    7400014: Throw
+    7400016: TPose
+    9500000: //RootNode
+    13700000: Character_Final_01_003
+    13700002: Mop
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
