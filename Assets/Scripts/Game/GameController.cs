@@ -48,13 +48,15 @@ public class GameController : MonoBehaviour {
         playerCreator.SetPlayerPrefab(playerPrefab);
     }
 
-    public void SetGameSettings(GameSettings settings)
+    public void SetGameSettings(GameSettings gameSettings)
     {
-        this.settings = settings;
-		Debug.Log ("Set the settings!");
+        settings = gameSettings;
+        
 		timerText.text = "Time: " + settings.roundDuration;
 		StartGame ();
     }
+
+    
 
     /**
      * Spawns all the players

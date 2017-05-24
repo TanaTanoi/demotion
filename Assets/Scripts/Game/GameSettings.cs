@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct GameSettings {
+public class GameSettings : ScriptableObject {
     public Dictionary<int, InputType> IDtoInput;
     public int playerCount;
     public GameSetup.GameMode mode;
