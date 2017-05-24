@@ -115,7 +115,7 @@ public class GameSetup : MonoBehaviour {
 	void sceneLoaded() {
 		control = GameController.instance;
 		control.SetGameSettings(settings);
-
+		Debug.Log ("SET THE SETTINGS!");
 
 	}
 

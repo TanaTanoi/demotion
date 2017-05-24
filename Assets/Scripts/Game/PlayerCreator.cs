@@ -10,7 +10,7 @@ public class PlayerCreator : MonoBehaviour {
     private PlayerMovement PlayerMovement;
     public InputType chooseInput = InputType.Keyboard;
     public int PlayerCust = 1;
-    public bool debug = true;
+    public bool debug = false;
     
     void Start()
     {
