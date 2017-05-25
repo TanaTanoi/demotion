@@ -15,12 +15,14 @@ public class GameController : MonoBehaviour {
 
     /*== GAME STATUS ==*/
     private bool paused = false;
-    private GameSetup setup;
+	private bool playing = false;
     private GameSettings settings;
+	private RoundManager roundManager;
 
 	/*== MENU SETTINGS ==*/
-    public MenuController menuControl;  // MenuController handles all the UI elements
-    private Text timerText;
+	public GameObject menu;  // MenuController handles all the UI elements
+	private MenuController menuControl;
+    public Text timerText;
     // Access the player hud elements here from a child object of something
     // also get the textbox for the timer here
 
@@ -40,17 +42,22 @@ public class GameController : MonoBehaviour {
             Destroy(gameObject);
         }
 
+		menuControl = menu.GetComponent<MenuController> ();
+
         spawnPoints = GameObject.Find("SpawnPoints").transform;
-        Debug.Log(spawnPoints != null);
         playerCreator = gameObject.AddComponent<PlayerCreator>() as PlayerCreator;
         playerCreator.SetPlayerPrefab(playerPrefab);
-        setup = GetComponent<GameSetup>();
     }
 
-    public void SetGameSettings(GameSettings settings)
+    public void SetGameSettings(GameSettings gameSettings)
     {
-        this.settings = settings;
+        settings = gameSettings;
+        
+		timerText.text = "Time: " + settings.roundDuration;
+		StartGame ();
     }
+
+    
 
     /**
      * Spawns all the players
@@ -75,12 +82,8 @@ public class GameController : MonoBehaviour {
      */
     void StartGame()
     {
-        // Play each round
-        for(int i = 0; i < settings.numberRounds; i++)
-        {
-            StartRound(i);
-            //TODO Display scoreboard here ==
-        }
+		StartRound (1);
+
     }
 
     /**
@@ -91,11 +94,12 @@ public class GameController : MonoBehaviour {
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
         SpawnAllPlayers();
+		playing = true;
 	}
 
     // Update is called once per frame
     void FixedUpdate() {
-		if (!paused) {
+		if (playing && !paused) {
 			UpdateTime ();
 			if (Input.GetAxisRaw ("Pause") != 0) {
 				TogglePause ();
@@ -109,7 +113,7 @@ public class GameController : MonoBehaviour {
 	void UpdateTime()
 	{
 		currentRoundDuration -= Time.deltaTime;
-		//timerText.text = "Time: " + (int)settings.roundDuration;
+		timerText.text = "Time: " + (int)settings.roundDuration;
 		if (currentRoundDuration <= 0)
 		{
 			PauseGame();
@@ -131,6 +135,7 @@ public class GameController : MonoBehaviour {
                 IncreaseScore(hitter);
                 break;
         }
+		// roundManager.onHit(hitter, hitee);
     }
 
 	/**
@@ -149,6 +154,10 @@ public class GameController : MonoBehaviour {
     {
 
     }
+
+	private void EndRound() {
+		playing = false;
+	}
     /*=== END GAME LOGIC ===*/
 
     /*=== PAUSE LOGIC ===*/

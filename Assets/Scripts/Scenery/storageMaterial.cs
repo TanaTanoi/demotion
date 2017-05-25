@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class storageMaterial : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class storageMaterial : MonoBehaviour
+{
+    private ParticleSystem psystem;
+    private bool coltrack = false;
+    // Use this for initialization
+    void Start()
+    {
+        psystem = GetComponentInChildren<ParticleSystem>();
         int rand = Random.Range(0, 3);
-        string Customization="STORAGERED";
-        if (rand == 1){
+        string Customization = "STORAGERED";
+        if (rand == 1)
+        {
             Customization = "STORAGEBLUE";
         }
         else if (rand == 2)
@@ -25,9 +30,18 @@ public class storageMaterial : MonoBehaviour {
         MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
         meshRenderer.material = newMat;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+
+    }
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Player") { 
+            psystem.Play();
+         }
+    }
 }
+    

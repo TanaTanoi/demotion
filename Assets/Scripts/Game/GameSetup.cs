@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSetup : MonoBehaviour {
     //Game type enums
@@ -63,9 +64,46 @@ public class GameSetup : MonoBehaviour {
 
     private void Start()
     {
-        settings = new GameSettings();
+        settings = (GameSettings)ScriptableObject.CreateInstance("GameSettings");
+        InitialisePlayerControls();
+        DebugPrintSettings();
     }
 
+    /**
+     * Prints out all the fields of a settings struct.
+     * Debugging purposes only.
+     */
+    void DebugPrintSettings()
+    {
+        string output = "";
+        Debug.Log("Settings is null: " + settings == null);
+        foreach (int i in settings.IDtoInput.Keys)
+        {
+            InputType val;
+            settings.IDtoInput.TryGetValue(i, out val);
+            output += "\nID: " + i + " Input type: " + val.ToString();
+        }
+        output += "\nNumber of players: " + settings.playerCount;
+        output += "\nGameMode: " + settings.mode.ToString();
+        output += "\nNumber of rounds: " + settings.numberRounds;
+        output += "\nRound duration: " + settings.roundDuration;
+        output += "\nRespawn time: " + settings.respawnTime;
+        output += "\nMax lives: " + settings.maxLives;
+        output += "\nTarget score: " + settings.targetScore;
+        output += "\nTarget kills: " + settings.targetKills;
+
+        Debug.Log(output);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
     /**
      * Changes the state of settingup.
      * Used from the menuController when we go to the GameSetup_Panel.
@@ -105,14 +143,21 @@ public class GameSetup : MonoBehaviour {
     }
 
     /**
-     * Creates a new GameController and assigns the gamemode and settings
+     * Moves this gameobject to the game scene
      */
     public void NewGame() {
-        control = GameController.instance;
-        if(control == null)
-            Debug.Log("The Gamesetup has not found the game controller" );
-        control.SetGameSettings(settings);
+        
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
+        if (scene != SceneManager.GetSceneByBuildIndex(1)) return;
+        SceneManager.MoveGameObjectToScene(gameObject, scene);
+        control = GameController.instance;
+        Debug.Log(GameController.instance.gameObject.name);
+		control.SetGameSettings(settings);
+		Debug.Log ("SET THE SETTINGS!");
+
+	}
 
     /*== Setter functions for the UI to alter values ==*/
     public void SetGameMode(GameMode mode)
