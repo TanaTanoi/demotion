@@ -16,21 +16,22 @@ public class ArenaGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//PopulateLists ();
+		PopulateLists ();
 
+		Debug.Log (wallPrefabs.Length);
 		Debug.Log (tilePrefabs.Length);
 		Debug.Log (tileClutteredPrefabs.Length);
 		Debug.Log (tileCrackedPrefabs.Length);
 
-		//GenerateArena ();
+		GenerateArena ();
 	}
 
 	void PopulateLists()
 	{
-		//wallPrefabs = Resources.LoadAll<GameObject>("Walls");
-		tilePrefabs = Resources.LoadAll<GameObject>("FloorTiles/Tiles");
-		tileClutteredPrefabs = Resources.LoadAll<GameObject>("FloorTiles/ClutteredTiles");
-		tileCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CrackedTiles");
+		wallPrefabs = Resources.LoadAll<GameObject>("Walls");
+		tilePrefabs = Resources.LoadAll<GameObject>("FloorTiles/TilesTest");
+		tileClutteredPrefabs = Resources.LoadAll<GameObject>("FloorTiles/ClutteredTilesTest");
+		tileCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CrackedTilesTest");
 	}
 
 	public void GenerateArena(){
@@ -41,17 +42,27 @@ public class ArenaGenerator : MonoBehaviour {
 	void GenerateOutline(){
 		List<GameObject> walls = new List<GameObject> ();
 
-		foreach (GameObject prefab in wallPrefabs) {
-			GameObject prefabObject = Instantiate(prefab) as GameObject; 
-			walls.Add (prefabObject);
-		}
+//		foreach (GameObject prefab in wallPrefabs) {
+//			GameObject prefabObject = Instantiate(prefab) as GameObject; 
+//			walls.Add (prefabObject);
+//		}
 
-		int randomIndex = Random.Range (0, walls.Count);
-		arenaOutline = walls [randomIndex];
+		int randomIndex = Random.Range (0, wallPrefabs.Length);
+		GameObject prefabObject = Instantiate(wallPrefabs[randomIndex]) as GameObject; 
+		walls.Add (prefabObject);
 
+		int randomIndex2 = Random.Range (0, walls.Count);
+		arenaOutline = walls [randomIndex2];
+	
+		string tag = "tileLocation";
 		foreach (Transform child in arenaOutline.transform) {
-			tileLocations.Add (child.position);
+			if (child.tag == tag) {
+				tileLocations.Add (child.position);
+			}
+
 		}
+
+
 	}
 
 	void GenerateTiles(){
