@@ -64,7 +64,6 @@ public class GameController : MonoBehaviour {
      */
     void SpawnAllPlayers()
     {
-
         for(int i = 0; i < settings.IDtoInput.Count; i++)
         {
             InputType inType;
