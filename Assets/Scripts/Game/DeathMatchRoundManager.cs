@@ -45,4 +45,12 @@ public class DeathMatchRoundManager : RoundManager {
 	protected override void endRound(){
 
 	}
+
+	/**
+	 * Manages Respawning of players
+	 **/
+	public override void respawn (int playerNum){
+		PlayerCreator pc = new PlayerCreator ();
+		pc.CreatePlayer (new Vector3 (0, 0, 0), InputType.Keyboard, 1);
+	}
 }

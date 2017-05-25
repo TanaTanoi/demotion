@@ -52,6 +52,11 @@ public abstract class RoundManager : MonoBehaviour {
 	protected abstract void endRound ();
 
 	/**
+	 * Manages Respawning of players
+	 **/
+	public abstract void respawn (int playerNum);
+
+	/**
 	 * Call this method whenever the scoreboard UI needs to be updated 
 	 **/
 	protected void updateScoreBoard(){
