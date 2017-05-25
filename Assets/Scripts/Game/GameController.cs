@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
     private bool paused = false;
 	private bool playing = false;
     private GameSettings settings;
+	private RoundManager roundManager;
 
 	/*== MENU SETTINGS ==*/
 	public GameObject menu;  // MenuController handles all the UI elements
@@ -134,6 +135,7 @@ public class GameController : MonoBehaviour {
                 IncreaseScore(hitter);
                 break;
         }
+		// roundManager.onHit(hitter, hitee);
     }
 
 	/**
