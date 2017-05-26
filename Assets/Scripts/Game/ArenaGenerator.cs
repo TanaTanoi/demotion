@@ -14,8 +14,11 @@ public class ArenaGenerator : MonoBehaviour {
 	List<Vector3> tileLocations = new List<Vector3>();
 	GameObject arenaOutline;
 
+	GameObject SpawnPoints;
+
 	// Use this for initialization
 	void Start () {
+		SpawnPoints = GameObject.Find ("SpawnPoints");
 		PopulateLists ();
 
 		Debug.Log (wallPrefabs.Length);
@@ -24,6 +27,7 @@ public class ArenaGenerator : MonoBehaviour {
 		Debug.Log (tileCrackedPrefabs.Length);
 
 		GenerateArena ();
+		GenerateStartPoints ();
 	}
 
 	void PopulateLists()
@@ -32,6 +36,29 @@ public class ArenaGenerator : MonoBehaviour {
 		tilePrefabs = Resources.LoadAll<GameObject>("FloorTiles/TilesTest");
 		tileClutteredPrefabs = Resources.LoadAll<GameObject>("FloorTiles/ClutteredTilesTest");
 		tileCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CrackedTilesTest");
+	}
+
+	void GenerateStartPoints(){
+
+		List<Vector3> spawnLocations = new List<Vector3>();
+		GameObject spawnPoint = Resources.Load ("SpawnPoint") as GameObject;
+
+		string childTag = "startSpawnLocation";
+		foreach (Transform child in arenaOutline.transform) {
+			if (child.tag == childTag) {
+				spawnLocations.Add (child.position);
+			}
+		}
+			
+		Debug.Log (spawnLocations.Count);
+
+		foreach (Vector3 spawnLocation in spawnLocations) {
+			GameObject spawn = Instantiate (spawnPoint) as GameObject;
+			spawn.transform.position = spawnLocation;
+			spawn.transform.position += new Vector3(0,2,0);
+			spawn.transform.parent = SpawnPoints.transform;
+	
+		}
 	}
 
 	public void GenerateArena(){
@@ -61,8 +88,7 @@ public class ArenaGenerator : MonoBehaviour {
 			}
 
 		}
-
-
+			
 	}
 
 	void GenerateTiles(){
