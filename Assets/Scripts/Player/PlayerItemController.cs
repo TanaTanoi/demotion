@@ -16,6 +16,8 @@ public class PlayerItemController : MonoBehaviour {
 	public PlayerModelController playerAnimator;
     public Transform throwingHand;
 
+	public GameObject throwableBanana;
+
     private Item.Type currentItem;
     private float chargeLeft = 0; // How much usage is left in this powerup
     private float nextUsableTime = 0.0f;
@@ -63,8 +65,9 @@ public class PlayerItemController : MonoBehaviour {
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
 		case Item.Type.BANANA_THROWABLE:
-			GameObject banana = Instantiate (throwableItem);
+			GameObject banana = Instantiate (throwableBanana);
 			banana.AddComponent<PowerupController> ().type = Powerup.Type.BANANA;
+			banana.AddComponent<Rigidbody> ().isKinematic = false;
 			IEnumerator bananaC = ThrowItem(banana);
 			StartCoroutine(bananaC);
 			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
@@ -93,13 +96,13 @@ public class PlayerItemController : MonoBehaviour {
         throwable.transform.localPosition = Vector3.zero;
         throwable.transform.position = transform.position + transform.forward * 1f; // TODO remove once thrown from hand
         throwable.GetComponent<Rigidbody>().isKinematic = true;
-        throwable.GetComponent<SphereCollider>().enabled = false;
+		throwable.GetComponent<Collider>().enabled = false;
         playerAnimator.Throw();
         yield return new WaitForSeconds(0.5f);
         throwable.GetComponent<Rigidbody>().isKinematic = false;
         throwable.transform.SetParent(null);
         throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
         yield return new WaitForSeconds(0.2f);
-        throwable.GetComponent<SphereCollider>().enabled = true;
+		throwable.GetComponent<Collider>().enabled = true;
     }
 }
