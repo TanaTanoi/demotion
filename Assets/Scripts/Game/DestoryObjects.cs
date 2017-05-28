@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class DestoryObjects : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	void OnTriggerEnter(Collider other){
-
+		if (other.gameObject.tag == "Player") {
+			// do something with the player
+		} else {
+			GameObject.Destroy(other.gameObject);
+		}
 	}
 }
