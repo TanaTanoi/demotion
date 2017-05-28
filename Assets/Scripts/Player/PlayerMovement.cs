@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public PlayerStats stats;
     public InputType inputType = InputType.Mouse;
+	public int playerNum;
 
     private float boostCooldown;
     private float boostPower;
@@ -125,6 +126,10 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void setBoostPower(float power) {
 		boostPower = power;
+	}
+
+	public int GetPlayerNum(){
+		return this.playerNum;
 	}
 
 }
