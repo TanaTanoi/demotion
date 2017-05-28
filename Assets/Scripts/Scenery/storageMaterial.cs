@@ -39,8 +39,9 @@ public class storageMaterial : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision col)
 	{
-		if (col.gameObject.tag == "Player") { 
-			//psystem.Play();
+        //psystem.Play();
+        if (col.gameObject.tag == "Player") { 
+			psystem.Play();
 		}
 	}
 }
