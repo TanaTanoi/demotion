@@ -123,8 +123,9 @@ public class GameController : MonoBehaviour {
 		}
 
 		if ((int)currentRoundDuration == drop) {
-			Debug.Log ("hello");
-			DropCrackedCenter ();
+			if (crackedTiles.Count > 0) {
+				DropCrackedCenter ();
+			}
 			drop -= 20;
 		}
 	}
@@ -152,7 +153,6 @@ public class GameController : MonoBehaviour {
 		rb.isKinematic = false;
 		rb.useGravity = true;
 
-		//crack.AddComponent<BoxCollider> ();
 	}
 
     /**
