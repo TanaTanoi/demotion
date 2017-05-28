@@ -19,12 +19,13 @@ public class PlayerHitDetection : MonoBehaviour {
 
 
     void OnTriggerEnter(Collider other)
-    {
+    {	
+		if (!other.GetComponent<Collider>().CompareTag("Player")) return;
+		if (Time.time < vulnerablility) return;
 		GameObject playerHit = other.gameObject;
 		Debug.Log (other.gameObject);
         // Do nothing if not hit with a lance or is still invulnerable
-        if (!other.GetComponent<Collider>().CompareTag("Player")) return;
-        if (Time.time < vulnerablility) return;
+  
          
 		GameObject chair = (GameObject)playerHit.transform.Find ("chairA").gameObject;
 		playerHit.transform.Find ("chairA").parent = null;
@@ -34,11 +35,12 @@ public class PlayerHitDetection : MonoBehaviour {
 //		GameObject lance = (GameObject)playerHit.transform.Find ("Lance").gameObject;
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
-
-	//	gameControl.OnHit(this.transform.gameObject.GetComponent<PlayerMovement>().GetPlayerNum(), other.transform.gameObject.GetComponent<PlayerMovement>().GetPlayerNum());
+		int thisPlayer = this.transform.gameObject.GetComponentInParent<PlayerMovement> ().GetPlayerNum ();
+		int otherPlayer = playerHit.GetComponent<PlayerMovement>().GetPlayerNum();
+		gameControl.OnHit(thisPlayer, otherPlayer);
 		Destroy(playerHit);
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, other.transform.rotation);
-		int otherPlayerNum = other.gameObject.GetComponent <PlayerMovement> ().GetPlayerNum ();
+//		int otherPlayerNum = other.gameObject.GetComponent <PlayerMovement> ().GetPlayerNum ();
 
         playerHit.GetComponentInChildren<Rigidbody>().AddRelativeForce(new Vector3(0f, 200f, 0f));
         vulnerablility = Time.time + invulnerabilityDuration;

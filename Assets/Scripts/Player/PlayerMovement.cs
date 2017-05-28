@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour {
 	public InputType inputType = InputType.Keyboard;
 	public int playerNum;
 
+
     private float boostCooldown;
     private float boostPower;
 	private float rotationSpeed; // If rotation speed is zero, the player can't move
@@ -30,7 +31,7 @@ public class PlayerMovement : MonoBehaviour {
         chairRigidbody = GetComponentInChildren<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
         //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change
-		SetInput(inputType);
+		//SetInput(inputType);
     }
 
     // Update is called once per frame

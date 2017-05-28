@@ -94,7 +94,7 @@ public class PlayerItemController : MonoBehaviour {
 		SetItemCooldown(stats.THROW_COOLDOWN);
         throwable.transform.parent = throwingHand;
         throwable.transform.localPosition = Vector3.zero;
-        throwable.transform.position = transform.position + transform.forward * 1f; // TODO remove once thrown from hand
+		throwable.transform.position = throwingHand.position;
         throwable.GetComponent<Rigidbody>().isKinematic = true;
 		throwable.GetComponent<Collider>().enabled = false;
         playerAnimator.Throw();
