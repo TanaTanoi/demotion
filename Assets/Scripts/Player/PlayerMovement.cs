@@ -96,6 +96,7 @@ public class PlayerMovement : MonoBehaviour {
      */
     public void Boost(float power)
     {
+		playerAnimator.Push ();
         chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }
 

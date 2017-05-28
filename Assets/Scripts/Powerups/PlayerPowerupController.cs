@@ -111,9 +111,10 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			RefreshPowerupTime (type, stats.BANANA_POWER / 100f);
 			playerMovement.SpinPlayer (stats.BANANA_POWER);
 			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
-			rb.AddForce (rb.velocity * -0.9f);
+			rb.AddForce (rb.velocity * -0.95f);
 			break;
 		}
 	}

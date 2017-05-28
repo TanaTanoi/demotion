@@ -24,6 +24,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
             return false;
         } else {
             currentItem = CreateItem(type);
+			currentItem.transform.localScale = Vector3.one * 2;
             currentItem.transform.position = spawnPosition;
             return true;
         }

@@ -27,7 +27,7 @@ public class PlayerParticleController : MonoBehaviour {
 	private Dictionary<Powerup.Type, GameObject> activeEffectProps = new Dictionary<Powerup.Type, GameObject>();
 	private TrailRenderer trails;
 
-	private Vector3 propOffset = new Vector3(0,2,0);
+	private Vector3 propOffset = new Vector3 (0, 2, 0);
 	private Quaternion propRotation = Quaternion.Euler (new Vector3 (-45, -45, 0));
 
 	private Transform camera;
@@ -66,15 +66,17 @@ public class PlayerParticleController : MonoBehaviour {
 			}
 			effect.status = EffectStatus.ACTIVE;
 
-			if (effect.particles == null)
+			if (effect.particles != null) {
 				effect.particles.Play ();
+			}
 		} else {
 			effect.status = EffectStatus.HIDDEN;
 			GameObject g = activeEffectProps [effect.type];
 			activeEffectProps.Remove (effect.type);
 			Destroy (g);
-			if (effect.particles == null)
+			if (effect.particles != null) {
 				effect.particles.Stop ();
+			}
 		}
 	}
 
