@@ -151,7 +151,7 @@ public class GameSetup : MonoBehaviour {
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-        if (scene != SceneManager.GetSceneByBuildIndex(1)) return;
+        if (scene != SceneManager.GetSceneByBuildIndex(2)) return;
 		// Move to GameScene
         SceneManager.MoveGameObjectToScene(gameObject, scene);
 		// Get the game controller
@@ -159,7 +159,7 @@ public class GameSetup : MonoBehaviour {
 		control = controller.GetComponent<GameController> ();
 		generator = controller.GetComponent<ArenaGenerator> ();
 		generator.Generate ();
-        
+		control.CrackedCenterSetup ();
 		control.SetGameSettings(settings);
 
 	}

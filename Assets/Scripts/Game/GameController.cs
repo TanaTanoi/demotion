@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Linq;
 
 public class GameController : MonoBehaviour {
     public static GameController instance;
@@ -27,7 +27,8 @@ public class GameController : MonoBehaviour {
     // also get the textbox for the timer here
 
     private float currentRoundDuration;
-
+	public List<GameObject> crackedTiles;
+	public int drop = 40;
 
     /*=== INITIALISATION ===*/
 
@@ -45,6 +46,7 @@ public class GameController : MonoBehaviour {
 		menuControl = menu.GetComponent<MenuController> ();
 		playersDict = new Dictionary<int, GameObject> ();
 		playerCreator = GetComponent<PlayerCreator> ();
+		//roundManager = new DeathMatchRoundManager ();
         
     }
 
@@ -95,6 +97,7 @@ public class GameController : MonoBehaviour {
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
         SpawnAllPlayers();
 		playing = true;
+		paused = false;
 	}
 
     // Update is called once per frame
@@ -113,11 +116,43 @@ public class GameController : MonoBehaviour {
 	void UpdateTime()
 	{
 		currentRoundDuration -= Time.deltaTime;
-		timerText.text = "Time: " + (int)settings.roundDuration;
+		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
 			PauseGame();
 		}
+
+		if ((int)currentRoundDuration == drop) {
+			Debug.Log ("hello");
+			DropCrackedCenter ();
+			drop -= 20;
+		}
+	}
+
+	/**
+     * creates a list of cracked tiles in the arena
+     */
+	public void CrackedCenterSetup(){
+		crackedTiles = GameObject.FindGameObjectsWithTag ("crackedCenter").ToList ();
+	}
+
+	/**
+     * Drops one cracked tile
+     */
+	void DropCrackedCenter()
+	{
+		int randomIndex = Random.Range (0, crackedTiles.Count);
+		GameObject crack = crackedTiles [randomIndex];
+		crackedTiles.RemoveAt (randomIndex);
+
+		BoxCollider bc = crack.GetComponent<BoxCollider> ();
+		bc.isTrigger = true;
+
+		Rigidbody rb = crack.GetComponent<Rigidbody> ();
+		rb.isKinematic = false;
+		rb.useGravity = true;
+
+		//crack.AddComponent<BoxCollider> ();
 	}
 
     /**
