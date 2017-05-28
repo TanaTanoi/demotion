@@ -25,7 +25,9 @@ public class PlayerHitDetection : MonoBehaviour {
 		GameObject playerHit = other.gameObject;
 		Debug.Log (other.gameObject);
         // Do nothing if not hit with a lance or is still invulnerable
-  
+		int thisPlayer = this.transform.gameObject.GetComponentInParent<PlayerMovement> ().GetPlayerNum ();
+		int otherPlayer = other.gameObject.GetComponentInParent<PlayerMovement>().GetPlayerNum();
+
          
 		GameObject chair = (GameObject)playerHit.transform.Find ("chairA").gameObject;
 		playerHit.transform.Find ("chairA").parent = null;
@@ -35,8 +37,6 @@ public class PlayerHitDetection : MonoBehaviour {
 //		GameObject lance = (GameObject)playerHit.transform.Find ("Lance").gameObject;
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
-		int thisPlayer = this.transform.gameObject.GetComponentInParent<PlayerMovement> ().GetPlayerNum ();
-		int otherPlayer = playerHit.GetComponent<PlayerMovement>().GetPlayerNum();
 		gameControl.OnHit(thisPlayer, otherPlayer);
 		Destroy(playerHit);
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, other.transform.rotation);
