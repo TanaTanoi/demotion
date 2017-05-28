@@ -25,6 +25,8 @@ public class ArenaGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start(){
 		Generate ();
+
+		gameObject.AddComponent<ItemSpawnController> ();
 	}
 
 	void Generate () {
