@@ -45,6 +45,7 @@ public class GameController : MonoBehaviour {
 		menuControl = menu.GetComponent<MenuController> ();
 		playersDict = new Dictionary<int, GameObject> ();
 		playerCreator = GetComponent<PlayerCreator> ();
+		//roundManager = new DeathMatchRoundManager ();
         
     }
 
