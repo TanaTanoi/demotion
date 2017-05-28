@@ -24,7 +24,7 @@ public class ArenaGenerator : MonoBehaviour {
 	GameObject SpawnPoints;
 
 	void Start() {
-		gameObject.AddComponent<ItemSpawnController> ();
+		
 	}
 
 	public void Generate () {
@@ -35,6 +35,7 @@ public class ArenaGenerator : MonoBehaviour {
 		GenerateArena ();
 		GenerateDestoryPlane ();
 		GenerateStartPoints ();
+		gameObject.AddComponent<ItemSpawnController> ();
 	}
 
 	void PopulateLists()
