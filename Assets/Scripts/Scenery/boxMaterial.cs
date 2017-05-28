@@ -20,7 +20,8 @@ public class boxMaterial : MonoBehaviour
     }
     void OnCollisionEnter(Collision col)
     {
-		if (col.gameObject.tag == "Player"&&paperCount>0) { 
+        
+        if (col.gameObject.tag == "Player"&&paperCount>0) { 
             psystem.Play();
 			paperCount--;
          }
