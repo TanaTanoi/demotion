@@ -41,7 +41,8 @@ public class ArenaGenerator : MonoBehaviour {
 	void PopulateLists()
 	{
 		wallPrefabs = Resources.LoadAll<GameObject>("Walls");
-		tileCarpetPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CarpetClear");
+
+		tileCarpetPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CarpetEmpty");
 		tileCarpetClutteredPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CarpetCluttered");
 		tileCarpetCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/CarpetCracked");
 	
@@ -115,33 +116,44 @@ public class ArenaGenerator : MonoBehaviour {
 		List<GameObject> tiles = new List<GameObject>();
 
 		int count = tileCarpetLocations.Count;
-		int tileClearCount = (tileCarpetLocations.Count)/2;
-		count -= tileClearCount;
+		//int tileClearCount = (tileCarpetLocations.Count)/2;
+		//count -= tileClearCount;
+
 
 		// adding "clear" carpet objects
-		for (int i = 0; i < tileClearCount; i++) {
+		for (int i = 0; i < count; i++) {
 			int randomIndex = Random.Range (0, tileCarpetPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
 		}
-			
-		int crackedTileCount = count / 4;
 
-		count -= crackedTileCount;
 
-		// adding "cluttered" carpet objects
-		for (int i = 0; i < count; i++) {
-			int randomIndex = Random.Range (0, tileCarpetClutteredPrefabs.Length);
-			GameObject prefabObject = Instantiate(tileCarpetClutteredPrefabs[randomIndex]) as GameObject; 
-			tiles.Add (prefabObject);
-		}
 
-		// adding "cracked" carpet objects
-		for (int i = 0; i < crackedTileCount; i++) {
-			int randomIndex = Random.Range (0, tileCarpetCrackedPrefabs.Length);
-			GameObject prefabObject = Instantiate(tileCarpetCrackedPrefabs[randomIndex]) as GameObject; 
-			tiles.Add (prefabObject);
-		}
+
+//		// adding "clear" carpet objects
+//		for (int i = 0; i < tileClearCount; i++) {
+//			int randomIndex = Random.Range (0, tileCarpetPrefabs.Length);
+//			GameObject prefabObject = Instantiate(tileCarpetPrefabs[randomIndex]) as GameObject; 
+//			tiles.Add (prefabObject);
+//		}
+//			
+//		int crackedTileCount = count / 4;
+//
+//		count -= crackedTileCount;
+//
+//		// adding "cluttered" carpet objects
+//		for (int i = 0; i < count; i++) {
+//			int randomIndex = Random.Range (0, tileCarpetClutteredPrefabs.Length);
+//			GameObject prefabObject = Instantiate(tileCarpetClutteredPrefabs[randomIndex]) as GameObject; 
+//			tiles.Add (prefabObject);
+//		}
+//
+//		// adding "cracked" carpet objects
+//		for (int i = 0; i < crackedTileCount; i++) {
+//			int randomIndex = Random.Range (0, tileCarpetCrackedPrefabs.Length);
+//			GameObject prefabObject = Instantiate(tileCarpetCrackedPrefabs[randomIndex]) as GameObject; 
+//			tiles.Add (prefabObject);
+//		}
 			
 		int tilesNum = tiles.Count;
 
