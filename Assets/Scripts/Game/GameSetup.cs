@@ -52,8 +52,10 @@ public class GameSetup : MonoBehaviour {
      * ========================================
      */
 
+	private GameObject controller;
     private GameController control;
     private GameSettings settings;
+	private ArenaGenerator generator;
     private bool settingUp = false;
 
     // Use this for initialization
@@ -76,7 +78,6 @@ public class GameSetup : MonoBehaviour {
     void DebugPrintSettings()
     {
         string output = "";
-        Debug.Log("Settings is null: " + settings == null);
         foreach (int i in settings.IDtoInput.Keys)
         {
             InputType val;
@@ -151,11 +152,15 @@ public class GameSetup : MonoBehaviour {
 
     void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
         if (scene != SceneManager.GetSceneByBuildIndex(1)) return;
+		// Move to GameScene
         SceneManager.MoveGameObjectToScene(gameObject, scene);
-        control = GameController.instance;
-        Debug.Log(GameController.instance.gameObject.name);
+		// Get the game controller
+		controller = GameController.instance.gameObject;
+		control = controller.GetComponent<GameController> ();
+		generator = controller.GetComponent<ArenaGenerator> ();
+		generator.Generate ();
+        
 		control.SetGameSettings(settings);
-		Debug.Log ("SET THE SETTINGS!");
 
 	}
 

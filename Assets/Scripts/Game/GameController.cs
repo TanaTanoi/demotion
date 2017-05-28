@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour {
 
     /*== PLAYER SETTINGS ==*/
 	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
-    public GameObject playerPrefab;
+    
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
 
@@ -43,10 +43,9 @@ public class GameController : MonoBehaviour {
         }
 
 		menuControl = menu.GetComponent<MenuController> ();
-
-        spawnPoints = GameObject.Find("SpawnPoints").transform;
-        playerCreator = gameObject.AddComponent<PlayerCreator>() as PlayerCreator;
-        playerCreator.SetPlayerPrefab(playerPrefab);
+		playersDict = new Dictionary<int, GameObject> ();
+		playerCreator = GetComponent<PlayerCreator> ();
+        
     }
 
     public void SetGameSettings(GameSettings gameSettings)
@@ -64,6 +63,8 @@ public class GameController : MonoBehaviour {
      */
     void SpawnAllPlayers()
     {
+		Debug.Log (playerCreator != null);
+		spawnPoints = GameObject.Find("SpawnPoints").transform;
         for(int i = 0; i < settings.IDtoInput.Count; i++)
         {
             InputType inType;
