@@ -14,6 +14,7 @@ public class PlayerCreator : MonoBehaviour {
     
     void Start()
     {
+		
         if(debug)
             CreatePlayer(transform.position, chooseInput, 0);
     }
@@ -24,18 +25,15 @@ public class PlayerCreator : MonoBehaviour {
         Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
 
         GameObject CurrentPrefab = Instantiate(prefab);
+		//GameObject CurrentPrefab = (GameObject)Instantiate(Resources.Load("Player"), new Vector3(-5,1,-3), new Quaternion(0,0,0,1));
+		//GameObject CurrentPrefab2 = (GameObject)Instantiate(Resources.Load("Lance"), new Vector3(-4,1,-3), new Quaternion(0,0,0,1));
         CurrentPrefab.transform.position = Pos;
 
         CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetInput(input);
-        CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
+        //CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 
 
         return CurrentPrefab;
-    }
-
-    public void SetPlayerPrefab(GameObject playerPrefab)
-    {
-        prefab = playerPrefab;
     }
 
 }

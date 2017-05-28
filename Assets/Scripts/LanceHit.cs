@@ -6,9 +6,11 @@ using UnityEngine;
 public class LanceHit : MonoBehaviour {
 
 	FixedJoint playerHolding;
+	RoundManager rm;
 
 	void Start(){
 		playerHolding = this.GetComponent<FixedJoint> ();
+		rm = new DeathMatchRoundManager ();
 	}
 
 	void Update(){
@@ -27,6 +29,7 @@ public class LanceHit : MonoBehaviour {
 			GameObject chair = (GameObject) other.transform.Find ("Chair").gameObject;
 			chair.transform.parent = null;
 			chair.AddComponent<Rigidbody>();
+			rm.respawn (1);
 			// GameController.onHit(this.getPLayer(), getOther(other))
 			Debug.Log(getPLayer());
 			Debug.Log(getOther (other));

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Linq;
 
 public class GameController : MonoBehaviour {
     public static GameController instance;
 
     /*== PLAYER SETTINGS ==*/
 	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
-    public GameObject playerPrefab;
+    
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
 
@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
     private bool paused = false;
 	private bool playing = false;
     private GameSettings settings;
+	private RoundManager roundManager;
 
 	/*== MENU SETTINGS ==*/
 	public GameObject menu;  // MenuController handles all the UI elements
@@ -26,7 +27,8 @@ public class GameController : MonoBehaviour {
     // also get the textbox for the timer here
 
     private float currentRoundDuration;
-
+	public List<GameObject> crackedTiles;
+	public int drop = 40;
 
     /*=== INITIALISATION ===*/
 
@@ -42,10 +44,10 @@ public class GameController : MonoBehaviour {
         }
 
 		menuControl = menu.GetComponent<MenuController> ();
-
-        spawnPoints = GameObject.Find("SpawnPoints").transform;
-        playerCreator = gameObject.AddComponent<PlayerCreator>() as PlayerCreator;
-        playerCreator.SetPlayerPrefab(playerPrefab);
+		playersDict = new Dictionary<int, GameObject> ();
+		playerCreator = GetComponent<PlayerCreator> ();
+		//roundManager = new DeathMatchRoundManager ();
+        
     }
 
     public void SetGameSettings(GameSettings gameSettings)
@@ -63,7 +65,8 @@ public class GameController : MonoBehaviour {
      */
     void SpawnAllPlayers()
     {
-
+		Debug.Log (playerCreator != null);
+		spawnPoints = GameObject.Find("SpawnPoints").transform;
         for(int i = 0; i < settings.IDtoInput.Count; i++)
         {
             InputType inType;
@@ -94,6 +97,7 @@ public class GameController : MonoBehaviour {
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
         SpawnAllPlayers();
 		playing = true;
+		paused = false;
 	}
 
     // Update is called once per frame
@@ -112,11 +116,43 @@ public class GameController : MonoBehaviour {
 	void UpdateTime()
 	{
 		currentRoundDuration -= Time.deltaTime;
-		timerText.text = "Time: " + (int)settings.roundDuration;
+		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
 			PauseGame();
 		}
+
+		if ((int)currentRoundDuration == drop) {
+			if (crackedTiles.Count > 0) {
+				DropCrackedCenter ();
+			}
+			drop -= 20;
+		}
+	}
+
+	/**
+     * creates a list of cracked tiles in the arena
+     */
+	public void CrackedCenterSetup(){
+		crackedTiles = GameObject.FindGameObjectsWithTag ("crackedCenter").ToList ();
+	}
+
+	/**
+     * Drops one cracked tile
+     */
+	void DropCrackedCenter()
+	{
+		int randomIndex = Random.Range (0, crackedTiles.Count);
+		GameObject crack = crackedTiles [randomIndex];
+		crackedTiles.RemoveAt (randomIndex);
+
+		BoxCollider bc = crack.GetComponent<BoxCollider> ();
+		bc.isTrigger = true;
+
+		Rigidbody rb = crack.GetComponent<Rigidbody> ();
+		rb.isKinematic = false;
+		rb.useGravity = true;
+
 	}
 
     /**
@@ -134,6 +170,7 @@ public class GameController : MonoBehaviour {
                 IncreaseScore(hitter);
                 break;
         }
+		// roundManager.onHit(hitter, hitee);
     }
 
 	/**

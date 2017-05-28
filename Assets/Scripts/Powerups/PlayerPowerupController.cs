@@ -23,6 +23,10 @@ public class PlayerPowerupController : MonoBehaviour {
 		}
 	}
 
+	public float TimeForPowerup(Powerup.Type type){
+		return PowerupEndtimes [type];
+	}
+
 	// On collision with a powerup, add it
 	void OnTriggerEnter(Collider other) {
 		PowerupController powerup = other.gameObject.GetComponent<PowerupController>();
@@ -34,10 +38,13 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	// Checks if any powerups are expired, then removes them
 	private void CheckPowerups() {
+		// Put in a set to prevent removing while iterating
 		HashSet<Type> toRemove = new HashSet<Type> ();
 		foreach(KeyValuePair<Type, float> pair in PowerupEndtimes) {
 			if (pair.Value - Time.time < 0.0f) {
 				toRemove.Add (pair.Key);
+			} else if(pair.Value - Time.time < FlashTimeForPowerup(pair.Key)){
+				particleController.setPowerupNotifyFlash (pair.Key);
 			}
 		}
 		foreach (Type type in toRemove) {
@@ -45,10 +52,25 @@ public class PlayerPowerupController : MonoBehaviour {
 		}
 	}
 
+	private float FlashTimeForPowerup(Powerup.Type type){
+		switch (type) {
+		case Type.STICKY:
+			return stats.STICKY_DURATION / 4;
+		case Type.BOOST:
+			return stats.BOOST_DURATION / 2;
+		case Type.POWER:
+			return stats.BOOST_DURATION / 4;
+		case Type.BANANA:
+			return stats.BANANA_POWER / 2;
+		default:
+			return 0;
+		}
+	}
+
 	// Remove the powerup from our counter and reset it's effects
 	private void EndPowerup(Powerup.Type type) {
 		// Disable particle effects
-		particleController.setPowerupParticleSystemEnabled (type, false);
+		particleController.SetEffectActive (type, false);
 
 		// Remove gameplay effects
 		PowerupEndtimes.Remove (type);
@@ -64,6 +86,7 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			playerMovement.GetComponent<Rigidbody> ().angularDrag = 10;
 			break;
 		}
@@ -72,7 +95,7 @@ public class PlayerPowerupController : MonoBehaviour {
 	// Enable the effects of a particular powerup
 	private void ActivatePowerup(Type type) {
 		// Enable particle effects for this powerup
-		particleController.setPowerupParticleSystemEnabled (type, true);
+		particleController.SetEffectActive (type, true);
 
 		// Enable gameplay effects
 		switch (type) {
@@ -89,9 +112,11 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			playerMovement.SetRotationSpeed (0);
+			RefreshPowerupTime (type, stats.BANANA_POWER / 100f);
 			playerMovement.SpinPlayer (stats.BANANA_POWER);
 			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
-			rb.AddForce (rb.velocity * -0.9f);
+			rb.AddForce (rb.velocity * -0.95f);
 			break;
 		}
 	}

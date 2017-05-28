@@ -15,6 +15,9 @@ public class PowerupSpawner : MonoBehaviour {
     [Tooltip ("Delay before the first powerup")]
     public float delayBeforeFirstPowerup = 0f;
 
+	public GameObject boostModel;
+	public GameObject powerModel;
+
     private Powerup.Type[] buffs = new Powerup.Type[] {
         Powerup.Type.BOOST,
         Powerup.Type.POWER
@@ -53,12 +56,36 @@ public class PowerupSpawner : MonoBehaviour {
 
 
     private GameObject CreatePowerup(Powerup.Type type, Vector3 location) {
-        GameObject powerup = GameObject.CreatePrimitive(PrimitiveType.Cube); // replace with model / prefab once decided
+		GameObject powerup = PowerupModel (type);
+		powerup.transform.localScale = Vector3.one * 2;
         powerup.transform.position = location + transform.position;
+		powerup.transform.rotation = Quaternion.Euler (new Vector3 (Random.Range (0, 360), Random.Range (0, 360), Random.Range (0, 360)));
         powerup.AddComponent<Rigidbody>();
+		powerup.AddComponent<SphereCollider> ();
         powerup.AddComponent<PowerupController>().type = type;
         return powerup;
     }
+
+	private GameObject PowerupModel(Powerup.Type type){
+		GameObject powerup;
+		switch(type){
+		case Powerup.Type.BOOST:
+			powerup = boostModel;
+			break;
+		case Powerup.Type.POWER:
+			powerup = powerModel;
+			break;
+		default:
+			powerup = null;
+			break;
+		};
+		if (powerup == null) {
+			powerup = GameObject.CreatePrimitive (PrimitiveType.Cube); // replace with model / prefab once decided
+		} else {
+			powerup = Instantiate (powerup);
+		}
+		return powerup;
+	}
 
     Vector3 RandomLocaitonInBounds() {
         Vector3 randomExtension = new Vector3(Random.Range(-1.0f, 1.0f) * bounds.extents.x, Random.Range(-1.0f, 1.0f) * bounds.extents.y, Random.Range(-1.0f, 1.0f) * bounds.extents.z);

@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
     public PlayerStats stats;
-    public InputType inputType = InputType.Mouse;
+	public InputType inputType = InputType.Keyboard;
+	public int playerNum;
+
 
     private float boostCooldown;
     private float boostPower;
@@ -26,10 +28,10 @@ public class PlayerMovement : MonoBehaviour {
         rotationSpeed = stats.DEFAULT_ROTATION_SPEED;
 
         playerAnimator = GetComponentInChildren<PlayerModelController>();
-        chairRigidbody = GetComponent<Rigidbody>();
+        chairRigidbody = GetComponentInChildren<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
         //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change
-		SetInput(inputType);
+		//SetInput(inputType);
     }
 
     // Update is called once per frame
@@ -75,19 +77,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Spins the player some amount
 	public void SpinPlayer(float power){
-		float time = power / 100f; // approx the amount of time the user is in the air
-		Debug.Log (time);
-		IEnumerator c = DisablePlayerInput (time);
-		StartCoroutine (c);
 		chairRigidbody.AddForce (Vector3.up * power * 2);
 		chairRigidbody.AddRelativeTorque (Vector3.up * power, ForceMode.VelocityChange);
-	}
-
-	private IEnumerator DisablePlayerInput(float time){
-		float temp = rotationSpeed;
-		rotationSpeed = 0;
-		yield return new WaitForSeconds(time);
-		rotationSpeed = temp;
 	}
 		
 
@@ -96,6 +87,7 @@ public class PlayerMovement : MonoBehaviour {
      */
     public void Boost(float power)
     {
+		playerAnimator.Push ();
         chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }
 
@@ -124,6 +116,10 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void setBoostPower(float power) {
 		boostPower = power;
+	}
+
+	public int GetPlayerNum(){
+		return this.playerNum;
 	}
 
 }
