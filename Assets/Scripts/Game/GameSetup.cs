@@ -52,6 +52,7 @@ public class GameSetup : MonoBehaviour {
      * ========================================
      */
 
+    public int interval;
 	private GameObject controller;
     private GameController control;
     private GameSettings settings;
@@ -165,10 +166,6 @@ public class GameSetup : MonoBehaviour {
 	}
 
     /*== Setter functions for the UI to alter values ==*/
-    public void SetGameMode(GameMode mode)
-    {
-        settings.mode = mode;
-    }
 
     public void SetRoundDuration(float duration)
     {

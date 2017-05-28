@@ -6,6 +6,7 @@ public class SliderText : MonoBehaviour
 
     Text textComponent;
     public bool zeroIsInfinite;
+    public int interval = 1;
     public string message;
 
     void Start()
@@ -22,7 +23,7 @@ public class SliderText : MonoBehaviour
             value = "∞";
         }
         else {
-            value = Mathf.Round(sliderValue).ToString();
+            value = (Mathf.CeilToInt(sliderValue/interval) * interval).ToString();
         }
         textComponent.text = message + value;
     }
