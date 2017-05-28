@@ -159,7 +159,7 @@ public class GameSetup : MonoBehaviour {
 		control = controller.GetComponent<GameController> ();
 		generator = controller.GetComponent<ArenaGenerator> ();
 		generator.Generate ();
-        
+		control.CrackedCenterSetup ();
 		control.SetGameSettings(settings);
 
 	}
