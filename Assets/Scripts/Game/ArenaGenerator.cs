@@ -70,8 +70,9 @@ public class ArenaGenerator : MonoBehaviour {
 	}
 
 	void GenerateDestoryPlane(){
-		GameObject planePrefab = Resources.LoadAll<GameObject>("Walls");
-		GameObject destoryPlane = Instantiate (planePrefab, Vector3 (0, -25, 0), Quaternion.identity);
+		GameObject planePrefab = Resources.Load<GameObject>("DestoryPlane");
+		GameObject destoryPlane = Instantiate (planePrefab, Vector3.zero, Quaternion.identity);
+		destoryPlane.transform.position = new Vector3 (0, -25, 0);
 		destoryPlane.AddComponent<DestoryObjects> ();
 	}
 
