@@ -1,0 +1,187 @@
+fileFormatVersion: 2
+guid: afbdaf0340f2b41d8b3b3740ff8ce2e7
+timeCreated: 1495925272
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Arm_L
+    100002: Arm_R
+    100004: Armature.001
+    100006: Camera
+    100008: Chest
+    100010: Fingers_L_1
+    100012: Fingers_L_2
+    100014: Fingers_L_3
+    100016: Fingers_L_3_end
+    100018: Fingers_R_1
+    100020: Fingers_R_2
+    100022: Fingers_R_3
+    100024: Fingers_R_3_end
+    100026: Foot_L
+    100028: Foot_R
+    100030: ForeArm_L
+    100032: ForeArm_R
+    100034: Hand_L
+    100036: Hand_R
+    100038: Head
+    100040: Head_end
+    100042: Hips
+    100044: Lamp
+    100046: Lamp.001
+    100048: Lamp.002
+    100050: Leg_L
+    100052: Leg_R
+    100054: Neck
+    100056: Shoulder_L
+    100058: Shoulder_R
+    100060: Spine
+    100062: Thumb_L_1
+    100064: Thumb_L_2
+    100066: Thumb_L_3
+    100068: Thumb_L_3_end
+    100070: Thumb_R_1
+    100072: Thumb_R_2
+    100074: Thumb_R_3
+    100076: Thumb_R_3_end
+    100078: Toe_end_L
+    100080: Toe_end_L_end
+    100082: Toe_end_R
+    100084: Toe_end_R_end
+    100086: Toe_L
+    100088: Toe_R
+    100090: UpLeg_L
+    100092: UpLeg_R
+    100094: WizardStick
+    100096: //RootNode
+    400000: Arm_L
+    400002: Arm_R
+    400004: Armature.001
+    400006: Camera
+    400008: Chest
+    400010: Fingers_L_1
+    400012: Fingers_L_2
+    400014: Fingers_L_3
+    400016: Fingers_L_3_end
+    400018: Fingers_R_1
+    400020: Fingers_R_2
+    400022: Fingers_R_3
+    400024: Fingers_R_3_end
+    400026: Foot_L
+    400028: Foot_R
+    400030: ForeArm_L
+    400032: ForeArm_R
+    400034: Hand_L
+    400036: Hand_R
+    400038: Head
+    400040: Head_end
+    400042: Hips
+    400044: Lamp
+    400046: Lamp.001
+    400048: Lamp.002
+    400050: Leg_L
+    400052: Leg_R
+    400054: Neck
+    400056: Shoulder_L
+    400058: Shoulder_R
+    400060: Spine
+    400062: Thumb_L_1
+    400064: Thumb_L_2
+    400066: Thumb_L_3
+    400068: Thumb_L_3_end
+    400070: Thumb_R_1
+    400072: Thumb_R_2
+    400074: Thumb_R_3
+    400076: Thumb_R_3_end
+    400078: Toe_end_L
+    400080: Toe_end_L_end
+    400082: Toe_end_R
+    400084: Toe_end_R_end
+    400086: Toe_L
+    400088: Toe_R
+    400090: UpLeg_L
+    400092: UpLeg_R
+    400094: WizardStick
+    400096: //RootNode
+    2300000: WizardStick
+    3300000: WizardStick
+    4300000: WizardStick
+    7400000: Armature.001|Idle
+    7400002: Armature.001|Push
+    7400004: Armature.001|StandingCelebrate1
+    7400006: Armature.001|StandingCelebrate2
+    7400008: Armature.001|StandingDespair
+    7400010: Armature.001|StandingIdle
+    7400012: Armature.001|StandingJump
+    7400014: Armature.001|Throw
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
