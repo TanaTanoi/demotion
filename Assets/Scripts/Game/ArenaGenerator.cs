@@ -33,7 +33,6 @@ public class ArenaGenerator : MonoBehaviour {
 		PopulateLists ();
 
 		GenerateArena ();
-		GenerateDestoryPlane ();
 		GenerateStartPoints ();
 		gameObject.AddComponent<ItemSpawnController> ();
 	}
@@ -69,13 +68,6 @@ public class ArenaGenerator : MonoBehaviour {
 			spawn.transform.position += new Vector3(0,2,0);
 			spawn.transform.parent = SpawnPoints.transform;
 		}
-	}
-
-	void GenerateDestoryPlane(){
-		GameObject planePrefab = Resources.Load<GameObject>("DestoryPlane");
-		GameObject destoryPlane = Instantiate (planePrefab, Vector3.zero, Quaternion.identity);
-		destoryPlane.transform.position = new Vector3 (0, -25, 0);
-		destoryPlane.AddComponent<DestoryObjects> ();
 	}
 
 	void GenerateArena(){
