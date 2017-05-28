@@ -76,19 +76,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Spins the player some amount
 	public void SpinPlayer(float power){
-		float time = power / 100f; // approx the amount of time the user is in the air
-		Debug.Log (time);
-		IEnumerator c = DisablePlayerInput (time);
-		StartCoroutine (c);
 		chairRigidbody.AddForce (Vector3.up * power * 2);
 		chairRigidbody.AddRelativeTorque (Vector3.up * power, ForceMode.VelocityChange);
-	}
-
-	private IEnumerator DisablePlayerInput(float time){
-		float temp = rotationSpeed;
-		rotationSpeed = 0;
-		yield return new WaitForSeconds(time);
-		rotationSpeed = temp;
 	}
 		
 

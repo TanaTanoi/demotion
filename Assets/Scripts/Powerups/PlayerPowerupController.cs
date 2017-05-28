@@ -86,6 +86,7 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			playerMovement.GetComponent<Rigidbody> ().angularDrag = 10;
 			break;
 		}
@@ -111,6 +112,7 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			playerMovement.SetRotationSpeed (0);
 			RefreshPowerupTime (type, stats.BANANA_POWER / 100f);
 			playerMovement.SpinPlayer (stats.BANANA_POWER);
 			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
