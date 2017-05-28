@@ -22,12 +22,11 @@ public class ArenaGenerator : MonoBehaviour {
 
 	GameObject SpawnPoints;
 
-	// Use this for initialization
-	void Start(){
-		Generate ();
+	void Start() {
+		gameObject.AddComponent<ItemSpawnController> ();
 	}
 
-	void Generate () {
+	public void Generate () {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
 		PopulateLists ();
 //
