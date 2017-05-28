@@ -24,10 +24,10 @@ public class ArenaGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		Generate ();
+		//Generate ();
 	}
 
-	void Generate () {
+	public void Generate () {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
 		PopulateLists ();
 //
