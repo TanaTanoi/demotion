@@ -20,6 +20,7 @@ public class ArenaGenerator : MonoBehaviour {
 
 	GameObject arenaOutline;
 
+	GameObject DestoryPlane;
 	GameObject SpawnPoints;
 
 	// Use this for initialization
@@ -31,14 +32,11 @@ public class ArenaGenerator : MonoBehaviour {
 
 	void Generate () {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
+
 		PopulateLists ();
-//
-//		Debug.Log (wallPrefabs.Length);
-//		Debug.Log (tilePrefabs.Length);
-//		Debug.Log (tileClutteredPrefabs.Length);
-//		Debug.Log (tileCrackedPrefabs.Length);
 
 		GenerateArena ();
+		GenerateDestoryPlane ();
 		GenerateStartPoints ();
 	}
 
@@ -54,8 +52,8 @@ public class ArenaGenerator : MonoBehaviour {
 		tileWoodCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/WoodCracked");
 	}
 
-	void GenerateStartPoints(){
-
+	void GenerateStartPoints()
+	{
 		List<Vector3> spawnLocations = new List<Vector3>();
 		GameObject spawnPoint = Resources.Load ("SpawnPoint") as GameObject;
 
@@ -74,7 +72,13 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
-	public void GenerateArena(){
+	void GenerateDestoryPlane(){
+		GameObject planePrefab = Resources.LoadAll<GameObject>("Walls");
+		GameObject destoryPlane = Instantiate (planePrefab, Vector3 (0, -25, 0), Quaternion.identity);
+		destoryPlane.AddComponent<DestoryObjects> ();
+	}
+
+	void GenerateArena(){
 		GenerateOutline ();
 		GenerateCarpetTiles ();
 		GenerateWoodTiles ();
