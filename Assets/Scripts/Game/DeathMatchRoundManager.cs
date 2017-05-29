@@ -14,6 +14,7 @@ public class DeathMatchRoundManager : RoundManager {
 			playerScores.Add (i, 0);
 		}
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
+		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
 	}
 	
 	// Update is called once per frame

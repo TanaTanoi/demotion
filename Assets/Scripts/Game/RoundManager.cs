@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class RoundManager : MonoBehaviour {
 
@@ -9,10 +10,11 @@ public abstract class RoundManager : MonoBehaviour {
 	private int currentRound;
 	private int targetScore;
 	private int maxRoundDuration;
-	private Canvas playerScoreCanvas;
+	protected Canvas hud;
 
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
+		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
 	}
 	
 	// Update is called once per frame
@@ -61,5 +63,15 @@ public abstract class RoundManager : MonoBehaviour {
 	 **/
 	protected void updateScoreBoard(){
 		
+		Text[] text = hud.GetComponentsInChildren<Text> ();
+		for(int i = 0; i < text.Length; i++){
+			if(text[i].name.Equals("Player1Score")){
+				text [i].text = playerScores [1].ToString ();
+			}
+			if(text[i].name.Equals("Player2Score")){
+				text [i].text = playerScores[2].ToString();
+			}
+		}
+
 	}
 }
