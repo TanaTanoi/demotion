@@ -5,10 +5,15 @@ using UnityEngine;
 public class DeathMatchRoundManager : RoundManager {
 
 	private int scoreIncrement = 1;
-
+	private int numOfPlayers = 2;
+	private Transform spawnPoints;
 	// Use this for initialization
 	void Start () {
-		
+		playerScores = new Dictionary<int, int> ();
+		for (int i = 1; i <= numOfPlayers; i++) {
+			playerScores.Add (i, 0);
+		}
+		spawnPoints = GameObject.Find("SpawnPoints").transform;
 	}
 	
 	// Update is called once per frame
@@ -21,8 +26,10 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 	public override void onHit(int hitter, int hitee){
 		int oldScore = playerScores [hitter];
+		playerScores.Remove (hitter);
 		playerScores.Add (hitter, oldScore + scoreIncrement);
 		updateScoreBoard ();
+		respawn (hitee);
 	}
 
 	/**
@@ -50,7 +57,10 @@ public class DeathMatchRoundManager : RoundManager {
 	 * Manages Respawning of players
 	 **/
 	public override void respawn (int playerNum){
-		PlayerCreator pc = new PlayerCreator ();
-		pc.CreatePlayer (new Vector3 (0, 0, 0), InputType.Keyboard, 1);
+		Debug.Log ("The respawn method in Deathmatch was called");
+		int i = Random.Range (0, spawnPoints.transform.childCount -1);
+		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
+		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
+		pm.SetPlayerNum (playerNum);
 	}
 }

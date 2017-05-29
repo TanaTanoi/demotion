@@ -30,6 +30,8 @@ public class PlayerCreator : MonoBehaviour {
         CurrentPrefab.transform.position = Pos;
 
         CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetInput(input);
+		CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetPlayerNum(Customization);
+
         //CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 
 

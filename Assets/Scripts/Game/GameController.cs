@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour {
 		menuControl = menu.GetComponent<MenuController> ();
 		playersDict = new Dictionary<int, GameObject> ();
 		playerCreator = GetComponent<PlayerCreator> ();
-		//roundManager = new DeathMatchRoundManager ();
+		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
         
     }
 
@@ -72,7 +72,7 @@ public class GameController : MonoBehaviour {
             InputType inType;
             settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-            playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, 1));
+			playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
         }
     }
 
@@ -170,7 +170,7 @@ public class GameController : MonoBehaviour {
                 IncreaseScore(hitter);
                 break;
         }
-		// roundManager.onHit(hitter, hitee);
+		 roundManager.onHit(hitter, hitee);
     }
 
 	/**
