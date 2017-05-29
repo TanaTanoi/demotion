@@ -115,6 +115,7 @@ public class GameController : MonoBehaviour {
      */
 	void UpdateTime()
 	{
+        // TODO change this to not be called if round duration is infinite
 		currentRoundDuration -= Time.deltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
@@ -161,16 +162,7 @@ public class GameController : MonoBehaviour {
      */
     public void OnHit(int hitter, int hitee)
     {
-        switch(settings.mode)
-        {
-            case GameSetup.GameMode.DEMOTION:
-                LoseLife(hitee);
-                break;
-            case GameSetup.GameMode.HIGHSCORE:
-                IncreaseScore(hitter);
-                break;
-        }
-		 roundManager.onHit(hitter, hitee);
+		 roundManager.OnHit(hitter, hitee);
     }
 
 	/**

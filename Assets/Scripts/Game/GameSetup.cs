@@ -169,7 +169,14 @@ public class GameSetup : MonoBehaviour {
 
     public void SetRoundDuration(float duration)
     {
-        settings.roundDuration = duration;
+        if (duration == 0.0f)
+        {
+            settings.roundDuration = float.PositiveInfinity;
+        }
+        else
+        {
+            settings.roundDuration = duration;
+        }
     }
 
     public void SetRoundQuantity(float quantity)

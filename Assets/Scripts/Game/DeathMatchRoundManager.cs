@@ -25,7 +25,7 @@ public class DeathMatchRoundManager : RoundManager {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public override void onHit(int hitter, int hitee){
+	public override void OnHit(int hitter, int hitee){
 		int oldScore = playerScores [hitter];
 		playerScores.Remove (hitter);
 		playerScores.Add (hitter, oldScore + scoreIncrement);

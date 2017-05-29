@@ -36,7 +36,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public abstract void onHit (int hitter, int hitee);
+	public abstract void OnHit (int hitter, int hitee);
 
 	/**
 	 * Checks to see if the current round is still playing

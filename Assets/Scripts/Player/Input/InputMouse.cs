@@ -17,7 +17,11 @@ public class InputMouse : PlayerInput {
         activate = "Activate_MS";
     }
 
-    // turn towards the mouse
+    // Turn towards the mouse
+    /**
+     * Turns the player towards the mouse,
+     * Code from https://unity3d.com/learn/tutorials/projects/survival-shooter/player-character?playlist=17144
+     */
     public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
     {
         // Create a ray from the mouse cursor on screen in the direction of the camera.
@@ -27,7 +31,7 @@ public class InputMouse : PlayerInput {
         RaycastHit floorHit;
 
         // Perform the raycast and if it hits something on the floor layer...
-        if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
+        if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask, QueryTriggerInteraction.Collide))
         {
             // Create a vector from the player to the point on the floor the raycast from the mouse hit.
             Vector3 playerToMouse = floorHit.point - transform.position;
