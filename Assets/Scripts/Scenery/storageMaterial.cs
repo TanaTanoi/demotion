@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class storageMaterial : MonoBehaviour
 {
@@ -26,10 +28,14 @@ public class storageMaterial : MonoBehaviour
 			Customization = "STORAGERED";
 		}
 		string matPath = "Assets/Materials&Textures/Storage/" + Customization + ".mat";
-		Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
-		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
-		meshRenderer.material = newMat;
-	}
+#if UNITY_EDITOR
+        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
+#endif
+        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+#if UNITY_EDITOR
+        meshRenderer.material = newMat;
+#endif
+    }
 
 	// Update is called once per frame
 	void Update()

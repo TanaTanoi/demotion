@@ -35,6 +35,7 @@ public class CamLerpScript : MonoBehaviour {
 
     void Play() {
         transform.position = startPoint.position;
+        transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 		startTime = Time.time;
 		journeyLength = Vector3.Distance(startPoint.position, finishPoint.position);
         lerping = true;

@@ -65,7 +65,6 @@ public class GameController : MonoBehaviour {
      */
     void SpawnAllPlayers()
     {
-		Debug.Log (playerCreator != null);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
         for(int i = 0; i < settings.IDtoInput.Count; i++)
         {

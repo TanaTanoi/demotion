@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameSetup : MonoBehaviour {
+    public static GameSetup instance;
+
     //Game type enums
     public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
     /**
@@ -61,6 +63,15 @@ public class GameSetup : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+
         //Don't destroy this
         DontDestroyOnLoad(gameObject);
     }
@@ -152,16 +163,17 @@ public class GameSetup : MonoBehaviour {
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-        if (scene != SceneManager.GetSceneByBuildIndex(1)) return;
-		// Move to GameScene
         SceneManager.MoveGameObjectToScene(gameObject, scene);
-		// Get the game controller
-		controller = GameController.instance.gameObject;
-		control = controller.GetComponent<GameController> ();
-		generator = controller.GetComponent<ArenaGenerator> ();
-		generator.Generate ();
-		control.CrackedCenterSetup ();
-		control.SetGameSettings(settings);
+        if (scene == SceneManager.GetSceneByBuildIndex(1))
+        {
+            // Get the game controller
+            controller = GameController.instance.gameObject;
+            control = controller.GetComponent<GameController>();
+            generator = controller.GetComponent<ArenaGenerator>();
+            generator.Generate();
+            control.CrackedCenterSetup();
+            control.SetGameSettings(settings);
+        }
 
 	}
 

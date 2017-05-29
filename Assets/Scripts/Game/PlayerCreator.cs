@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class PlayerCreator : MonoBehaviour {
 
@@ -22,7 +21,8 @@ public class PlayerCreator : MonoBehaviour {
     public GameObject CreatePlayer(Vector3 Pos, InputType input, int Customization)
     {
         string matPath = "Assets/Materials&Textures/Player/player" + Customization + ".mat";
-        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
+        //Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
+        // TODO reimplement this mat thing but getting around the unity editor issue
 
         GameObject CurrentPrefab = Instantiate(prefab);
 		//GameObject CurrentPrefab = (GameObject)Instantiate(Resources.Load("Player"), new Vector3(-5,1,-3), new Quaternion(0,0,0,1));
