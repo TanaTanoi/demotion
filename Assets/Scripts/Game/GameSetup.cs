@@ -155,14 +155,9 @@ public class GameSetup : MonoBehaviour {
         }
     }
 
-    /**
-     * Moves this gameobject to the game scene
-     */
-    public void NewGame() {
-        
-    }
-
     void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
+        // Move the setup back into the scene
+        // Need to work out how to attach this back to all the things...
         SceneManager.MoveGameObjectToScene(gameObject, scene);
         if (scene == SceneManager.GetSceneByBuildIndex(1))
         {

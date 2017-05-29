@@ -11,7 +11,7 @@ Use two empty game objects to set start and finish.
 public class CamLerpScript : MonoBehaviour {
 	public Transform startPoint;
 	public Transform finishPoint;
-	public float speed = 1.0F;
+	public float speed = 12000.0F;
 	private float startTime;
 	private float journeyLength;
 
@@ -29,12 +29,14 @@ public class CamLerpScript : MonoBehaviour {
 
     void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
-        Play();
+        if (scene == SceneManager.GetSceneByBuildIndex(0))
+        {
+            transform.SetPositionAndRotation(finishPoint.position, finishPoint.rotation);
+        }
     }
 
 
     void Play() {
-        transform.position = startPoint.position;
         transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 		startTime = Time.time;
 		journeyLength = Vector3.Distance(startPoint.position, finishPoint.position);
@@ -50,4 +52,9 @@ public class CamLerpScript : MonoBehaviour {
         // Stop lerping when we get to the end
         if(transform.position == finishPoint.position) lerping = false;
 	}
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
