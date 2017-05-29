@@ -53,12 +53,15 @@ public class GameController : MonoBehaviour {
     public void SetGameSettings(GameSettings gameSettings)
     {
         settings = gameSettings;
-        
-		timerText.text = "Time: " + settings.roundDuration;
-		StartGame ();
+
+        Restart();
     }
 
-    
+    public void Restart()
+    {
+        timerText.text = "Time: " + settings.roundDuration;
+        StartGame();
+    }
 
     /**
      * Spawns all the players

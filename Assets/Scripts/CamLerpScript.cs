@@ -14,7 +14,7 @@ public class CamLerpScript : MonoBehaviour {
 	public float speed = 12000.0F;
 	private float startTime;
 	private float journeyLength;
-
+    private bool first = true;
     private bool lerping = false;
 
     private void OnEnable()
@@ -31,16 +31,27 @@ public class CamLerpScript : MonoBehaviour {
     {
         if (scene == SceneManager.GetSceneByBuildIndex(0))
         {
-            transform.SetPositionAndRotation(finishPoint.position, finishPoint.rotation);
+            //if (first) return;
+            //ebug.Log("asd");
+            //lerping = false;
+            //transform.SetPositionAndRotation(finishPoint.position, finishPoint.rotation);
+            
         }
+    }
+
+    private void Awake()
+    {
+        first = true;
+        Play();
     }
 
 
     void Play() {
+        lerping = true;
         transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 		startTime = Time.time;
 		journeyLength = Vector3.Distance(startPoint.position, finishPoint.position);
-        lerping = true;
+        first = false;
 	}
 
 	void Update() {

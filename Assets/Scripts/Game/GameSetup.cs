@@ -80,7 +80,7 @@ public class GameSetup : MonoBehaviour {
     {
         settings = (GameSettings)ScriptableObject.CreateInstance("GameSettings");
         InitialisePlayerControls();
-        DebugPrintSettings();
+        
     }
 
     /**
@@ -128,7 +128,7 @@ public class GameSetup : MonoBehaviour {
     }
 
     void Update() {
-        if (!settingUp) return;
+        //if (!settingUp) return;
 
         //TODO take all players' inputs and use it to determine their team
         //When a player presses boost it will lock them to that team
@@ -169,7 +169,6 @@ public class GameSetup : MonoBehaviour {
             control.CrackedCenterSetup();
             control.SetGameSettings(settings);
         }
-
 	}
 
     /*== Setter functions for the UI to alter values ==*/
