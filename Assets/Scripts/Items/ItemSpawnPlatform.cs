@@ -38,9 +38,10 @@ public class ItemSpawnPlatform : MonoBehaviour {
 			GameObject boost = Instantiate(superboostProp);
             boost.AddComponent<ItemController>().type = type;
             return boost;
-            case Item.Type.STICKY_THROWABLE:
+		case Item.Type.STICKY_THROWABLE:
                 // change once we have different models for them etc
-                GameObject throwable = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				GameObject throwable = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+				throwable.transform.localScale = Vector3.one * 0.5f;
                 throwable.AddComponent<ItemController>().type = type;
                 return throwable;
 		case Item.Type.BANANA_THROWABLE:
