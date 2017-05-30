@@ -220,5 +220,9 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 1;
         menuControl.Resume();
     }
+
+	public RoundManager GetRoundManager(){
+		return this.roundManager;
+	}
     /*=== END PAUSE LOGIC ===*/
 }
