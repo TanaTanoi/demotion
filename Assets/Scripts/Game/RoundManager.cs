@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class RoundManager : MonoBehaviour {
-
+	
 	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score
 	private int numOfRounds;
 	private int currentRound;

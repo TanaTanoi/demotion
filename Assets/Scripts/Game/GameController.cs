@@ -221,9 +221,41 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 1;
         menuControl.Resume();
     }
+    /*=== END PAUSE LOGIC ===*/
 
 	public RoundManager GetRoundManager(){
 		return this.roundManager;
 	}
-    /*=== END PAUSE LOGIC ===*/
+
+	public Dictionary<int, GameObject> GetPlayersDict(){
+		return this.playersDict;
+	}
+
+	/**
+	 * Manages Respawning of players
+	 **/
+	public void respawn (int playerNum){
+
+		ArrayList goodSpawns = new ArrayList ();
+		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
+			if (IsGoodSpawn (j)) {
+				goodSpawns.Add (spawnPoints.transform.GetChild (j));
+			}
+		}
+		int i = Random.Range (0, spawnPoints.transform.childCount -1);
+		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
+		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
+		pm.SetPlayerNum (playerNum);
+		playersDict [playerNum] = newPlayer;
+	}
+
+	private bool IsGoodSpawn(int spawnNumber){
+		GameController gc = GameController.instance;
+		Dictionary<int, GameObject> players = gc.GetPlayersDict ();
+		Debug.Log ("There are: " + players.Count + " Players");
+		for (int i = 0; i < players.Count; i++) {
+			Debug.Log ("There is a player in the dictinary");
+		}
+		return false;
+	}
 }
