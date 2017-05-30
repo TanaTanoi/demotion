@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour {
 
     private float currentRoundDuration;
 	public List<GameObject> crackedTiles;
-	public int drop = 40;
+	public int drop = 0;
 
     /*=== INITIALISATION ===*/
 
@@ -97,6 +97,7 @@ public class GameController : MonoBehaviour {
         //TODO display start round splash: 3..2..1..Joust (or something)
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
+		drop = (int)currentRoundDuration - 20;
         SpawnAllPlayers();
 		playing = true;
 		paused = false;
@@ -220,5 +221,9 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 1;
         menuControl.Resume();
     }
+
+	public RoundManager GetRoundManager(){
+		return this.roundManager;
+	}
     /*=== END PAUSE LOGIC ===*/
 }

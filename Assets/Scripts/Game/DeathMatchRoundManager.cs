@@ -58,7 +58,7 @@ public class DeathMatchRoundManager : RoundManager {
 	 * Manages Respawning of players
 	 **/
 	public override void respawn (int playerNum){
-		Debug.Log ("The respawn method in Deathmatch was called");
+		
 		int i = Random.Range (0, spawnPoints.transform.childCount -1);
 		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
 		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();

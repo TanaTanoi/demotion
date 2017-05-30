@@ -26,8 +26,7 @@ public class PlayerHitDetection : MonoBehaviour {
         // Do nothing if not hit with a lance or is still invulnerable
 		int thisPlayer = this.transform.gameObject.GetComponentInParent<PlayerMovement> ().GetPlayerNum ();
 		int otherPlayer = other.gameObject.GetComponentInParent<PlayerMovement>().GetPlayerNum();
-		Debug.Log (thisPlayer);
-		Debug.Log (otherPlayer);
+
          
 		GameObject chair = (GameObject)playerHit.transform.Find ("chairA").gameObject;
 		playerHit.transform.Find ("chairA").parent = null;
