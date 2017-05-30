@@ -6,6 +6,7 @@ using System.Linq;
 
 public class GameController : MonoBehaviour {
     public static GameController instance;
+	private static CameraController mainCamera;
 
     /*== PLAYER SETTINGS ==*/
 	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
@@ -47,7 +48,7 @@ public class GameController : MonoBehaviour {
 		playersDict = new Dictionary<int, GameObject> ();
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
-        
+		mainCamera = FindObjectOfType<CameraController> ();
     }
 
     public void SetGameSettings(GameSettings gameSettings)
@@ -74,7 +75,7 @@ public class GameController : MonoBehaviour {
             InputType inType;
             settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
+			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
         }
     }
 
@@ -165,8 +166,32 @@ public class GameController : MonoBehaviour {
      */
     public void OnHit(int hitter, int hitee)
     {
-		 roundManager.OnHit(hitter, hitee);
+		GameObject loser = playersDict [hitee];
+		GameObject winner = playersDict [hitter];
+		
+		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
+
+		StartCoroutine (FocusOnPoint (mid));
+		roundManager.OnHit(hitter, hitee);
     }
+
+
+	private IEnumerator FocusOnPoint(Vector3 point)
+	{
+		mainCamera.ZoomIn (point);
+		for(int i = 0; i < 10; i++)
+		{
+			Time.timeScale -= 0.09f;
+		}
+		yield return new WaitForSeconds(1f);
+		mainCamera.ReturnZoom ();
+		for(int i = 0; i < 10; i++)
+		{
+			Time.timeScale += 0.09f;
+		}
+		// set focal point
+
+	}
 
 	/**
      * Reduces the lives remaining of the given player
