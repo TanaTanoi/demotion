@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DeathMatchRoundManager : RoundManager {
-
+	
 	private int scoreIncrement = 1;
 	private int numOfPlayers = 2;
 	private Transform spawnPoints;
@@ -58,10 +58,26 @@ public class DeathMatchRoundManager : RoundManager {
 	 * Manages Respawning of players
 	 **/
 	public override void respawn (int playerNum){
-		
-		int i = Random.Range (0, spawnPoints.transform.childCount -1);
-		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
-		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
-		pm.SetPlayerNum (playerNum);
+		GameController.instance.respawn (playerNum);
+//		ArrayList goodSpawns = new ArrayList ();
+//		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
+//			if (IsGoodSpawn (j)) {
+//				goodSpawns.Add (spawnPoints.transform.GetChild (j));
+//			}
+//		}
+//		int i = Random.Range (0, spawnPoints.transform.childCount -1);
+//		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
+//		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
+//		pm.SetPlayerNum (playerNum);
+	}
+
+	private bool IsGoodSpawn(int spawnNumber){
+		GameController gc = GameController.instance;
+		Dictionary<int, GameObject> players = gc.GetPlayersDict ();
+		Debug.Log ("There are: " + players.Count + " Players");
+		for (int i = 0; i < players.Count; i++) {
+			Debug.Log ("There is a player in the dictinary");
+		}
+		return false;
 	}
 }
