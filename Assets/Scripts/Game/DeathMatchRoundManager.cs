@@ -70,14 +70,4 @@ public class DeathMatchRoundManager : RoundManager {
 //		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
 //		pm.SetPlayerNum (playerNum);
 	}
-
-	private bool IsGoodSpawn(int spawnNumber){
-		GameController gc = GameController.instance;
-		Dictionary<int, GameObject> players = gc.GetPlayersDict ();
-		Debug.Log ("There are: " + players.Count + " Players");
-		for (int i = 0; i < players.Count; i++) {
-			Debug.Log ("There is a player in the dictinary");
-		}
-		return false;
-	}
 }

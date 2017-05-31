@@ -6,6 +6,7 @@ using System.Linq;
 
 public class GameController : MonoBehaviour {
     public static GameController instance;
+	private static CameraController mainCamera;
 
     /*== PLAYER SETTINGS ==*/
 	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
@@ -30,6 +31,9 @@ public class GameController : MonoBehaviour {
 	public List<GameObject> crackedTiles;
 	public int drop = 0;
 
+	/*== CAMERA SETTINGS ==*/
+	private bool zooming = false;
+
     /*=== INITIALISATION ===*/
 
 
@@ -47,7 +51,7 @@ public class GameController : MonoBehaviour {
 		playersDict = new Dictionary<int, GameObject> ();
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
-        
+		mainCamera = FindObjectOfType<CameraController> ();
     }
 
     public void SetGameSettings(GameSettings gameSettings)
@@ -74,7 +78,7 @@ public class GameController : MonoBehaviour {
             InputType inType;
             settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
+			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
         }
     }
 
@@ -107,6 +111,7 @@ public class GameController : MonoBehaviour {
     void FixedUpdate() {
 		if (playing && !paused) {
 			UpdateTime ();
+			FocusCamera ();
 			if (Input.GetAxisRaw ("Pause") != 0) {
 				TogglePause ();
 			}
@@ -131,6 +136,17 @@ public class GameController : MonoBehaviour {
 				DropCrackedCenter ();
 			}
 			drop -= 20;
+		}
+	}
+
+	private void FocusCamera(){
+		if (!zooming) {
+			Vector3 mid = Vector3.zero;
+			foreach (GameObject x in playersDict.Values) {
+				mid += x.transform.position;
+			}
+			mid = mid / playersDict.Count;
+			mainCamera.SetFocalPoint (mid);
 		}
 	}
 
@@ -165,8 +181,32 @@ public class GameController : MonoBehaviour {
      */
     public void OnHit(int hitter, int hitee)
     {
-		 roundManager.OnHit(hitter, hitee);
+		GameObject loser = playersDict [hitee];
+		GameObject winner = playersDict [hitter];
+		
+		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
+
+		StartCoroutine (FocusOnPoint (mid));
+		roundManager.OnHit(hitter, hitee);
     }
+
+
+	private IEnumerator FocusOnPoint(Vector3 point)
+	{
+		zooming = true;
+		mainCamera.ZoomIn (point);
+		for(int i = 0; i < 10; i++)
+		{
+			Time.timeScale -= 0.03f;
+		}
+		yield return new WaitForSeconds(1f);
+		mainCamera.ReturnZoom ();
+		for(int i = 0; i < 10; i++)
+		{
+			Time.timeScale += 0.03f;
+		}
+		zooming = false;
+	}
 
 	/**
      * Reduces the lives remaining of the given player
@@ -227,10 +267,6 @@ public class GameController : MonoBehaviour {
 		return this.roundManager;
 	}
 
-	public Dictionary<int, GameObject> GetPlayersDict(){
-		return this.playersDict;
-	}
-
 	/**
 	 * Manages Respawning of players
 	 **/
@@ -252,6 +288,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
+
 		Transform spawn = spawnPoints.GetChild (spawnNumber);
 		foreach(GameObject x in playersDict.Values){
 			if (x != null) {
@@ -260,6 +297,7 @@ public class GameController : MonoBehaviour {
 					return false;
 				}
 			}
+
 		}
 		return true;
 	}
