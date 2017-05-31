@@ -31,6 +31,9 @@ public class GameController : MonoBehaviour {
 	public List<GameObject> crackedTiles;
 	public int drop = 0;
 
+	/*== CAMERA SETTINGS ==*/
+	private bool zooming = false;
+
     /*=== INITIALISATION ===*/
 
 
@@ -108,6 +111,7 @@ public class GameController : MonoBehaviour {
     void FixedUpdate() {
 		if (playing && !paused) {
 			UpdateTime ();
+			FocusCamera ();
 			if (Input.GetAxisRaw ("Pause") != 0) {
 				TogglePause ();
 			}
@@ -132,6 +136,17 @@ public class GameController : MonoBehaviour {
 				DropCrackedCenter ();
 			}
 			drop -= 20;
+		}
+	}
+
+	private void FocusCamera(){
+		if (!zooming) {
+			Vector3 mid = Vector3.zero;
+			foreach (GameObject x in playersDict.Values) {
+				mid += x.transform.position;
+			}
+			mid = mid / playersDict.Count;
+			mainCamera.SetFocalPoint (mid);
 		}
 	}
 
@@ -178,19 +193,19 @@ public class GameController : MonoBehaviour {
 
 	private IEnumerator FocusOnPoint(Vector3 point)
 	{
+		zooming = true;
 		mainCamera.ZoomIn (point);
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale -= 0.09f;
+			Time.timeScale -= 0.03f;
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale += 0.09f;
+			Time.timeScale += 0.03f;
 		}
-		// set focal point
-
+		zooming = false;
 	}
 
 	/**
@@ -252,10 +267,6 @@ public class GameController : MonoBehaviour {
 		return this.roundManager;
 	}
 
-	public Dictionary<int, GameObject> GetPlayersDict(){
-		return this.playersDict;
-	}
-
 	/**
 	 * Manages Respawning of players
 	 **/
@@ -276,9 +287,9 @@ public class GameController : MonoBehaviour {
 
 	private bool IsGoodSpawn(int spawnNumber){
 		GameController gc = GameController.instance;
-		Dictionary<int, GameObject> players = gc.GetPlayersDict ();
-		Debug.Log ("There are: " + players.Count + " Players");
-		for (int i = 0; i < players.Count; i++) {
+	
+		Debug.Log ("There are: " + playersDict.Count + " Players");
+		for (int i = 0; i < playersDict.Count; i++) {
 			Debug.Log ("There is a player in the dictinary");
 		}
 		return false;

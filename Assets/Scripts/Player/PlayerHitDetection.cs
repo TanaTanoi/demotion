@@ -10,6 +10,8 @@ public class PlayerHitDetection : MonoBehaviour {
 	private int playerNum;
     private float vulnerablility = 0.0f;
 
+	private float blockAngleThreshold = -0.8f;
+
     private GameController gameControl;
 
     private void Start()
@@ -24,10 +26,25 @@ public class PlayerHitDetection : MonoBehaviour {
 		if (!other.GetComponent<Collider>().CompareTag("Player")) return;
 		if (Time.time < vulnerablility) return;
 
+		PlayerMovement thisPlayerMove = this.transform.gameObject.GetComponentInParent<PlayerMovement> ();
+		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
+		if (thisPlayerMove == null)
+			return;
+
 		// Get the playerhit and the number of players involved in the collision
 		GameObject playerHit = other.gameObject;
-		int thisPlayerNum = this.transform.gameObject.GetComponentInParent<PlayerMovement> ().GetPlayerNum ();
-		int otherPlayerNum = other.gameObject.GetComponentInParent<PlayerMovement>().GetPlayerNum();
+
+		// If the direction of the hit is from the front of the player, both get spun.
+		if (Vector3.Dot (-transform.forward, -playerHit.transform.forward) > blockAngleThreshold) {
+			thisPlayerMove.Boost (-100f);
+			otherPlayerMove.Boost (-100f);
+			thisPlayerMove.SpinPlayer (Random.Range(-100, 100));
+			otherPlayerMove.SpinPlayer (Random.Range(-100, 100));
+			return;
+		}
+
+		int thisPlayerNum = thisPlayerMove.GetPlayerNum ();
+		int otherPlayerNum = otherPlayerMove.GetPlayerNum();
 
         // Get the lance and chair and unparent them so they remain in the game scene
 		GameObject chair = (GameObject)playerHit.transform.Find ("chairA").gameObject;

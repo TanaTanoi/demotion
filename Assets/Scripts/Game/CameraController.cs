@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (focalPoint - transform.position), 1);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (focalPoint - transform.position), 0.1f);
 		transform.position = Vector3.Lerp (original, focalPoint, zoomAmount);
 		if (zooming) {
 			zoomAmount = Mathf.Min (0.7f, zoomAmount + zoomSpeed);
