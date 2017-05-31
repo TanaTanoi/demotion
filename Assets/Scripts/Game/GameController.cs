@@ -236,26 +236,31 @@ public class GameController : MonoBehaviour {
 	 **/
 	public void respawn (int playerNum){
 
-		ArrayList goodSpawns = new ArrayList ();
+		List<Transform> goodSpawns = new List<Transform> ();
 		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
+			
 			if (IsGoodSpawn (j)) {
 				goodSpawns.Add (spawnPoints.transform.GetChild (j));
 			}
 		}
-		int i = Random.Range (0, spawnPoints.transform.childCount -1);
-		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
+		int i = Random.Range (0, goodSpawns.Count);
+		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
 		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
 		pm.SetPlayerNum (playerNum);
 		playersDict [playerNum] = newPlayer;
+
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
-		GameController gc = GameController.instance;
-		Dictionary<int, GameObject> players = gc.GetPlayersDict ();
-		Debug.Log ("There are: " + players.Count + " Players");
-		for (int i = 0; i < players.Count; i++) {
-			Debug.Log ("There is a player in the dictinary");
+		Transform spawn = spawnPoints.GetChild (spawnNumber);
+		foreach(GameObject x in playersDict.Values){
+			if (x != null) {
+				float distance = Vector3.Distance (x.transform.position, spawn.transform.position);
+				if (distance < 10) {
+					return false;
+				}
+			}
 		}
-		return false;
+		return true;
 	}
 }
