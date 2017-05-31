@@ -145,8 +145,18 @@ public class GameController : MonoBehaviour {
 			foreach (GameObject x in playersDict.Values) {
 				mid += x.transform.position;
 			}
+			float biggestDist = 0;
+			foreach (GameObject x in playersDict.Values) {
+				float d = Vector3.Distance (x.transform.position, mid);
+				biggestDist = Mathf.Max (d, biggestDist);					
+			}
+
 			mid = mid / playersDict.Count;
+
 			mainCamera.SetFocalPoint (mid);
+			// 0.3 is the max influence we can get from the base zoom
+			Debug.Log((biggestDist / 50));
+			mainCamera.desiredBaseZoom = Mathf.Max(0.3f - (biggestDist / 50), 0); // TODO change 100f to some fixed map radius
 		}
 	}
 

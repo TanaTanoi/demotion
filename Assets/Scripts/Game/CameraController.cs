@@ -9,7 +9,8 @@ public class CameraController : MonoBehaviour {
 	private bool zooming = false;
 
 	private float zoomSpeed = 0.08f;
-
+	private float baseZoom = 0;
+	public float desiredBaseZoom = 0;
 	void Start(){
 		original = transform.position;
 	}
@@ -17,12 +18,14 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (focalPoint - transform.position), 0.1f);
-		transform.position = Vector3.Lerp (original, focalPoint, zoomAmount);
+		transform.position = Vector3.Lerp (original, focalPoint, baseZoom + zoomAmount);
 		if (zooming) {
-			zoomAmount = Mathf.Min (0.7f, zoomAmount + zoomSpeed);
+			zoomAmount = Mathf.Min (0.4f, baseZoom + zoomAmount + zoomSpeed);
 		} else {
-			zoomAmount = Mathf.Max (0, zoomAmount - zoomSpeed);
+			zoomAmount = Mathf.Max (0,  zoomAmount - zoomSpeed);
 		}
+		baseZoom -= (baseZoom - desiredBaseZoom) * 0.2f;
+		Debug.Log (baseZoom + " " + desiredBaseZoom);
 	}
 
 	public void ZoomIn(Vector3 point){
