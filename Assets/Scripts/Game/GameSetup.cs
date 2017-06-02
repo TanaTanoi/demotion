@@ -73,6 +73,8 @@ public class GameSetup : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
+        DontDestroyOnLoad(gameObject);
+
 		Text[] slidersText = settingsPanel.GetComponentsInChildren<Text> (true);
 		roundsText = slidersText [2];
 		durationText = slidersText [3];
@@ -163,7 +165,10 @@ public class GameSetup : MonoBehaviour {
 		SceneManager.sceneLoaded -= OnLevelFinishedLoading;
 	}
 
-	public void OnLevelFinishedLoading(Scene Scene, LoadSceneMode mode) {
+	public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
+        // Do nothing if we dont load the game scene
+        if (scene != SceneManager.GetSceneByName("GameScene")) return;
+
 		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
 		NewGame ();
 	}
