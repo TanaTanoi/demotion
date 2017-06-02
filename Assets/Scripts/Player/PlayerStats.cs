@@ -8,6 +8,9 @@ public class PlayerStats : ScriptableObject {
     public float DEFAULT_BOOST_POWER = 450;
 	public float DEFAULT_ROTATION_SPEED = 5f;
 	public float DEFAULT_COOLDOWN = 0.7f;
+	public float DEFAULT_MAX_BOOST_HOLD_TIME = 0.5f;
+	public float MINIMUM_BOOST_POWER = 200;
+	public AnimationCurve BOOST_POWER_RAMP;
 
     /* Powerup stats */
     // Decreases boost cooldown. Does not stack, extends duration

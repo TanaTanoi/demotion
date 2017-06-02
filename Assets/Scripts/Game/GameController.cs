@@ -146,17 +146,18 @@ public class GameController : MonoBehaviour {
 				mid += x.transform.position;
 			}
 			float biggestDist = 0;
+			mid = mid / playersDict.Count;
+
 			foreach (GameObject x in playersDict.Values) {
 				float d = Vector3.Distance (x.transform.position, mid);
 				biggestDist = Mathf.Max (d, biggestDist);					
 			}
 
-			mid = mid / playersDict.Count;
 
 			mainCamera.SetFocalPoint (mid);
 			// 0.3 is the max influence we can get from the base zoom
-			Debug.Log((biggestDist / 50));
-			mainCamera.desiredBaseZoom = Mathf.Max(0.3f - (biggestDist / 50), 0); // TODO change 100f to some fixed map radius
+
+			mainCamera.desiredBaseZoom = Mathf.Max(0.3f - (biggestDist / 50), 0); // TODO change 50f to some fixed map radius
 		}
 	}
 
@@ -207,13 +208,13 @@ public class GameController : MonoBehaviour {
 		mainCamera.ZoomIn (point);
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale -= 0.03f;
+			Time.timeScale -= 0.05f;
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale += 0.03f;
+			Time.timeScale += 0.05f;
 		}
 		zooming = false;
 	}

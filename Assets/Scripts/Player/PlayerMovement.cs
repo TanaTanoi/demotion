@@ -21,6 +21,10 @@ public class PlayerMovement : MonoBehaviour {
 
     private PlayerInput playerIn;
 
+	private float boostHoldDuration = 0f;
+
+	private bool boostDown = false;
+
     // Use this for initialization
     void Start() {
         boostCooldown = stats.DEFAULT_COOLDOWN;
@@ -48,11 +52,22 @@ public class PlayerMovement : MonoBehaviour {
 		
 
 			//desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
-			if (Input.GetAxisRaw (playerIn.boost) > deadZone) {
-				if (nextBoostTime <= Time.time) {
-					Boost (boostPower);
-					nextBoostTime = Time.time + boostCooldown;
-				}
+			if (!boostDown && Input.GetAxisRaw (playerIn.boost) > deadZone) {
+				//if (nextBoostTime <= Time.time) {
+				boostDown = true;
+				boostHoldDuration = Time.time;
+				nextBoostTime = Time.time + boostCooldown;
+			//	}
+			}
+
+			if(boostDown && Input.GetAxisRaw(playerIn.boost) <= deadZone) {
+				boostHoldDuration = Mathf.Min ((Time.time - boostHoldDuration), stats.DEFAULT_MAX_BOOST_HOLD_TIME);
+				boostHoldDuration = boostHoldDuration / stats.DEFAULT_MAX_BOOST_HOLD_TIME;
+				boostHoldDuration = stats.BOOST_POWER_RAMP.Evaluate (boostHoldDuration);
+				float boost = boostHoldDuration * boostPower;// + stats.MINIMUM_BOOST_POWER;
+				Boost (boost);
+
+				boostDown = false;
 			}
 		}
 

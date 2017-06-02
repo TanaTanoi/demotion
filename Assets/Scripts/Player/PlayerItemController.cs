@@ -101,8 +101,9 @@ public class PlayerItemController : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         throwable.GetComponent<Rigidbody>().isKinematic = false;
         throwable.transform.SetParent(null);
-        throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
+        throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 700);
         yield return new WaitForSeconds(0.2f);
 		throwable.GetComponent<Collider>().enabled = true;
+		throwable.AddComponent<ThrowableItem> ();
     }
 }
