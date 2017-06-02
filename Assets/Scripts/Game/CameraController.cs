@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour {
 			zoomAmount = Mathf.Max (0,  zoomAmount - zoomSpeed);
 		}
 		baseZoom -= (baseZoom - desiredBaseZoom) * 0.2f;
-		Debug.Log (baseZoom + " " + desiredBaseZoom);
+		//Debug.Log (baseZoom + " " + desiredBaseZoom);
 	}
 
 	public void ZoomIn(Vector3 point){
