@@ -17,15 +17,15 @@ public class CameraController : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (focalPoint - transform.position), 0.1f);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (focalPoint - transform.position), 0.4f);
 		transform.position = Vector3.Lerp (original, focalPoint, baseZoom + zoomAmount);
 		if (zooming) {
-			zoomAmount = Mathf.Min (0.4f, baseZoom + zoomAmount + zoomSpeed);
+			zoomAmount = Mathf.Min (0.5f, baseZoom + zoomAmount + zoomSpeed);
 		} else {
 			zoomAmount = Mathf.Max (0,  zoomAmount - zoomSpeed);
 		}
-		baseZoom -= (baseZoom - desiredBaseZoom) * 0.2f;
-		Debug.Log (baseZoom + " " + desiredBaseZoom);
+		//baseZoom -= Mathf.Clamp((baseZoom - desiredBaseZoom) * 0.2f, 0, 0.3f);
+		baseZoom = desiredBaseZoom;
 	}
 
 	public void ZoomIn(Vector3 point){
