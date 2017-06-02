@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour {
-    public static GameSetup instance;
 
     //Game type enums
     public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
@@ -146,6 +145,7 @@ public class GameSetup : MonoBehaviour {
     {
         settings.IDtoInput = new Dictionary<int, InputType>();
         string[] controllers = Input.GetJoystickNames();
+        
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
         settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
         // Add all the players into the ID to Input dictionary
@@ -166,7 +166,6 @@ public class GameSetup : MonoBehaviour {
 	}
 
 	public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
-        // Do nothing if we dont load the game scene
         if (scene != SceneManager.GetSceneByName("GameScene")) return;
 
 		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
@@ -184,12 +183,21 @@ public class GameSetup : MonoBehaviour {
         control.SetGameSettings(settings);
 	}
 
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
+    }
+
 
 
     /*== Setter functions for the UI to alter values ==*/
-	// (Mathf.CeilToInt(sliderValue/interval) * interval).ToString();
+    // (Mathf.CeilToInt(sliderValue/interval) * interval).ToString();
 
-	public void SetRoundQuantity(float quantity)
+    public void SetRoundQuantity(float quantity)
 	{
 		float interval = 1f;
 		settings.numberRounds = (int)(Mathf.CeilToInt(quantity/interval) * interval);
