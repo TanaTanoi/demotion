@@ -112,22 +112,28 @@ public class GameController : MonoBehaviour {
 		if (playing && !paused) {
 			UpdateTime ();
 			FocusCamera ();
-			if (Input.GetAxisRaw ("Pause") != 0) {
-				TogglePause ();
-			}
 		}
     }
 
-	/**
+    private void Update()
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            TogglePause();
+        }
+    }
+
+    /**
      * Updates the time remaining of the match
      */
-	void UpdateTime()
+    void UpdateTime()
 	{
         // TODO change this to not be called if round duration is infinite
 		currentRoundDuration -= Time.deltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
+            // TODO end round here
 			PauseGame();
 		}
 

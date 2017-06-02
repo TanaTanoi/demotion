@@ -42,7 +42,7 @@ public class CamLerpScript : MonoBehaviour {
         transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 		startTime = Time.time;
 		journeyLength = Vector3.Distance(startPoint.position, finishPoint.position);
-        Debug.Log("Play the damn camera lerp!");
+        
     }
 
 	void FixedUpdate() {

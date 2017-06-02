@@ -21,7 +21,7 @@ public class InputController : PlayerInput {
         Vector3 targetDirection = new Vector3(horizontalInput, 0f, verticalInput);
 
         Quaternion newRotation = Quaternion.LookRotation(targetDirection);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed * Time.fixedDeltaTime);
 
     }
 }
