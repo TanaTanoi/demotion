@@ -10,7 +10,7 @@ public class DeathMatchRoundManager : RoundManager {
 	// Use this for initialization
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
-		for (int i = 1; i <= numOfPlayers; i++) {
+		for (int i = 0; i <= numOfPlayers; i++) {
 			playerScores.Add (i, 0);
 		}
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
@@ -30,7 +30,7 @@ public class DeathMatchRoundManager : RoundManager {
 		playerScores.Remove (hitter);
 		playerScores.Add (hitter, oldScore + scoreIncrement);
 		updateScoreBoard ();
-		respawn (hitee);
+		Respawn (hitee);
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class DeathMatchRoundManager : RoundManager {
 	/**
 	 * Manages Respawning of players
 	 **/
-	public override void respawn (int playerNum){
-		GameController.instance.respawn (playerNum);
+	public override void Respawn (int playerNum){
+		GameController.instance.Respawn (playerNum);
 //		ArrayList goodSpawns = new ArrayList ();
 //		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
 //			if (IsGoodSpawn (j)) {

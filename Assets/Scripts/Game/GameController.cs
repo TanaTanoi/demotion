@@ -10,7 +10,8 @@ public class GameController : MonoBehaviour {
 
     /*== PLAYER SETTINGS ==*/
 
-	private Dictionary<int, GameObject> playersDict;    // Dictionary between the player number and the player object.
+    private Dictionary<int, PlayerSettings> playerSettingsDict;  // Dictionary between playerID and player settings
+    private Dictionary<int, GameObject> playerObjectDict;        // Dictionary between playerID and player Gameobject
     
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
@@ -50,8 +51,8 @@ public class GameController : MonoBehaviour {
         }
 
 		menuControl = menu.GetComponent<MenuController> ();
-		playersDict = new Dictionary<int, GameObject> ();
-
+        playerObjectDict = new Dictionary<int, GameObject> ();
+        playerSettingsDict = new Dictionary<int, PlayerSettings>();
 
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
@@ -79,7 +80,8 @@ public class GameController : MonoBehaviour {
         for(int i = 0; i < settings.players.Count; i++)
         {
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, settings.players[i]));
+			playerObjectDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, settings.players[i]));
+            playerSettingsDict.Add(i, settings.players[i]);
         }
     }
 
@@ -165,13 +167,13 @@ public class GameController : MonoBehaviour {
                 biggestDist = Mathf.Max(distance, biggestDist);
             } */
             /* Old dict */
-            foreach (GameObject x in playersDict.Values) {
+            foreach (GameObject x in playerObjectDict.Values) {
 				mid += x.transform.position;
 			}
 			float biggestDist = 0;
-			mid = mid / playersDict.Count;
+			mid = mid / playerObjectDict.Count;
 
-			foreach (GameObject x in playersDict.Values) {
+			foreach (GameObject x in playerObjectDict.Values) {
 				float d = Vector3.Distance (x.transform.position, mid);
 				biggestDist = Mathf.Max (d, biggestDist);					
 			} 
@@ -214,8 +216,7 @@ public class GameController : MonoBehaviour {
      */
     private bool OpposingTeam(int player1, int player2)
     {
-        //return (playersDict[player1].GetTeam() != playersDict[player2].GetComponent<PlayerMovement>.GetTeam());
-        return true;
+        return (playerSettingsDict[player1].teamID != playerSettingsDict[player2].teamID);
     }
 
     /**
@@ -226,8 +227,8 @@ public class GameController : MonoBehaviour {
     public bool OnHit(int hitter, int hitee)
     {
         if (!OpposingTeam(hitter, hitee)) return false;
-		GameObject loser = playersDict [hitee];
-		GameObject winner = playersDict [hitter];
+		GameObject loser = playerObjectDict [hitee];
+		GameObject winner = playerObjectDict [hitter];
 		
 		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
@@ -242,32 +243,16 @@ public class GameController : MonoBehaviour {
     public void Kill(GameObject player)
     {
         Destroy(player);
-        roundManager.respawn(GetPlayerIDFromObject(player));
+        Respawn(player.GetComponentInParent<PlayerSettings>().playerID);
         //Something about losing points here
     }
 
-    /**
-     * Returns the player ID if the given player is in the dictionary.
-     * Else returns -1
-     */
-    public int GetPlayerIDFromObject(GameObject player)
-    {
-        foreach(int id in playersDict.Keys)
-        {
-            if(playersDict[id].Equals(player))
-            {
-                return id;
-            }
-        }
-
-        return -1;
-    }
 
 	private IEnumerator FocusOnPoint(Vector3 point)
 	{
 		zooming = true;
 		mainCamera.ZoomIn (point);
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 10; i++) // Should remove these magic numbers
 		{
 			Time.timeScale -= 0.05f;
 		}
@@ -327,7 +312,7 @@ public class GameController : MonoBehaviour {
 	/**
 	 * Manages Respawning of players
 	 **/
-	public void respawn (int playerNum){
+	public void Respawn (int playerNum){
 
 		List<Transform> goodSpawns = new List<Transform> ();
 		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
@@ -339,6 +324,8 @@ public class GameController : MonoBehaviour {
 		int i = Random.Range (0, goodSpawns.Count);
 
         // TODO Add Create player call here
+        playerObjectDict[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, playerSettingsDict[playerNum]);
+
 
         /* Remove this and use PlayerCreator
 		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
@@ -352,10 +339,10 @@ public class GameController : MonoBehaviour {
 	private bool IsGoodSpawn(int spawnNumber){
 
 		Transform spawn = spawnPoints.GetChild (spawnNumber);
-		foreach(GameObject x in playersDict.Values){
+		foreach(GameObject x in playerObjectDict.Values){
 			if (x != null) {
 				float distance = Vector3.Distance (x.transform.position, spawn.transform.position);
-				if (distance < 10) {
+				if (distance < 10) { // Remove magic numbers please
 					return false;
 				}
 			}

@@ -11,6 +11,8 @@ public class LanceHit : MonoBehaviour {
 	void Start(){
 		playerHolding = this.GetComponent<FixedJoint> ();
 		rm = new DeathMatchRoundManager ();
+        Debug.Log("LANCE HIT SCRIPT");
+        Debug.Log(gameObject.name);
 	}
 
 	void Update(){
@@ -29,7 +31,7 @@ public class LanceHit : MonoBehaviour {
 			GameObject chair = (GameObject) other.transform.Find ("Chair").gameObject;
 			chair.transform.parent = null;
 			chair.AddComponent<Rigidbody>();
-			rm.respawn (1);
+			//rm.Respawn (1);
 			// GameController.onHit(this.getPLayer(), getOther(other))
 			Debug.Log(getPLayer());
 			Debug.Log(getOther (other));
