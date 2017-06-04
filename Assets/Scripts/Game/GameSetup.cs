@@ -92,31 +92,6 @@ public class GameSetup : MonoBehaviour {
         
     }
 
-    /**
-     * Prints out all the fields of a settings struct.
-     * Debugging purposes only.
-     */
-    void DebugPrintSettings()
-    {
-        string output = "";
-        foreach (int i in settings.IDtoInput.Keys)
-        {
-            InputType val;
-            settings.IDtoInput.TryGetValue(i, out val);
-            output += "\nID: " + i + " Input type: " + val.ToString();
-        }
-        output += "\nNumber of players: " + settings.playerCount;
-        output += "\nGameMode: " + settings.mode.ToString();
-        output += "\nNumber of rounds: " + settings.numberRounds;
-        output += "\nRound duration: " + settings.roundDuration;
-        output += "\nRespawn time: " + settings.respawnTime;
-        output += "\nMax lives: " + settings.maxLives;
-        output += "\nTarget score: " + settings.targetScore;
-        output += "\nTarget kills: " + settings.targetKills;
-
-        Debug.Log(output);
-    }
-
 
     /**
      * Changes the state of settingup.
@@ -143,17 +118,17 @@ public class GameSetup : MonoBehaviour {
      */
     void InitialisePlayerControls()
     {
-        settings.IDtoInput = new Dictionary<int, InputType>();
+        settings.players = new List<PlayerSettings>();
         string[] controllers = Input.GetJoystickNames();
-        
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
         settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
-        // Add all the players into the ID to Input dictionary
-        settings.IDtoInput.Add(0, InputType.Keyboard);
-        settings.IDtoInput.Add(1, InputType.Mouse);
+        // Add all player settings to player settings list
+        int p = 0; // player number, also used as temporary team number
+        settings.players.Add(new PlayerSettings(InputType.Keyboard, p, p++));
+        settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
         for (int i = 2; i < settings.playerCount; i++)
         {
-            settings.IDtoInput.Add(i, InputType.Controller);
+            settings.players.Add(new PlayerSettings(InputType.Mouse, i, i));
         }
     }
 

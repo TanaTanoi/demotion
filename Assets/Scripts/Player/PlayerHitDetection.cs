@@ -26,9 +26,13 @@ public class PlayerHitDetection : MonoBehaviour {
 		if (!other.GetComponent<Collider>().CompareTag("Player")) return;
 		if (Time.time < vulnerablility) return;
 
-		PlayerMovement thisPlayerMove = this.transform.gameObject.GetComponentInParent<PlayerMovement> ();
+        // Get the Settings and Movement scripts from this and the other player
+        PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerSettings>();
+        PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerSettings>();
+        PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
-		if (thisPlayerMove == null)
+
+        if (thisPlayerMove == null)
 			return;
 
 		// Get the playerhit and the number of players involved in the collision
@@ -43,12 +47,9 @@ public class PlayerHitDetection : MonoBehaviour {
 			return;
 		}
 
-		int thisPlayerNum = thisPlayerMove.GetPlayerNum ();
-		int otherPlayerNum = otherPlayerMove.GetPlayerNum();
-
         // Get the lance and chair and unparent them so they remain in the game scene
 
-		Transform chair = playerHit.transform.Find ("chairA");
+        Transform chair = playerHit.transform.Find ("chairA");
 		chair.parent = null;
 		chair.gameObject.AddComponent<Rigidbody> ();
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
@@ -57,7 +58,7 @@ public class PlayerHitDetection : MonoBehaviour {
 		lance.AddComponent<Rigidbody> ();
 
         // Call the Onhit mehtod and destroy the other player and replace with ragdoll
-        if (gameControl.OnHit(thisPlayerNum, otherPlayerNum))
+        if (gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID))
         {
             GameObject destroyThis = playerHit.transform.parent.gameObject;
             Destroy(destroyThis);

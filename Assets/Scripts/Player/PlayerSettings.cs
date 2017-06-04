@@ -12,6 +12,12 @@ public class PlayerSettings : MonoBehaviour {
     public int teamID;
     //private PlayerPref customisation; // customisation settings
 
+    public PlayerSettings(InputType input, int pid, int tid)
+    {
+        this.input = input;
+        this.playerID = pid;
+        this.teamID = tid;
+    }
 
 
 }

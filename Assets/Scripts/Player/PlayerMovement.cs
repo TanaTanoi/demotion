@@ -34,7 +34,6 @@ public class PlayerMovement : MonoBehaviour {
         chairRigidbody = GetComponentInChildren<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
 
-		SetInput(inputType);
     }
 
     // Update is called once per frame
@@ -72,10 +71,11 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     /**
-     * Sets the player's input type to the input provided
+     * Applys the Input type from the player settings
      */
-    public void SetInput(InputType input){
-        switch(input)
+    public void SetInput(){
+        PlayerSettings settings = gameObject.GetComponentInParent<PlayerSettings>();
+        switch(settings.input)
         {
             case InputType.Keyboard:
                 playerIn = gameObject.AddComponent<InputKeyboard>() as InputKeyboard;
@@ -132,13 +132,4 @@ public class PlayerMovement : MonoBehaviour {
 		boostPower = power;
 	}
 
-    // Remove this
-	public int GetPlayerNum(){
-		return this.playerNum;
-	}
-
-    // Remove this
-	public void SetPlayerNum(int playerNum){
-		this.playerNum = playerNum;
-	}
 }

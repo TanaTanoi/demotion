@@ -79,7 +79,7 @@ public class GameController : MonoBehaviour {
         for(int i = 0; i < settings.players.Count; i++)
         {
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
+			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, settings.players[i]));
         }
     }
 
@@ -338,13 +338,15 @@ public class GameController : MonoBehaviour {
 		}
 		int i = Random.Range (0, goodSpawns.Count);
 
-        // Remove this and use PlayerCreator
+        // TODO Add Create player call here
+
+        /* Remove this and use PlayerCreator
 		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
         
 		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
 		pm.SetPlayerNum (playerNum);
 		playersDict [playerNum] = newPlayer;
-        //
+        */
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
