@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour {
      */
     public void SetInput(){
         PlayerSettings settings = gameObject.GetComponentInParent<PlayerSettings>();
+
         switch(settings.input)
         {
             case InputType.Keyboard:

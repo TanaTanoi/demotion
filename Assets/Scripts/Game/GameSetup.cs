@@ -128,7 +128,7 @@ public class GameSetup : MonoBehaviour {
         settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
         for (int i = 2; i < settings.playerCount; i++)
         {
-            settings.players.Add(new PlayerSettings(InputType.Mouse, i, i));
+            settings.players.Add(new PlayerSettings(InputType.Controller, i, i));
         }
     }
 
