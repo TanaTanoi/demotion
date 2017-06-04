@@ -9,7 +9,8 @@ public class GameController : MonoBehaviour {
 	private static CameraController mainCamera;
 
     /*== PLAYER SETTINGS ==*/
-	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
+
+	private Dictionary<int, GameObject> playersDict;    // Dictionary between the player number and the player object.
     
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
@@ -29,7 +30,8 @@ public class GameController : MonoBehaviour {
 
     private float currentRoundDuration;
 	public List<GameObject> crackedTiles;
-	public int drop = 0;
+    public int dropInterval = 20;
+	private int drop = 0;
 
 	/*== CAMERA SETTINGS ==*/
 	private bool zooming = false;
@@ -49,6 +51,8 @@ public class GameController : MonoBehaviour {
 
 		menuControl = menu.GetComponent<MenuController> ();
 		playersDict = new Dictionary<int, GameObject> ();
+
+
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
 		mainCamera = FindObjectOfType<CameraController> ();
@@ -57,7 +61,6 @@ public class GameController : MonoBehaviour {
     public void SetGameSettings(GameSettings gameSettings)
     {
         settings = gameSettings;
-
         Restart();
     }
 
@@ -73,10 +76,8 @@ public class GameController : MonoBehaviour {
     void SpawnAllPlayers()
     {
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
-        for(int i = 0; i < settings.IDtoInput.Count; i++)
+        for(int i = 0; i < settings.players.Count; i++)
         {
-            InputType inType;
-            settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
 			playersDict.Add(i+1, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
         }
@@ -141,14 +142,30 @@ public class GameController : MonoBehaviour {
 			if (crackedTiles.Count > 0) {
 				DropCrackedCenter ();
 			}
-			drop -= 20;
+			drop -= dropInterval;
 		}
 	}
 
 	private void FocusCamera(){
 		if (!zooming) {
 			Vector3 mid = Vector3.zero;
-			foreach (GameObject x in playersDict.Values) {
+            /* New dict
+
+            int count = IdPlayerDict.CountInner(DictionarySet.first);
+            for (int i = 0; i < count; i++)
+            {
+                mid += IdPlayerDict.GetValue(i).transform.position;
+            }
+            float biggestDist = 0;
+            mid = mid / count;
+            for(int i = 0; i < count; i++)
+            {
+                GameObject p = IdPlayerDict.GetValue(i);
+                float distance = Vector3.Distance(p.transform.position, mid);
+                biggestDist = Mathf.Max(distance, biggestDist);
+            } */
+            /* Old dict */
+            foreach (GameObject x in playersDict.Values) {
 				mid += x.transform.position;
 			}
 			float biggestDist = 0;
@@ -157,7 +174,7 @@ public class GameController : MonoBehaviour {
 			foreach (GameObject x in playersDict.Values) {
 				float d = Vector3.Distance (x.transform.position, mid);
 				biggestDist = Mathf.Max (d, biggestDist);					
-			}
+			} 
 
 
 			mainCamera.SetFocalPoint (mid);
@@ -193,11 +210,22 @@ public class GameController : MonoBehaviour {
 	}
 
     /**
+     * Returns true if the players are on opposing teams
+     */
+    private bool OpposingTeam(int player1, int player2)
+    {
+        //return (playersDict[player1].GetTeam() != playersDict[player2].GetComponent<PlayerMovement>.GetTeam());
+        return true;
+    }
+
+    /**
      * Called from a player when they hit another player.
      * Will lose lives or increase score depending on the game mode.
+     * Returns true if the players are on different teams and is therefore a valid hit
      */
-    public void OnHit(int hitter, int hitee)
+    public bool OnHit(int hitter, int hitee)
     {
+        if (!OpposingTeam(hitter, hitee)) return false;
 		GameObject loser = playersDict [hitee];
 		GameObject winner = playersDict [hitter];
 		
@@ -205,8 +233,35 @@ public class GameController : MonoBehaviour {
 
 		StartCoroutine (FocusOnPoint (mid));
 		roundManager.OnHit(hitter, hitee);
+        return true;
     }
 
+    /**
+     * Kills the given player
+     */
+    public void Kill(GameObject player)
+    {
+        Destroy(player);
+        roundManager.respawn(GetPlayerIDFromObject(player));
+        //Something about losing points here
+    }
+
+    /**
+     * Returns the player ID if the given player is in the dictionary.
+     * Else returns -1
+     */
+    public int GetPlayerIDFromObject(GameObject player)
+    {
+        foreach(int id in playersDict.Keys)
+        {
+            if(playersDict[id].Equals(player))
+            {
+                return id;
+            }
+        }
+
+        return -1;
+    }
 
 	private IEnumerator FocusOnPoint(Vector3 point)
 	{
@@ -225,22 +280,6 @@ public class GameController : MonoBehaviour {
 		zooming = false;
 	}
 
-	/**
-     * Reduces the lives remaining of the given player
-     */
-	private void LoseLife(int playerNumber)
-	{
-        GameObject player;
-        playersDict.TryGetValue(playerNumber, out player);
-	}
-
-    /**
-     * Increases the score of the given player
-     */
-    private void IncreaseScore(int playerNumber)
-    {
-
-    }
 
 	private void EndRound() {
 		playing = false;
@@ -280,6 +319,7 @@ public class GameController : MonoBehaviour {
     }
     /*=== END PAUSE LOGIC ===*/
 
+    // Remove this, only game controller should access the round manager directly
 	public RoundManager GetRoundManager(){
 		return this.roundManager;
 	}
@@ -297,11 +337,14 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		int i = Random.Range (0, goodSpawns.Count);
+
+        // Remove this and use PlayerCreator
 		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
+        
 		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
 		pm.SetPlayerNum (playerNum);
 		playersDict [playerNum] = newPlayer;
-
+        //
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){

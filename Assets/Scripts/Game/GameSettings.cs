@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Data", menuName = "Game/Settings", order = 1)]
 public class GameSettings : ScriptableObject {
-    public Dictionary<int, InputType> IDtoInput;
+    public List<PlayerSettings> players;
     public int playerCount = 2;
 	public GameSetup.GameMode mode = GameSetup.GameMode.DEMOTION;
     public int numberRounds = 3;

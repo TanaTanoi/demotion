@@ -47,21 +47,24 @@ public class PlayerHitDetection : MonoBehaviour {
 		int otherPlayerNum = otherPlayerMove.GetPlayerNum();
 
         // Get the lance and chair and unparent them so they remain in the game scene
-		GameObject chair = (GameObject)playerHit.transform.Find ("chairA").gameObject;
-		playerHit.transform.Find ("chairA").parent = null;
-		chair.AddComponent<Rigidbody> ();
+
+		Transform chair = playerHit.transform.Find ("chairA");
+		chair.parent = null;
+		chair.gameObject.AddComponent<Rigidbody> ();
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
 		Destroy (lance.GetComponent<PlayerHitDetection> ());
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
-		// Call the Onhit mehtod and destroy the other player and replace with ragdoll
-		gameControl.OnHit(thisPlayerNum, otherPlayerNum);
-		GameObject destroyThis = playerHit.transform.parent.gameObject;
-		Destroy(destroyThis);
-		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, other.transform.rotation);
+        // Call the Onhit mehtod and destroy the other player and replace with ragdoll
+        if (gameControl.OnHit(thisPlayerNum, otherPlayerNum))
+        {
+            GameObject destroyThis = playerHit.transform.parent.gameObject;
+            Destroy(destroyThis);
+            GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, other.transform.rotation);
 
-        vulnerablility = Time.time + invulnerabilityDuration;
+            vulnerablility = Time.time + invulnerabilityDuration; // Should be controlled by settings probably
+        }
       
     }
 

@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class DestoryObjects : MonoBehaviour {
 
-	void OnTriggerEnter(Collider other){
+    private GameController control;
+    
 
+    private void Start()
+    {
+        control = GameController.instance;
+    }
 
-
+    void OnTriggerEnter(Collider other){
 		if (other.gameObject.tag == "Player") {
-			Debug.Log ("The object was a player");
+			
 			GameObject player = other.gameObject.transform.parent.gameObject;
-			GameController gc = GameController.instance;
-			RoundManager rm = gc.GetRoundManager ();
-			int playerNum = player.GetComponentInChildren<PlayerMovement> ().GetPlayerNum ();
-			Destroy (player);
-			rm.respawn (playerNum);
+            control.Kill(player);
+			
+			//int playerNum = player.GetComponentInChildren<PlayerMovement> ().GetPlayerNum ();
+			//Destroy (player);
+			//rm.respawn (playerNum);
 		} else {
 			Destroy (other.gameObject);
 		}

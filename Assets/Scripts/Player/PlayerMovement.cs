@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour {
 
     public PlayerStats stats;
 	public InputType inputType = InputType.Keyboard;
-	public int playerNum;
 
 
     private float boostCooldown;
@@ -34,9 +33,8 @@ public class PlayerMovement : MonoBehaviour {
         playerAnimator = GetComponentInChildren<PlayerModelController>();
         chairRigidbody = GetComponentInChildren<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
-        //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change
-		//SetInput(inputType);
-		SetUpInput();
+
+		SetInput(inputType);
     }
 
     // Update is called once per frame
@@ -134,30 +132,13 @@ public class PlayerMovement : MonoBehaviour {
 		boostPower = power;
 	}
 
+    // Remove this
 	public int GetPlayerNum(){
 		return this.playerNum;
 	}
 
+    // Remove this
 	public void SetPlayerNum(int playerNum){
 		this.playerNum = playerNum;
-
-		//This is here for the demo
-		if (playerNum == 1) {
-			inputType = InputType.Keyboard;
-		} else {
-			inputType = InputType.Mouse;
-		}
 	}
-
-	/**
-	 * This mehtod is here for the demo so the plaeyr respawns with the correct player input
-	 **/
-	private void SetUpInput(){
-		if (playerNum == 1) {
-			SetInput(InputType.Keyboard);
-		} else {
-			SetInput(InputType.Mouse);
-		}
-	}
-
 }
