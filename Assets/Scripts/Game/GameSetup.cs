@@ -94,26 +94,6 @@ public class GameSetup : MonoBehaviour {
 
 
     /**
-     * Changes the state of settingup.
-     * Used from the menuController when we go to the GameSetup_Panel.
-     * This will allow inputs from the players control which team they are assigned to.
-     */
-    public void SettingUp(bool setup)
-    {
-        settingUp = setup;
-    }
-
-    void Update() {
-        //if (!settingUp) return;
-
-        //TODO take all players' inputs and use it to determine their team
-        //When a player presses boost it will lock them to that team
-        // Pressing 'activate' will cancel and let them move again
-
-        // NOTE will have to make only player1 able to navigate the menu else it will probably get messy
-    }
-
-    /**
      * Assigns the initial control inputs to the players
      */
     void InitialisePlayerControls()
@@ -225,5 +205,11 @@ public class GameSetup : MonoBehaviour {
     public void SetGameMode(int modeIndex)
     {
         settings.mode = (GameMode)modeIndex;
+    }
+
+
+    public GameSettings GetGameSettings()
+    {
+        return settings;
     }
 }
