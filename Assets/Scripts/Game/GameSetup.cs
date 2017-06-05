@@ -99,17 +99,24 @@ public class GameSetup : MonoBehaviour {
     void InitialisePlayerControls()
     {
         settings.players = new List<PlayerSettings>();
+        int p = 0;  // player number, also used as temporary team number
+        int c = 0;  // controller number
+
         string[] controllers = Input.GetJoystickNames();
+
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
         settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
+
         // Add all player settings to player settings list
-        int p = 0; // player number, also used as temporary team number
         settings.players.Add(new PlayerSettings(InputType.Keyboard, p, p++));
         settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
         for (int i = 2; i < settings.playerCount; i++)
         {
-            settings.players.Add(new PlayerSettings(InputType.Controller, i, i));
+            // Ensure we're adding a valid controller
+            while (controllers[c++] == null) ;
+            settings.players.Add(new PlayerSettings(InputType.Controller, c, i, i));
         }
+
     }
 
 	void OnEnable() {

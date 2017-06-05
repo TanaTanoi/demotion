@@ -86,6 +86,7 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case InputType.Controller:
                 playerIn = gameObject.AddComponent<InputController>() as InputController;
+                (playerIn as InputController).RefreshInputs(settings.controllerID);
                 break;
         }
     }

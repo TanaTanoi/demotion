@@ -29,6 +29,7 @@ public class PlayerCreator : MonoBehaviour {
         // Apply their settings
         PlayerSettings pSettings = player.GetComponent<PlayerSettings>();
         pSettings.input = settings.input;
+        pSettings.controllerID = settings.controllerID;
         pSettings.playerID = settings.playerID;
         pSettings.teamID = settings.teamID;
         // Tell the movement script to add the appropriate input type
