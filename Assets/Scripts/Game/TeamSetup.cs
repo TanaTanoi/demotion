@@ -37,10 +37,7 @@ public class TeamSetup : MonoBehaviour {
     {
         foreach(PlayerSettings p in players)
         {
-            switch (p.input)
-            {
-                case InputType.Keyboard
-            }
+            //switch
         }
 
     }
