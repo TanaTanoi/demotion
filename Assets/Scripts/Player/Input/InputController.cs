@@ -6,7 +6,7 @@ public class InputController : PlayerInput {
 
     int id = -1;  // Controller id
 
-    public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
+	public override void turn(float rotationSpeed, float horizontalInput, float verticalInput, Transform transform)
     {
         if (id == -1) Debug.Log("ID is -1, ensure this is set before gameplay!");
 
@@ -15,7 +15,6 @@ public class InputController : PlayerInput {
 
         Quaternion newRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed * Time.fixedDeltaTime);
-
     }
 
     public void RefreshInputs(int id)
