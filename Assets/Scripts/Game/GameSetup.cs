@@ -107,6 +107,7 @@ public class GameSetup : MonoBehaviour {
         // Add all player settings to player settings list
         settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 1, p++));
 		settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 2, p++));
+		settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 3, p++));
         for (int i = 2; i < settings.playerCount; i++)
         {
             // Ensure we're adding a valid controller

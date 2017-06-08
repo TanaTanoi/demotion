@@ -10,7 +10,7 @@ public class PlayerHitDetection : MonoBehaviour {
 	private int playerNum;
     private float vulnerablility = 0.0f;
 
-	private float blockAngleThreshold = -0.8f;
+	private float blockAngleThreshold = -0.3f;
 
     private GameController gameControl;
 
@@ -27,8 +27,8 @@ public class PlayerHitDetection : MonoBehaviour {
 		if (Time.time < vulnerablility) return;
 
         // Get the Settings and Movement scripts from this and the other player
-        PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerSettings>();
-        PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerSettings>();
+		PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerMovement>().settings;
+		PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerMovement>().settings;
         PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
 

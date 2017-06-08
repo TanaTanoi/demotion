@@ -33,7 +33,7 @@ public class PlayerCreator : MonoBehaviour {
 				input = new InputKeyboard ();
 				(input as InputKeyboard).RefreshInputs(settings.keyboardID);
 	            break;
-			case InputType.Mouse:
+		case InputType.Mouse:
 				input = new InputMouse ();
 	            break;
 			case InputType.Controller:
@@ -43,7 +43,10 @@ public class PlayerCreator : MonoBehaviour {
         }
 
         // Tell the movement script to add the appropriate input type
-        player.GetComponentInChildren<PlayerMovement>().SetInput(input);
+        PlayerMovement m = player.GetComponentInChildren<PlayerMovement>();
+		m.SetInput (input);
+		m.settings = settings;
+	
 
         //CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 
