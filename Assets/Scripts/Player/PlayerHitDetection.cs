@@ -40,8 +40,8 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// If the direction of the hit is from the front of the player, both get spun.
 		if (Vector3.Dot (-transform.forward, -playerHit.transform.forward) > blockAngleThreshold) {
-			thisPlayerMove.Boost (-100f);
-			otherPlayerMove.Boost (-100f);
+			thisPlayerMove.Boost (-400f);
+			otherPlayerMove.Boost (-400f);
 			thisPlayerMove.SpinPlayer (Random.Range(-100, 100));
 			otherPlayerMove.SpinPlayer (Random.Range(-100, 100));
 			return;
