@@ -6,15 +6,24 @@ public class InputKeyboard : PlayerInput {
 
     void Start()
     {
-        horizontal = "Horizontal_KB";
-        vertical = "Vertical_KB";
-        boost = "Boost_KB";
-        activate = "Activate_KB";
     }
 
-    public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
+	private int inputid = -1;
+
+	public override void turn(float rotationSpeed, float horizontalInput, float verticalInput, Transform transform)
     {
         float y = rotationSpeed * horizontalInput;// * Time.fixedDeltaTime; // <- this make the turn speed basically 0
         transform.Rotate(new Vector3(0, y, 0), Space.World);
     }
+
+	public void RefreshInputs(int id)
+	{
+		// Don't need to update anything if the id's are the same
+		if (this.inputid == id) return;
+		this.inputid = id;
+		horizontal = string.Format("Horizontal_KB{0}", id);
+		vertical = string.Format("Vertical_KB{0}", id);
+		boost = string.Format("Boost_KB{0}", id);
+		activate = string.Format("Activate_KB{0}", id);
+	}
 }

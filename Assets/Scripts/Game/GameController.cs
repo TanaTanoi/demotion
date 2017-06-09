@@ -168,6 +168,7 @@ public class GameController : MonoBehaviour {
             } */
             /* Old dict */
             foreach (GameObject x in playerObjectDict.Values) {
+				if(transform != null)
 				mid += x.transform.position;
 			}
 			float biggestDist = 0;
@@ -243,7 +244,7 @@ public class GameController : MonoBehaviour {
     public void Kill(GameObject player)
     {
         Destroy(player);
-        Respawn(player.GetComponentInParent<PlayerSettings>().playerID);
+		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
         //Something about losing points here
     }
 

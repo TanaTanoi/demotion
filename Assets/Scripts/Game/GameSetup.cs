@@ -66,7 +66,7 @@ public class GameSetup : MonoBehaviour {
 
 	private GameObject controller;  // GameController gameobject
     private GameController control; // GameController script
-    private GameSettings settings;  // Local settings applied via menu
+    public GameSettings settings;  // Local settings applied via menu
 	private ArenaGenerator generator;  // Arena generator, could this be moved to the game controller?
     private bool settingUp = false;  // Setting up boolean so players can set teams
 
@@ -86,10 +86,7 @@ public class GameSetup : MonoBehaviour {
 
     private void Start()
     {
-        settings = (GameSettings)ScriptableObject.CreateInstance("GameSettings");
-
         InitialisePlayerControls();
-        
     }
 
 
@@ -105,16 +102,17 @@ public class GameSetup : MonoBehaviour {
         string[] controllers = Input.GetJoystickNames();
 
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
-        settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
+        settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 3;
 
         // Add all player settings to player settings list
-        settings.players.Add(new PlayerSettings(InputType.Keyboard, p, p++));
-        settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
-        for (int i = 2; i < settings.playerCount; i++)
+        settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 1, p++));
+		settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 2, p++));
+		settings.players.Add(new PlayerSettings(InputType.Keyboard, p, 3, p++));
+        for (int i = 3; i < settings.playerCount; i++)
         {
             // Ensure we're adding a valid controller
             while (controllers[c++] == null) ;
-            settings.players.Add(new PlayerSettings(InputType.Controller, c, i, i));
+			settings.players.Add(new PlayerSettings(InputType.Controller, i, c, i));
         }
 
     }
