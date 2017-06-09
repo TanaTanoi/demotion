@@ -11,9 +11,10 @@ public class PlayerSettings : MonoBehaviour {
     public int controllerID;
     public int playerID;
     public int teamID;
-    //private PlayerPref customisation; // customisation settings
+	public SkinIndexs indices;
 
-    public PlayerSettings(InputType input, int pid, int tid)
+
+	public PlayerSettings(InputType input, int pid, int tid, SkinIndexs indices)
     {
         if(input == InputType.Controller)
         {
@@ -26,7 +27,7 @@ public class PlayerSettings : MonoBehaviour {
         this.teamID = tid;
     }
 
-    public PlayerSettings(InputType input, int cid, int pid, int tid)
+	public PlayerSettings(InputType input, int cid, int pid, int tid, SkinIndexs indices)
     {
         if (input != InputType.Controller)
         {
