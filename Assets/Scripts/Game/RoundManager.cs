@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class RoundManager : MonoBehaviour {
-
-	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score
+	
+	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
+    // -- Many of these are in the GameSettings object and dont need to be stored twice --
 	private int numOfRounds;
 	private int currentRound;
 	private int targetScore;
@@ -53,10 +54,10 @@ public abstract class RoundManager : MonoBehaviour {
 	 **/
 	protected abstract void endRound ();
 
-	/**
-	 * Manages Respawning of players
-	 **/
-	public abstract void respawn (int playerNum);
+    /**
+     * Handle respawning of players
+     */
+    public abstract void Respawn(int playerNum);
 
 	/**
 	 * Call this method whenever the scoreboard UI needs to be updated 

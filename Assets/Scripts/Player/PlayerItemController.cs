@@ -22,19 +22,21 @@ public class PlayerItemController : MonoBehaviour {
     private float chargeLeft = 0; // How much usage is left in this powerup
     private float nextUsableTime = 0.0f;
     private PlayerMovement playerMovement;
+    private PlayerInput playerInput;
     private PlayerParticleController particleController;
 
     private int itemsActivated = 0;
 
     void Start() {
         playerMovement = GetComponentInParent<PlayerMovement>();
+        playerInput = playerMovement.GetPlayerInput();
         particleController = GetComponentInChildren<PlayerParticleController>();
 		stats = playerMovement.stats;
     }
 
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetAxisRaw(playerMovement.GetPlayerInput().activate) > 0 && CanUseItem()) {
+        if (Input.GetAxisRaw(playerInput.activate) > 0 && CanUseItem()) {
             ActivatePowerup();
             itemsActivated++;
         }
@@ -101,8 +103,9 @@ public class PlayerItemController : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         throwable.GetComponent<Rigidbody>().isKinematic = false;
         throwable.transform.SetParent(null);
-        throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
+        throwable.GetComponent<Rigidbody>().AddForce(transform.forward * 700);
         yield return new WaitForSeconds(0.2f);
 		throwable.GetComponent<Collider>().enabled = true;
+		throwable.AddComponent<ThrowableItem> ();
     }
 }

@@ -43,7 +43,7 @@ public class InputMouse : PlayerInput {
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
 
             //playerRigidbody.MoveRotation(Quaternion.Slerp();
-            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed*Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed*Time.fixedDeltaTime);
         }
     }
 

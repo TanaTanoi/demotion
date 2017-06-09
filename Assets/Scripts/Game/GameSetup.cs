@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour {
-    public static GameSetup instance;
 
     //Game type enums
     public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
@@ -54,164 +54,169 @@ public class GameSetup : MonoBehaviour {
      * ========================================
      */
 
-    public int interval;
-	private GameObject controller;
-    private GameController control;
-    private GameSettings settings;
-	private ArenaGenerator generator;
-    private bool settingUp = false;
+	/*== Settings Menu Text ==*/
+    public GameObject settingsPanel;
+	private Text roundsText;
+	private Text durationText;
+	private Text respawnText;
+	private Text livesText;
+	private Text targetKillsText;
+	private Text targetScoreText;
+
+
+	private GameObject controller;  // GameController gameobject
+    private GameController control; // GameController script
+    private GameSettings settings;  // Local settings applied via menu
+	private ArenaGenerator generator;  // Arena generator, could this be moved to the game controller?
+    private bool settingUp = false;  // Setting up boolean so players can set teams
 
     // Use this for initialization
     void Awake() {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        //Don't destroy this
         DontDestroyOnLoad(gameObject);
+
+		Text[] slidersText = settingsPanel.GetComponentsInChildren<Text> (true);
+		roundsText = slidersText [2];
+		durationText = slidersText [3];
+		respawnText = slidersText [4];
+		livesText = slidersText [5];
+		targetKillsText = slidersText [6];
+		targetScoreText = slidersText [7];
+
     }
 
     private void Start()
     {
         settings = (GameSettings)ScriptableObject.CreateInstance("GameSettings");
+
         InitialisePlayerControls();
         
     }
 
-    /**
-     * Prints out all the fields of a settings struct.
-     * Debugging purposes only.
-     */
-    void DebugPrintSettings()
-    {
-        string output = "";
-        foreach (int i in settings.IDtoInput.Keys)
-        {
-            InputType val;
-            settings.IDtoInput.TryGetValue(i, out val);
-            output += "\nID: " + i + " Input type: " + val.ToString();
-        }
-        output += "\nNumber of players: " + settings.playerCount;
-        output += "\nGameMode: " + settings.mode.ToString();
-        output += "\nNumber of rounds: " + settings.numberRounds;
-        output += "\nRound duration: " + settings.roundDuration;
-        output += "\nRespawn time: " + settings.respawnTime;
-        output += "\nMax lives: " + settings.maxLives;
-        output += "\nTarget score: " + settings.targetScore;
-        output += "\nTarget kills: " + settings.targetKills;
-
-        Debug.Log(output);
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    /**
-     * Changes the state of settingup.
-     * Used from the menuController when we go to the GameSetup_Panel.
-     * This will allow inputs from the players control which team they are assigned to.
-     */
-    public void SettingUp(bool setup)
-    {
-        settingUp = setup;
-    }
-
-    void Update() {
-        //if (!settingUp) return;
-
-        //TODO take all players' inputs and use it to determine their team
-        //When a player presses boost it will lock them to that team
-        // Pressing 'activate' will cancel and let them move again
-
-        // NOTE will have to make only player1 able to navigate the menu else it will probably get messy
-    }
 
     /**
      * Assigns the initial control inputs to the players
      */
     void InitialisePlayerControls()
     {
-        settings.IDtoInput = new Dictionary<int, InputType>();
+        settings.players = new List<PlayerSettings>();
+        int p = 0;  // player number, also used as temporary team number
+        int c = 0;  // controller number
+
         string[] controllers = Input.GetJoystickNames();
+
         // There are always at least 2 players, keyboard and mouse, the rest are controllers
         settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
-        // Add all the players into the ID to Input dictionary
-        settings.IDtoInput.Add(0, InputType.Keyboard);
-        settings.IDtoInput.Add(1, InputType.Mouse);
+
+        // Add all player settings to player settings list
+        settings.players.Add(new PlayerSettings(InputType.Keyboard, p, p++));
+        settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
         for (int i = 2; i < settings.playerCount; i++)
         {
-            settings.IDtoInput.Add(i, InputType.Controller);
+            // Ensure we're adding a valid controller
+            while (controllers[c++] == null) ;
+            settings.players.Add(new PlayerSettings(InputType.Controller, c, i, i));
         }
+
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-        // Move the setup back into the scene
-        // Need to work out how to attach this back to all the things...
-        SceneManager.MoveGameObjectToScene(gameObject, scene);
-        if (scene == SceneManager.GetSceneByBuildIndex(1))
-        {
-            // Get the game controller
-            controller = GameController.instance.gameObject;
-            control = controller.GetComponent<GameController>();
-            generator = controller.GetComponent<ArenaGenerator>();
-            generator.Generate();
-            control.CrackedCenterSetup();
-            control.SetGameSettings(settings);
-        }
+	void OnEnable() {
+		SceneManager.sceneLoaded += OnLevelFinishedLoading;
 	}
 
+	void OnDisable() {
+		SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+	}
+
+	public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
+        if (scene != SceneManager.GetSceneByName("GameScene")) return;
+
+		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
+		NewGame ();
+	}
+
+    public void NewGame() {
+		
+        // Get the game controller
+        controller = GameController.instance.gameObject;
+        control = controller.GetComponent<GameController>();
+        generator = controller.GetComponent<ArenaGenerator>();
+        generator.Generate();
+        control.CrackedCenterSetup();
+        control.SetGameSettings(settings);
+	}
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
+    }
+
+
+
     /*== Setter functions for the UI to alter values ==*/
+    // (Mathf.CeilToInt(sliderValue/interval) * interval).ToString();
+
+    public void SetRoundQuantity(float quantity)
+	{
+		float interval = 1f;
+		settings.numberRounds = (int)(Mathf.CeilToInt(quantity/interval) * interval);
+		roundsText.text = "Number of Rounds: " + settings.numberRounds;
+	}
 
     public void SetRoundDuration(float duration)
     {
+		float interval = 10f;
         if (duration == 0.0f)
         {
             settings.roundDuration = float.PositiveInfinity;
         }
         else
         {
-            settings.roundDuration = duration;
+			settings.roundDuration = (Mathf.CeilToInt(duration/interval) * interval);
         }
+
+		durationText.text = "Round Duration: " + settings.roundDuration;
     }
 
-    public void SetRoundQuantity(float quantity)
+    public void SetMaxLives(float lives)
     {
-        settings.numberRounds = (int)quantity;
-    }
-
-    public void SetMaxLive(float lives)
-    {
-        settings.maxLives = (int)lives;
+		float interval = 1f;
+		settings.maxLives = (int)(Mathf.CeilToInt(lives/interval) * interval);
+		livesText.text = "Maximum Lives: " + settings.maxLives;
     }
 
     public void SetTargetScore(float score)
     {
-        settings.targetScore = (int)score;
+		float interval = 100f;
+		settings.targetScore = (int)(Mathf.CeilToInt(score/interval) * interval);
+		targetScoreText.text = "Target Score: " + settings.targetScore;
     }
 
     public void SetTargetKills(float kills)
     {
-        settings.targetKills = (int)kills;
+		float interval = 2f;
+		settings.targetKills = (int)(Mathf.CeilToInt(kills/interval) * interval);
+		targetKillsText.text = "Target Demotions: " + settings.targetKills;
     }
 
     public void SetRespawnTime(float respawnTime)
     {
-        settings.respawnTime = (int)respawnTime;
+		float interval = 1f;
+		settings.respawnTime = (Mathf.CeilToInt (respawnTime / interval) * interval);
+		respawnText.text = "Respawn Time: " + settings.respawnTime;
     }
 
     public void SetGameMode(int modeIndex)
     {
         settings.mode = (GameMode)modeIndex;
+    }
+
+
+    public GameSettings GetGameSettings()
+    {
+        return settings;
     }
 }

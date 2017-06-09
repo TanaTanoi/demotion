@@ -4,21 +4,40 @@ using UnityEngine;
 
 public class ThrowableItem : MonoBehaviour {
 
-	public enum Effect { SPIN, STICK, Count }
+	private Transform target;
+	private Rigidbody rb; 
 
-	public Effect effect;
+	private float fuel;
+
+	private const float MAX_FUEL = 1;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		rb = GetComponent<Rigidbody> ();
+		target = SelectTargetPlayer ();
+		fuel = Time.time + MAX_FUEL;
 	}
 
-	void HitPlayer(PlayerMovement player){
-
+	void FixedUpdate () {
+		if (fuel > Time.time) {
+			rb.AddForce ((target.position - transform.position).normalized * (rb.velocity.normalized.magnitude * 25));
+		}
 	}
+
+	public Transform SelectTargetPlayer(){
+		PlayerMovement[] players = FindObjectsOfType<PlayerMovement> ();
+		Vector3 dir = rb.velocity.normalized;
+		float bestDir = -1;
+		Transform bestPlayer = players[0].transform;
+		foreach (PlayerMovement player in players) {
+			Vector3 oDir = (player.transform.position - transform.position).normalized;
+			float d = Vector3.Dot (oDir, dir);
+			if (bestDir < d) {
+				bestDir = d;
+				bestPlayer = player.transform;
+			}
+		}
+		return bestPlayer;
+	}
+
 }

@@ -6,9 +6,12 @@ using System.Linq;
 
 public class GameController : MonoBehaviour {
     public static GameController instance;
+	private static CameraController mainCamera;
 
     /*== PLAYER SETTINGS ==*/
-	private Dictionary<int, GameObject> playersDict;  // Dictionary between the player number and the player object.
+
+    private Dictionary<int, PlayerSettings> playerSettingsDict;  // Dictionary between playerID and player settings
+    private Dictionary<int, GameObject> playerObjectDict;        // Dictionary between playerID and player Gameobject
     
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
@@ -28,7 +31,11 @@ public class GameController : MonoBehaviour {
 
     private float currentRoundDuration;
 	public List<GameObject> crackedTiles;
-	public int drop = 0;
+    public int dropInterval = 20;
+	private int drop = 0;
+
+	/*== CAMERA SETTINGS ==*/
+	private bool zooming = false;
 
     /*=== INITIALISATION ===*/
 
@@ -44,16 +51,17 @@ public class GameController : MonoBehaviour {
         }
 
 		menuControl = menu.GetComponent<MenuController> ();
-		playersDict = new Dictionary<int, GameObject> ();
+        playerObjectDict = new Dictionary<int, GameObject> ();
+        playerSettingsDict = new Dictionary<int, PlayerSettings>();
+
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
-        
+		mainCamera = FindObjectOfType<CameraController> ();
     }
 
     public void SetGameSettings(GameSettings gameSettings)
     {
         settings = gameSettings;
-
         Restart();
     }
 
@@ -69,12 +77,11 @@ public class GameController : MonoBehaviour {
     void SpawnAllPlayers()
     {
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
-        for(int i = 0; i < settings.IDtoInput.Count; i++)
+        for(int i = 0; i < settings.players.Count; i++)
         {
-            InputType inType;
-            settings.IDtoInput.TryGetValue(i, out inType);
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playersDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, inType, i+1));
+			playerObjectDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, settings.players[i]));
+            playerSettingsDict.Add(i, settings.players[i]);
         }
     }
 
@@ -107,22 +114,29 @@ public class GameController : MonoBehaviour {
     void FixedUpdate() {
 		if (playing && !paused) {
 			UpdateTime ();
-			if (Input.GetAxisRaw ("Pause") != 0) {
-				TogglePause ();
-			}
+			FocusCamera ();
 		}
     }
 
-	/**
+    private void Update()
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            TogglePause();
+        }
+    }
+
+    /**
      * Updates the time remaining of the match
      */
-	void UpdateTime()
+    void UpdateTime()
 	{
         // TODO change this to not be called if round duration is infinite
 		currentRoundDuration -= Time.deltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
+            // TODO end round here
 			PauseGame();
 		}
 
@@ -130,7 +144,45 @@ public class GameController : MonoBehaviour {
 			if (crackedTiles.Count > 0) {
 				DropCrackedCenter ();
 			}
-			drop -= 20;
+			drop -= dropInterval;
+		}
+	}
+
+	private void FocusCamera(){
+		if (!zooming) {
+			Vector3 mid = Vector3.zero;
+            /* New dict
+
+            int count = IdPlayerDict.CountInner(DictionarySet.first);
+            for (int i = 0; i < count; i++)
+            {
+                mid += IdPlayerDict.GetValue(i).transform.position;
+            }
+            float biggestDist = 0;
+            mid = mid / count;
+            for(int i = 0; i < count; i++)
+            {
+                GameObject p = IdPlayerDict.GetValue(i);
+                float distance = Vector3.Distance(p.transform.position, mid);
+                biggestDist = Mathf.Max(distance, biggestDist);
+            } */
+            /* Old dict */
+            foreach (GameObject x in playerObjectDict.Values) {
+				mid += x.transform.position;
+			}
+			float biggestDist = 0;
+			mid = mid / playerObjectDict.Count;
+
+			foreach (GameObject x in playerObjectDict.Values) {
+				float d = Vector3.Distance (x.transform.position, mid);
+				biggestDist = Mathf.Max (d, biggestDist);					
+			} 
+
+
+			mainCamera.SetFocalPoint (mid);
+			// 0.3 is the max influence we can get from the base zoom
+
+			mainCamera.desiredBaseZoom = Mathf.Max(0.3f - (biggestDist / 50), 0); // TODO change 50f to some fixed map radius
 		}
 	}
 
@@ -160,30 +212,59 @@ public class GameController : MonoBehaviour {
 	}
 
     /**
-     * Called from a player when they hit another player.
-     * Will lose lives or increase score depending on the game mode.
+     * Returns true if the players are on opposing teams
      */
-    public void OnHit(int hitter, int hitee)
+    private bool OpposingTeam(int player1, int player2)
     {
-		 roundManager.OnHit(hitter, hitee);
+        return (playerSettingsDict[player1].teamID != playerSettingsDict[player2].teamID);
     }
-
-	/**
-     * Reduces the lives remaining of the given player
-     */
-	private void LoseLife(int playerNumber)
-	{
-        GameObject player;
-        playersDict.TryGetValue(playerNumber, out player);
-	}
 
     /**
-     * Increases the score of the given player
+     * Called from a player when they hit another player.
+     * Will lose lives or increase score depending on the game mode.
+     * Returns true if the players are on different teams and is therefore a valid hit
      */
-    private void IncreaseScore(int playerNumber)
+    public bool OnHit(int hitter, int hitee)
     {
+        if (!OpposingTeam(hitter, hitee)) return false;
+		GameObject loser = playerObjectDict [hitee];
+		GameObject winner = playerObjectDict [hitter];
+		
+		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
+		StartCoroutine (FocusOnPoint (mid));
+		roundManager.OnHit(hitter, hitee);
+        return true;
     }
+
+    /**
+     * Kills the given player
+     */
+    public void Kill(GameObject player)
+    {
+        Destroy(player);
+        Respawn(player.GetComponentInParent<PlayerSettings>().playerID);
+        //Something about losing points here
+    }
+
+
+	private IEnumerator FocusOnPoint(Vector3 point)
+	{
+		zooming = true;
+		mainCamera.ZoomIn (point);
+		for(int i = 0; i < 10; i++) // Should remove these magic numbers
+		{
+			Time.timeScale -= 0.05f;
+		}
+		yield return new WaitForSeconds(1f);
+		mainCamera.ReturnZoom ();
+		for(int i = 0; i < 10; i++)
+		{
+			Time.timeScale += 0.05f;
+		}
+		zooming = false;
+	}
+
 
 	private void EndRound() {
 		playing = false;
@@ -221,9 +302,52 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 1;
         menuControl.Resume();
     }
+    /*=== END PAUSE LOGIC ===*/
 
+    // Remove this, only game controller should access the round manager directly
 	public RoundManager GetRoundManager(){
 		return this.roundManager;
 	}
-    /*=== END PAUSE LOGIC ===*/
+
+	/**
+	 * Manages Respawning of players
+	 **/
+	public void Respawn (int playerNum){
+
+		List<Transform> goodSpawns = new List<Transform> ();
+		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
+			
+			if (IsGoodSpawn (j)) {
+				goodSpawns.Add (spawnPoints.transform.GetChild (j));
+			}
+		}
+		int i = Random.Range (0, goodSpawns.Count);
+
+        // TODO Add Create player call here
+        playerObjectDict[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, playerSettingsDict[playerNum]);
+
+
+        /* Remove this and use PlayerCreator
+		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
+        
+		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
+		pm.SetPlayerNum (playerNum);
+		playersDict [playerNum] = newPlayer;
+        */
+	}
+
+	private bool IsGoodSpawn(int spawnNumber){
+
+		Transform spawn = spawnPoints.GetChild (spawnNumber);
+		foreach(GameObject x in playerObjectDict.Values){
+			if (x != null) {
+				float distance = Vector3.Distance (x.transform.position, spawn.transform.position);
+				if (distance < 10) { // Remove magic numbers please
+					return false;
+				}
+			}
+
+		}
+		return true;
+	}
 }

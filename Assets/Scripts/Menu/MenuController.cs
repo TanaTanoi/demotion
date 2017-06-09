@@ -61,8 +61,8 @@ public class MenuController : MonoBehaviour {
         }
     }
 
-    public void SwitchScene(string scene)
+	public void SwitchScene(string scene)
     {
-        SceneManager.LoadScene(scene);
+		SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
     }
 }

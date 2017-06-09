@@ -14,7 +14,7 @@ public class InputKeyboard : PlayerInput {
 
     public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
     {
-        transform.Rotate(new Vector3(0, rotationSpeed*horizontalInput, 0), Space.World);
-        
+        float y = rotationSpeed * horizontalInput;// * Time.fixedDeltaTime; // <- this make the turn speed basically 0
+        transform.Rotate(new Vector3(0, y, 0), Space.World);
     }
 }

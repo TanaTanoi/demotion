@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour {
 
     public PlayerStats stats;
 	public InputType inputType = InputType.Keyboard;
-	public int playerNum;
 
 
     private float boostCooldown;
@@ -21,6 +20,10 @@ public class PlayerMovement : MonoBehaviour {
 
     private PlayerInput playerIn;
 
+	private float boostHoldDuration = 0f;
+
+	private bool boostDown = false;
+
     // Use this for initialization
     void Start() {
         boostCooldown = stats.DEFAULT_COOLDOWN;
@@ -30,9 +33,7 @@ public class PlayerMovement : MonoBehaviour {
         playerAnimator = GetComponentInChildren<PlayerModelController>();
         chairRigidbody = GetComponentInChildren<Rigidbody>();
         chairRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Ensures locked to 2D. but why this over the editor?
-        //playerIn = gameObject.AddComponent<InputMouse>() as InputMouse; //set to Mouse to start with before change
-		//SetInput(inputType);
-		SetUpInput();
+
     }
 
     // Update is called once per frame
@@ -48,21 +49,34 @@ public class PlayerMovement : MonoBehaviour {
 		
 
 			//desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
-			if (Input.GetAxisRaw (playerIn.boost) > deadZone) {
-				if (nextBoostTime <= Time.time) {
-					Boost (boostPower);
-					nextBoostTime = Time.time + boostCooldown;
-				}
+			if (!boostDown && Input.GetAxisRaw (playerIn.boost) > deadZone) {
+				//if (nextBoostTime <= Time.time) {
+				boostDown = true;
+				boostHoldDuration = Time.time;
+				nextBoostTime = Time.time + boostCooldown;
+			//	}
+			}
+
+			if(boostDown && Input.GetAxisRaw(playerIn.boost) <= deadZone) {
+				boostHoldDuration = Mathf.Min ((Time.time - boostHoldDuration), stats.DEFAULT_MAX_BOOST_HOLD_TIME);
+				boostHoldDuration = boostHoldDuration / stats.DEFAULT_MAX_BOOST_HOLD_TIME;
+				boostHoldDuration = stats.BOOST_POWER_RAMP.Evaluate (boostHoldDuration);
+				float boost = boostHoldDuration * boostPower;// + stats.MINIMUM_BOOST_POWER;
+				Boost (boost);
+
+				boostDown = false;
 			}
 		}
 
     }
 
     /**
-     * Sets the player's input type to the input provided
+     * Applys the Input type from the player settings
      */
-    public void SetInput(InputType input){
-        switch(input)
+    public void SetInput(){
+        PlayerSettings settings = gameObject.GetComponentInParent<PlayerSettings>();
+
+        switch(settings.input)
         {
             case InputType.Keyboard:
                 playerIn = gameObject.AddComponent<InputKeyboard>() as InputKeyboard;
@@ -72,6 +86,7 @@ public class PlayerMovement : MonoBehaviour {
                 break;
             case InputType.Controller:
                 playerIn = gameObject.AddComponent<InputController>() as InputController;
+                (playerIn as InputController).RefreshInputs(settings.controllerID);
                 break;
         }
     }
@@ -117,32 +132,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void setBoostPower(float power) {
 		boostPower = power;
-	}
-
-	public int GetPlayerNum(){
-		return this.playerNum;
-	}
-
-	public void SetPlayerNum(int playerNum){
-		this.playerNum = playerNum;
-
-		//This is here for the demo
-		if (playerNum == 1) {
-			inputType = InputType.Keyboard;
-		} else {
-			inputType = InputType.Mouse;
-		}
-	}
-
-	/**
-	 * This mehtod is here for the demo so the plaeyr respawns with the correct player input
-	 **/
-	private void SetUpInput(){
-		if (playerNum == 1) {
-			SetInput(InputType.Keyboard);
-		} else {
-			SetInput(InputType.Mouse);
-		}
 	}
 
 }

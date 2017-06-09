@@ -5,37 +5,39 @@ using UnityEngine;
 public class PlayerCreator : MonoBehaviour {
 
     public GameObject prefab;
-    //private GameObject CurrentPrefab;
-    private PlayerMovement PlayerMovement;
-    public InputType chooseInput = InputType.Keyboard;
-    public int PlayerCust = 1;
-    public bool debug = false;
-    
-    void Start()
-    {
-		
-        if(debug)
-            CreatePlayer(transform.position, chooseInput, 0);
-    }
 
-    public GameObject CreatePlayer(Vector3 Pos, InputType input, int Customization)
+    /**
+     * Creates a player with the given settings at the given position
+     */
+    public GameObject CreatePlayer(Vector3 pos, PlayerSettings settings)
     {
-        string matPath = "Assets/Materials&Textures/Player/player" + Customization + ".mat";
+
+        //This will change to use the player customisation
+        string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
+
         //Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
+
+
         // TODO reimplement this mat thing but getting around the unity editor issue
+        //GameObject CurrentPrefab = (GameObject)Instantiate(Resources.Load("Player"), new Vector3(-5,1,-3), new Quaternion(0,0,0,1));
+        //GameObject CurrentPrefab2 = (GameObject)Instantiate(Resources.Load("Lance"), new Vector3(-4,1,-3), new Quaternion(0,0,0,1));
 
-        GameObject CurrentPrefab = Instantiate(prefab);
-		//GameObject CurrentPrefab = (GameObject)Instantiate(Resources.Load("Player"), new Vector3(-5,1,-3), new Quaternion(0,0,0,1));
-		//GameObject CurrentPrefab2 = (GameObject)Instantiate(Resources.Load("Lance"), new Vector3(-4,1,-3), new Quaternion(0,0,0,1));
-        CurrentPrefab.transform.position = Pos;
 
-        CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetInput(input);
-		CurrentPrefab.GetComponentInChildren<PlayerMovement>().SetPlayerNum(Customization);
+        // Create the player
+        GameObject player = Instantiate(prefab, pos, Quaternion.identity);
+
+        // Apply their settings
+        PlayerSettings pSettings = player.GetComponent<PlayerSettings>();
+        pSettings.input = settings.input;
+        pSettings.controllerID = settings.controllerID;
+        pSettings.playerID = settings.playerID;
+        pSettings.teamID = settings.teamID;
+        // Tell the movement script to add the appropriate input type
+        player.GetComponentInChildren<PlayerMovement>().SetInput();
 
         //CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 
-
-        return CurrentPrefab;
+        return player;
     }
 
 }
