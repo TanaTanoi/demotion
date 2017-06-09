@@ -85,7 +85,7 @@ public class ArenaGenerator : MonoBehaviour {
 //		}
 
 		int randomIndex = Random.Range (0, wallPrefabs.Length);
-		GameObject prefabObject = Instantiate(wallPrefabs[randomIndex], Vector3.zero, Quaternion.identity) as GameObject; 
+		GameObject prefabObject = Instantiate(wallPrefabs[1], Vector3.zero, Quaternion.identity) as GameObject; 
 		walls.Add (prefabObject);
 
 		int randomIndex2 = Random.Range (0, walls.Count);
