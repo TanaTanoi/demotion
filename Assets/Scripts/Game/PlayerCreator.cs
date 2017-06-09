@@ -5,15 +5,21 @@ using UnityEngine;
 public class PlayerCreator : MonoBehaviour {
 
     public GameObject prefab;
+	private GameController controller;
+	private PlayerSkins skins;
 
+	void Start(){
+		controller = GameController.instance;
+		skins = controller.GetSkins ();
+	}
     /**
      * Creates a player with the given settings at the given position
      */
     public GameObject CreatePlayer(Vector3 pos, PlayerSettings settings)
     {
-
+		//skins.outfits;
         //This will change to use the player customisation
-        string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
+        //string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
 
         //Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
 
@@ -41,6 +47,10 @@ public class PlayerCreator : MonoBehaviour {
 				(input as InputController).RefreshInputs(settings.controllerID);
 	            break;
         }
+
+
+
+
 
         // Tell the movement script to add the appropriate input type
         PlayerMovement m = player.GetComponentInChildren<PlayerMovement>();

@@ -12,10 +12,9 @@ public class PlayerSettings {
 	public int keyboardID;
     public int playerID;
     public int teamID;
-    //private PlayerPref customisation; // customisation settings
 	public SkinIndexs indices;
 
-    public PlayerSettings(InputType input, int pid, int inputid, int tid)
+	public PlayerSettings(InputType input, int pid, int inputid, int tid, SkinIndexs indices)
     {
 		if (input == InputType.Controller) {
 			this.controllerID = inputid;
@@ -28,6 +27,6 @@ public class PlayerSettings {
         this.input = input;
         this.playerID = pid;
         this.teamID = tid;
-		//this.indices = indices;
+		this.indices = indices;
     }
 }

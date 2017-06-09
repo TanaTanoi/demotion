@@ -6,7 +6,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "Player/Skins", order = 2)]
 public class SkinIndexs : ScriptableObject {
 
-	public int outfitIndex;
-	public int hatIndex;
-	public int lanceIndex;
+	public int outfitIndex = 0;
+	public int hatIndex = 0;
+	public int lanceIndex = 0;
+
+	public SkinIndexs(int outfitIndex, int hatIndex, int lanceIndex){
+		this.outfitIndex = outfitIndex;
+		this.hatIndex = hatIndex;
+		this.lanceIndex = lanceIndex;
+	}
+
+
 }

@@ -5,9 +5,13 @@ using System.Linq;
 
 public class PlayerCustomisation : MonoBehaviour {
 
-	public List<Material> outfits;
-	public List<GameObject> hats;
-	public List<GameObject> lances;
+//	public List<Material> skins.skins.outfits;
+//	public List<GameObject> skins.skins.hats;
+//	public List<GameObject> skins.lances;
+//
+	public GameObject setupObject;
+	private PlayerSkins skins;
+	private GameSetup setup;
 
 	List<GameObject> hatObjects = new List<GameObject> ();
 	List<GameObject> lanceObjects = new List<GameObject>();
@@ -22,10 +26,14 @@ public class PlayerCustomisation : MonoBehaviour {
 
 	GameObject characterObject;
 
+	public int playerNo;
+
 	// Use this for initialization
 	void Start () {
+		
+		skins = setupObject.GetComponent<PlayerSkins> ();
+		setup = setupObject.GetComponent<GameSetup> ();
 		CustomisationSetup();
-		Debug.Log (this);
 	}
 
 	void CustomisationSetup(){
@@ -54,8 +62,8 @@ public class PlayerCustomisation : MonoBehaviour {
 
 		characterObject = character.gameObject;
 			
-		// instantiate all hats and hide them
-		foreach (GameObject hat in hats) {
+		// instantiate all skins.hats and hide them
+		foreach (GameObject hat in skins.hats) {
 			currentHat = Instantiate (hat) as GameObject;
 			currentHat.transform.position = playerPosition;
 			currentHat.transform.parent = head;
@@ -63,8 +71,9 @@ public class PlayerCustomisation : MonoBehaviour {
 			hatObjects.Add (currentHat);
 		}
 
-		// instantiate all lances and hide them
-		foreach (GameObject lance in lances) {
+		Debug.Log (hatObjects.Count);
+		// instantiate all skins.lances and hide them
+		foreach (GameObject lance in skins.lances) {
 			currentLance = Instantiate (lance) as GameObject;
 			currentLance.transform.position = lancePosition;
 			currentLance.transform.Rotate (90, 0, 0);
@@ -82,7 +91,7 @@ public class PlayerCustomisation : MonoBehaviour {
 
 		Debug.Log (character);
 		// setting the first out
-		newMat = outfits[outfitIndex] as Material;
+		newMat = skins.outfits[outfitIndex] as Material;
 		characterObject.GetComponent<Renderer> ().material = newMat;
 
 	}
@@ -96,7 +105,7 @@ public class PlayerCustomisation : MonoBehaviour {
 		Debug.Log ("editing player " + outfit + " " + hat + " " + lance);
 
 		// setting the outfit
-		newMat = outfits[outfit] as Material;
+		newMat = skins.outfits[outfit] as Material;
 
 		characterObject.GetComponent<Renderer> ().material = newMat;
 
@@ -120,7 +129,7 @@ public class PlayerCustomisation : MonoBehaviour {
 	public void RightButtonOutfit()
 	{
 
-		outfitIndex = (outfitIndex + 1)%outfits.Count;
+		outfitIndex = (outfitIndex + 1)%skins.outfits.Count;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
@@ -130,7 +139,7 @@ public class PlayerCustomisation : MonoBehaviour {
 	 */
 	public void LeftButtonOutfit(){
 
-		outfitIndex = (outfitIndex == 0) ? outfits.Count - 1 : outfitIndex - 1;
+		outfitIndex = (outfitIndex == 0) ? skins.outfits.Count - 1 : outfitIndex - 1;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
@@ -173,6 +182,10 @@ public class PlayerCustomisation : MonoBehaviour {
 		lanceIndex = (lanceIndex == 0) ? lanceObjects.Count - 1 : lanceIndex - 1;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
+	}
+
+	public void ApplySkins(){
+		setup.PopulateSkin (playerNo, new SkinIndexs (outfitIndex, hatIndex, lanceIndex));
 	}
 
 }

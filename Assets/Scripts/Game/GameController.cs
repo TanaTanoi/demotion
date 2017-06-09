@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
 	private PlayerSettings[] playerSettings;
 	private GameObject[] players;
 
+	private PlayerSkins skins;
     private PlayerCreator playerCreator;
     private Transform spawnPoints;
 
@@ -56,9 +57,10 @@ public class GameController : MonoBehaviour {
 		mainCamera = FindObjectOfType<CameraController> ();
     }
 
-    public void SetGameSettings(GameSettings gameSettings)
+	public void SetGameSettings(GameSettings gameSettings, PlayerSkins skins)
     {
         settings = gameSettings;
+		this.skins = skins;
 		playerSettings = new PlayerSettings[settings.playerCount];
 		players = new GameObject[settings.playerCount];
         Restart();
@@ -348,5 +350,9 @@ public class GameController : MonoBehaviour {
 
 		}
 		return true;
+	}
+
+	public PlayerSkins GetSkins(){
+		return skins;
 	}
 }
