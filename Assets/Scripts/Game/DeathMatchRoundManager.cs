@@ -5,7 +5,7 @@ using UnityEngine;
 public class DeathMatchRoundManager : RoundManager {
 	
 	private int scoreIncrement = 1;
-	private int numOfPlayers = 2;
+	private int numOfPlayers = 4;
 	private Transform spawnPoints;
 	// Use this for initialization
 	void Start () {

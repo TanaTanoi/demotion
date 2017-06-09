@@ -11,7 +11,7 @@ public class InputController : PlayerInput {
         if (id == -1) Debug.Log("ID is -1, ensure this is set before gameplay!");
 
         if (horizontalInput + verticalInput == 0) return; // Do nothing if there is no input
-        Vector3 targetDirection = new Vector3(horizontalInput, 0f, verticalInput);
+		Vector3 targetDirection = new Vector3(verticalInput, 0f, -horizontalInput);
 
         Quaternion newRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, rotationSpeed * Time.fixedDeltaTime);
