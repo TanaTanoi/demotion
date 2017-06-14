@@ -5,15 +5,21 @@ using UnityEngine;
 public class PlayerCreator : MonoBehaviour {
 
     public GameObject prefab;
+	private GameController controller;
+	private PlayerSkins skins;
 
+	void Start(){
+		controller = GameController.instance;
+		skins = controller.GetSkins ();
+	}
     /**
      * Creates a player with the given settings at the given position
      */
     public GameObject CreatePlayer(Vector3 pos, PlayerSettings settings)
     {
-
+		//skins.outfits;
         //This will change to use the player customisation
-        string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
+        //string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
 
         //Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
 
@@ -26,14 +32,31 @@ public class PlayerCreator : MonoBehaviour {
         // Create the player
         GameObject player = Instantiate(prefab, pos, Quaternion.identity);
 
-        // Apply their settings
-        PlayerSettings pSettings = player.GetComponent<PlayerSettings>();
-        pSettings.input = settings.input;
-        pSettings.controllerID = settings.controllerID;
-        pSettings.playerID = settings.playerID;
-        pSettings.teamID = settings.teamID;
+		PlayerInput input = new InputKeyboard();
+		switch(settings.input)
+		{
+			case InputType.Keyboard:
+				input = new InputKeyboard ();
+				(input as InputKeyboard).RefreshInputs(settings.keyboardID);
+	            break;
+		case InputType.Mouse:
+				input = new InputMouse ();
+	            break;
+			case InputType.Controller:
+				input = new InputController ();
+				(input as InputController).RefreshInputs(settings.controllerID);
+	            break;
+        }
+
+
+
+
+
         // Tell the movement script to add the appropriate input type
-        player.GetComponentInChildren<PlayerMovement>().SetInput();
+        PlayerMovement m = player.GetComponentInChildren<PlayerMovement>();
+		m.SetInput (input);
+		m.settings = settings;
+	
 
         //CurrentPrefab.GetComponentInChildren<SetMaterial>().setMat(newMat);
 

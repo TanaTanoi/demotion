@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody chairRigidbody;
 
     private PlayerInput playerIn;
+	public PlayerSettings settings;
 
 	private float boostHoldDuration = 0f;
 
@@ -45,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (rotationSpeed > 0) {
 			//gyroscope back to the correct orientation
 			transform.rotation = Quaternion.Euler (0.0f, transform.rotation.eulerAngles.y, 0.0f);
-			playerIn.turn (rotationSpeed, horizontalInput, verticalInput);
+			playerIn.turn (rotationSpeed, horizontalInput, verticalInput, transform);
 		
 
 			//desiredDirection = Vector3.Normalize(new Vector3(horizontalInput, 0f, verticalInput));
@@ -73,22 +74,8 @@ public class PlayerMovement : MonoBehaviour {
     /**
      * Applys the Input type from the player settings
      */
-    public void SetInput(){
-        PlayerSettings settings = gameObject.GetComponentInParent<PlayerSettings>();
-
-        switch(settings.input)
-        {
-            case InputType.Keyboard:
-                playerIn = gameObject.AddComponent<InputKeyboard>() as InputKeyboard;
-                break;
-            case InputType.Mouse:
-                playerIn = gameObject.AddComponent<InputMouse>() as InputMouse;
-                break;
-            case InputType.Controller:
-                playerIn = gameObject.AddComponent<InputController>() as InputController;
-                (playerIn as InputController).RefreshInputs(settings.controllerID);
-                break;
-        }
+	public void SetInput(PlayerInput input){
+		playerIn = input;
     }
 
 	// Spins the player some amount

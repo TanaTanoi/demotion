@@ -10,7 +10,7 @@ public class PlayerHitDetection : MonoBehaviour {
 	private int playerNum;
     private float vulnerablility = 0.0f;
 
-	private float blockAngleThreshold = -0.8f;
+	private float blockAngleThreshold = -0.3f;
 
     private GameController gameControl;
 
@@ -27,8 +27,8 @@ public class PlayerHitDetection : MonoBehaviour {
 		if (Time.time < vulnerablility) return;
 
         // Get the Settings and Movement scripts from this and the other player
-        PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerSettings>();
-        PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerSettings>();
+		PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerMovement>().settings;
+		PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerMovement>().settings;
         PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
 
@@ -40,8 +40,8 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// If the direction of the hit is from the front of the player, both get spun.
 		if (Vector3.Dot (-transform.forward, -playerHit.transform.forward) > blockAngleThreshold) {
-			thisPlayerMove.Boost (-100f);
-			otherPlayerMove.Boost (-100f);
+			thisPlayerMove.Boost (-400f);
+			otherPlayerMove.Boost (-400f);
 			thisPlayerMove.SpinPlayer (Random.Range(-100, 100));
 			otherPlayerMove.SpinPlayer (Random.Range(-100, 100));
 			return;

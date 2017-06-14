@@ -22,7 +22,7 @@ public class InputMouse : PlayerInput {
      * Turns the player towards the mouse,
      * Code from https://unity3d.com/learn/tutorials/projects/survival-shooter/player-character?playlist=17144
      */
-    public override void turn(float rotationSpeed, float horizontalInput, float verticalInput)
+	public override void turn(float rotationSpeed, float horizontalInput, float verticalInput, Transform transform)
     {
         // Create a ray from the mouse cursor on screen in the direction of the camera.
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
