@@ -7,7 +7,8 @@ public class DeathMatchRoundManager : RoundManager {
 	private int scoreIncrement = 1;
 	private int numOfPlayers = 4;
 	private Transform spawnPoints;
-	// Use this for initialization
+	
+
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
 		for (int i = 0; i <= numOfPlayers; i++) {
@@ -59,15 +60,5 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 	public override void Respawn (int playerNum){
 		GameController.instance.Respawn (playerNum);
-//		ArrayList goodSpawns = new ArrayList ();
-//		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
-//			if (IsGoodSpawn (j)) {
-//				goodSpawns.Add (spawnPoints.transform.GetChild (j));
-//			}
-//		}
-//		int i = Random.Range (0, spawnPoints.transform.childCount -1);
-//		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), spawnPoints.GetChild(i).position, spawnPoints.GetChild(i).rotation);
-//		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
-//		pm.SetPlayerNum (playerNum);
 	}
 }

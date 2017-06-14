@@ -87,7 +87,20 @@ public class GameSetup : MonoBehaviour {
 
     private void Start()
     {
+        InitialiseSystem();
         InitialisePlayerControls();
+    }
+
+    void InitialiseSystem()
+    {
+        #if UNITY_STANDALONE_OSX
+            Debug.Log("Stand Alone OSX");
+        #endif
+
+        #if UNITY_STANDALONE_WIN
+                Debug.Log("Stand Alone Windows");
+        #endif
+
     }
 
 

@@ -175,6 +175,7 @@ public class GameController : MonoBehaviour {
 			mid = mid / players.Length;
 
 			foreach (GameObject x in players) {
+                if (x == null) continue;
 				float d = Vector3.Distance (x.transform.position, mid);
 				biggestDist = Mathf.Max (d, biggestDist);					
 			} 
@@ -228,6 +229,7 @@ public class GameController : MonoBehaviour {
     public bool OnHit(int hitter, int hitee)
     {
         if (!OpposingTeam(hitter, hitee)) return false;
+
 		GameObject loser = players [hitee];
 		GameObject winner = players [hitter];
 		
@@ -314,7 +316,11 @@ public class GameController : MonoBehaviour {
 	 * Manages Respawning of players
 	 **/
 	public void Respawn (int playerNum){
-
+        if(players[playerNum] != null)
+        {
+            Destroy(players[playerNum]);
+            players[playerNum] = null;
+        }
 		List<Transform> goodSpawns = new List<Transform> ();
 		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
 			
@@ -323,18 +329,9 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		int i = Random.Range (0, goodSpawns.Count);
-
-        // TODO Add Create player call here
+        // Wait for respawn time here
 		players[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, settings.players[playerNum]);
 
-
-        /* Remove this and use PlayerCreator
-		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
-        
-		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
-		pm.SetPlayerNum (playerNum);
-		playersDict [playerNum] = newPlayer;
-        */
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
