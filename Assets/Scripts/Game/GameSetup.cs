@@ -87,14 +87,14 @@ public class GameSetup : MonoBehaviour {
 
     private void Start()
     {
-        InitialisePlayerControls();
+        InitialisePlayers();
     }
 
 
     /**
      * Assigns the initial control inputs to the players
      */
-    void InitialisePlayerControls()
+    void InitialisePlayers()
     {
         settings.players = new List<PlayerSettings>();
         if (skins == null) {
