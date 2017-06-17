@@ -69,7 +69,7 @@ public class GameSetup : MonoBehaviour {
     public GameSettings settings;  // Local settings applied via menu
 	private ArenaGenerator generator;  // Arena generator, could this be moved to the game controller?
     private bool settingUp = false;  // Setting up boolean so players can set teams
-	private SkinIndexs[] skins;
+	private SkinIndexs[] skins = null;
 
     // Use this for initialization
     void Awake() {
@@ -87,20 +87,7 @@ public class GameSetup : MonoBehaviour {
 
     private void Start()
     {
-        InitialiseSystem();
         InitialisePlayerControls();
-    }
-
-    void InitialiseSystem()
-    {
-        #if UNITY_STANDALONE_OSX
-            Debug.Log("Stand Alone OSX");
-        #endif
-
-        #if UNITY_STANDALONE_WIN
-                Debug.Log("Stand Alone Windows");
-        #endif
-
     }
 
 
@@ -110,9 +97,11 @@ public class GameSetup : MonoBehaviour {
     void InitialisePlayerControls()
     {
         settings.players = new List<PlayerSettings>();
-		SkinIndexs[] skins = {new SkinIndexs(0,0,0), new SkinIndexs(0,0,0), new SkinIndexs(0,0,0), new SkinIndexs(0,0,0)};
-		this.skins = skins;
-        int p = 0;  // player number, also used as temporary team number
+        if (skins == null) {
+            skins = new SkinIndexs[4];
+            for (int i = 0; i < 4; i++)
+                skins[i] = new SkinIndexs(0, 0, 0);
+        }
         int c = 0;  // controller number
 
         string[] controllers = Input.GetJoystickNames();
@@ -170,6 +159,7 @@ public class GameSetup : MonoBehaviour {
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit ();
+        //Its time to go home
 #endif
     }
 
