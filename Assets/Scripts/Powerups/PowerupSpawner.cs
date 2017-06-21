@@ -19,6 +19,8 @@ public class PowerupSpawner : MonoBehaviour {
 	public GameObject powerModel;
 	public GameObject shieldModel;
 
+	public ParticleSystem spawnEffect;
+
     private Powerup.Type[] buffs = new Powerup.Type[] {
         Powerup.Type.POWER,
 		Powerup.Type.SHIELD
@@ -61,9 +63,18 @@ public class PowerupSpawner : MonoBehaviour {
 		powerup.transform.localScale = Vector3.one * 2;
         powerup.transform.position = location + transform.position;
 		powerup.transform.rotation = Quaternion.Euler (new Vector3 (Random.Range (0, 360), Random.Range (0, 360), Random.Range (0, 360)));
+
+
         powerup.AddComponent<Rigidbody>();
 		powerup.AddComponent<SphereCollider> ();
         powerup.AddComponent<PowerupController>().type = type;
+
+		ParticleSystem ps = Instantiate (spawnEffect);
+		ps.transform.parent = powerup.transform;
+		ps.transform.localPosition = powerup.GetComponent<SphereCollider> ().center;
+		ParticleSystem.MinMaxGradient x = ps.main.startColor;
+		x.color = Color.red;
+
         return powerup;
     }
 
