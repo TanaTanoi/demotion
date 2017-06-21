@@ -17,10 +17,11 @@ public class PowerupSpawner : MonoBehaviour {
 
 	public GameObject boostModel;
 	public GameObject powerModel;
+	public GameObject shieldModel;
 
     private Powerup.Type[] buffs = new Powerup.Type[] {
-        Powerup.Type.BOOST,
-        Powerup.Type.POWER
+        Powerup.Type.POWER,
+		Powerup.Type.SHIELD
     };
 
     private float startTime; // The time the spawning started
@@ -74,6 +75,9 @@ public class PowerupSpawner : MonoBehaviour {
 			break;
 		case Powerup.Type.POWER:
 			powerup = powerModel;
+			break;
+		case Powerup.Type.SHIELD:
+			powerup = shieldModel;
 			break;
 		default:
 			powerup = null;

@@ -7,10 +7,10 @@ public abstract class RoundManager : MonoBehaviour {
 	
 	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
     // -- Many of these are in the GameSettings object and dont need to be stored twice --
-	private int numOfRounds;
-	private int currentRound;
-	private int targetScore;
-	private int maxRoundDuration;
+	protected int numOfRounds;
+	protected int currentRound;
+	protected int targetScore;
+	protected int maxRoundDuration;
 	protected Canvas hud;
 
 	void Start () {
@@ -29,8 +29,8 @@ public abstract class RoundManager : MonoBehaviour {
 	 * Creates the number of players passed in an initalises them with a score of zero
 	 **/
 	public void initPlayers(int numOfPlayers){
-		for (int i = 1; i <= numOfPlayers; i++) {
-			playerScores.Add(1,0);
+		for (int i = 0; i <= numOfPlayers; i++) {
+			playerScores.Add(i,0);
 		}
 	}
 
@@ -67,10 +67,16 @@ public abstract class RoundManager : MonoBehaviour {
 		Text[] text = hud.GetComponentsInChildren<Text> ();
 		for(int i = 0; i < text.Length; i++){
 			if(text[i].name.Equals("Player1Score")){
-				text [i].text = playerScores [1].ToString ();
+				text [i].text = playerScores [0].ToString ();
 			}
 			if(text[i].name.Equals("Player2Score")){
-				text [i].text = playerScores[2].ToString();
+				text [i].text = playerScores[1].ToString();
+			}
+			if(text[i].name.Equals("Player3Score")){
+				text [i].text = playerScores [2].ToString ();
+			}
+			if(text[i].name.Equals("Player4Score")){
+				text [i].text = playerScores[3].ToString();
 			}
 		}
 
