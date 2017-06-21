@@ -56,7 +56,16 @@ public class PlayerParticleController : MonoBehaviour {
 	// Enable or disable an effect for a particular de/buff
 	public void SetEffectActive(Powerup.Type type, bool setEnabled) {
 		// select the first system of this type
-		Effect effect = effects.First(x => x.type == type);
+		Debug.Log(type);
+		Effect effect = null;// = effects.First(x => x.type == type);
+		foreach (Effect e in effects) {
+			if (e.type == type) {
+				effect = e;
+			}
+		}
+
+		if (effect == null)
+			return;
 
 		if (setEnabled) {
 			if (effect.status != EffectStatus.ACTIVE) {
@@ -97,6 +106,10 @@ public class PlayerParticleController : MonoBehaviour {
         }
 
     }
+
+	private Effect GetEfect(Powerup.Type type){
+
+	}
 
 	IEnumerator BoostTrail() {
 		
