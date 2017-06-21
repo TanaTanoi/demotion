@@ -21,8 +21,6 @@ public class DestoryObjects : MonoBehaviour {
 			//int playerNum = player.GetComponentInChildren<PlayerMovement> ().GetPlayerNum ();
 			//Destroy (player);
 			//rm.respawn (playerNum);
-		} else {
-			Destroy (other.gameObject);
 		}
 	}
 }

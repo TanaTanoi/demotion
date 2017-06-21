@@ -76,6 +76,13 @@ public class PlayerHitDetection : MonoBehaviour {
 
             GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, q);
 
+			Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
+			Rigidbody killerb = GetComponentInParent<Rigidbody> ();
+			foreach (Rigidbody rb in ragdollrb) {
+				rb.AddForce (killerb.velocity * 50);
+			}
+
+
             vulnerablility = Time.time + invulnerabilityDuration; // Should be controlled by settings probably
         }
       
