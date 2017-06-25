@@ -45,15 +45,16 @@ public class PlayerCustomisation : MonoBehaviour {
 
 		Transform character = null;
 		Transform head = null;
-		Vector3 lancePosition = new Vector3(0,0,0);
-
+		//Vector3 lancePosition = new Vector3(0,0,0);
+		Transform lancePosition = null;
 
 		foreach (Transform child in children) {
 			if (child.CompareTag("Character")) {
 				character = child;
 			}
 			if(child.CompareTag("LanceLocation")){
-				lancePosition = child.position;
+				//lancePosition = child.position;
+				lancePosition = child;
 			}
 			if(child.CompareTag("Head")){
 				head = child;
@@ -67,6 +68,7 @@ public class PlayerCustomisation : MonoBehaviour {
 			currentHat = Instantiate (hat) as GameObject;
 			currentHat.transform.position = playerPosition;
 			currentHat.transform.parent = head;
+			currentHat.transform.localScale = Vector3.one;
 			currentHat.SetActive (false);
 			hatObjects.Add (currentHat);
 		}
@@ -75,9 +77,11 @@ public class PlayerCustomisation : MonoBehaviour {
 		// instantiate all skins.lances and hide them
 		foreach (GameObject lance in skins.lances) {
 			currentLance = Instantiate (lance) as GameObject;
-			currentLance.transform.position = lancePosition;
+			currentLance.transform.position = lancePosition.position;
+			currentLance.transform.parent = lancePosition;
 			currentLance.transform.Rotate (90, 0, 0);
 			currentLance.SetActive (false);
+			currentLance.transform.localScale = Vector3.one;
 			lanceObjects.Add (currentLance);
 		}
 	
@@ -186,6 +190,8 @@ public class PlayerCustomisation : MonoBehaviour {
 
 	public void ApplySkins(){
 		setup.PopulateSkin (playerNo, new SkinIndexs (outfitIndex, hatIndex, lanceIndex));
+
+		Debug.Log (playerNo + "Ready");
 	}
 
 }
