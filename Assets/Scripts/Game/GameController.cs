@@ -57,12 +57,14 @@ public class GameController : MonoBehaviour {
 		mainCamera = FindObjectOfType<CameraController> ();
     }
 
-	public void SetGameSettings(GameSettings gameSettings, PlayerSkins skins)
+	public void SetGameSettings(GameSettings gameSettings, PlayerSkins newSkins)
     {
         settings = gameSettings;
-		this.skins = skins;
+		skins = newSkins;
+		Debug.Log ("setup");
 		playerSettings = new PlayerSettings[settings.playerCount];
 		players = new GameObject[settings.playerCount];
+		playerCreator.Initialise ();
         Restart();
     }
 
@@ -105,6 +107,7 @@ public class GameController : MonoBehaviour {
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
 		drop = (int)currentRoundDuration - 20;
+		Debug.Log ("hello");
         SpawnAllPlayers();
 		playing = true;
 		paused = false;

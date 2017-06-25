@@ -188,7 +188,7 @@ public class PlayerCustomisation : MonoBehaviour {
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
 
-	public void ApplySkins(){
+	public void PlayerReady(){
 		setup.PopulateSkin (playerNo, new SkinIndexs (outfitIndex, hatIndex, lanceIndex));
 
 		Debug.Log (playerNo + "Ready");

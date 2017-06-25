@@ -130,7 +130,10 @@ public class GameSetup : MonoBehaviour {
 	public void ApplySkins(){
 		skins = tempSkins;
 
-		Debug.Log ("skins = " + skins.ToString());
+		for(int i = 0; i < settings.playerCount; ++i) {
+			settings.players [i].indices = skins [i];
+				
+		}
 	}
 
 	public void PopulateSkin(int index, SkinIndexs indices){
