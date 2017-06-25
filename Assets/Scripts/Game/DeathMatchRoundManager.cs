@@ -69,4 +69,30 @@ public class DeathMatchRoundManager : RoundManager {
 	public override void Respawn (int playerNum){
 		GameController.instance.Respawn (playerNum);
 	}
+
+	/**
+	 * Handle when a player falls off the map
+	 */ 
+	public override void Suicide (GameObject player){
+		PlayerSettings playerSettings  = player.GetComponentInParent<PlayerMovement>().settings;
+		int playerNum = playerSettings.playerID;
+		int oldScore = playerScores [playerNum];
+		playerScores.Remove (playerNum);
+		playerScores.Add (playerNum, oldScore - scoreIncrement);
+		updateScoreBoard ();
+		//
+		Transform wrapper = player.transform.Find ("wrapper");
+		Transform chair = wrapper.Find ("chairA");
+		chair.parent = null;
+		chair.gameObject.AddComponent<Rigidbody> ();
+		GameObject lance = player.GetComponentInChildren<PlayerHitDetection> ().gameObject;
+		Destroy (lance.GetComponent<PlayerHitDetection> ());
+		player.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
+		lance.AddComponent<Rigidbody> ();
+		Destroy(player);
+		Quaternion q = Quaternion.Euler(-player.transform.forward);
+
+		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), player.transform.position, q);
+		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
+	}
 }

@@ -245,19 +245,7 @@ public class GameController : MonoBehaviour {
      */
     public void Kill(GameObject player)
     {	
-		Transform chair = player.transform.Find ("chairA");
-		chair.parent = null;
-		chair.gameObject.AddComponent<Rigidbody> ();
-		GameObject lance = player.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		Destroy (lance.GetComponent<PlayerHitDetection> ());
-		player.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
-		lance.AddComponent<Rigidbody> ();
-		Destroy(player);
-		Quaternion q = Quaternion.Euler(-player.transform.forward);
-
-		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), player.transform.position, q);
-		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
-        //Something about losing points here
+		roundManager.Suicide (player);
     }
 
 

@@ -37,7 +37,7 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// Get the playerhit and the number of players involved in the collision
 		GameObject playerHit = other.gameObject;
-
+		Debug.Log ("Player hit = " + playerHit);
 
 		//float dotDir = Vector3.Dot (transform.forward, playerHit.transform.forward);
 		Vector3 dif = (playerHit.transform.position - transform.position);
