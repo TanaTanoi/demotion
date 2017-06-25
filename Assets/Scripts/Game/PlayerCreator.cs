@@ -8,9 +8,12 @@ public class PlayerCreator : MonoBehaviour {
 	private GameController controller;
 	private PlayerSkins skins;
 
-	void Start(){
+	public void Initialise(){
 		controller = GameController.instance;
 		skins = controller.GetSkins ();
+
+		Debug.Log (skins.hats.ToString ());
+		Debug.Log (skins.hats[1].name);
 	}
     /**
      * Creates a player with the given settings at the given position
@@ -31,7 +34,24 @@ public class PlayerCreator : MonoBehaviour {
 
         // Create the player
         GameObject player = Instantiate(prefab, pos, Quaternion.identity);
+		PlayerLimbs limbs = player.GetComponent<PlayerLimbs> ();
 
+		GameObject hat = skins.hats [settings.indices.hatIndex];
+		GameObject playerHat = Instantiate (hat, limbs.head.transform.position, limbs.head.transform.rotation);
+		playerHat.transform.parent = limbs.head.transform;
+
+		Mesh lance = skins.lances [settings.indices.lanceIndex].GetComponentInChildren<MeshFilter>().sharedMesh;
+		Mesh playerLance = Instantiate (lance);
+		limbs.lance.GetComponent<MeshFilter> ().sharedMesh = playerLance;
+
+
+		//playerLance.transform.parent = limbs.lance.transform;
+		//playerLance.transform.position
+		//playerLance.transform.localScale = Vector3.one;
+
+
+		player.GetComponent<PlayerLimbs> ().character.GetComponent<Renderer> ().material = skins.outfits [settings.indices.outfitIndex];
+	
 		PlayerInput input = new InputKeyboard();
 		switch(settings.input)
 		{
