@@ -60,6 +60,11 @@ public abstract class RoundManager : MonoBehaviour {
     public abstract void Respawn(int playerNum);
 
 	/**
+	 * Handle when a player falls off the map
+	 */ 
+	public abstract void Suicide (GameObject player);
+
+	/**
 	 * Call this method whenever the scoreboard UI needs to be updated 
 	 **/
 	protected void updateScoreBoard(){
