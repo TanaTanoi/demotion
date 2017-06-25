@@ -226,7 +226,7 @@ public class GameController : MonoBehaviour {
      * Will lose lives or increase score depending on the game mode.
      * Returns true if the players are on different teams and is therefore a valid hit
      */
-    public bool OnHit(int hitter, int hitee)
+	public bool OnHit(int hitter, int hitee, GameObject playerHit)
     {
         if (!OpposingTeam(hitter, hitee)) return false;
 
@@ -236,7 +236,7 @@ public class GameController : MonoBehaviour {
 		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
 		StartCoroutine (FocusOnPoint (mid));
-		roundManager.OnHit(hitter, hitee);
+		roundManager.OnHit(hitter, hitee, playerHit);
         return true;
     }
 
