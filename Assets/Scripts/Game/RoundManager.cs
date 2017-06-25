@@ -102,7 +102,13 @@ public abstract class RoundManager : MonoBehaviour {
 			chair.gameObject.AddComponent<Rigidbody> ();
 		}
 		// get the material
-		Material ragdollMat = playerHit.GetComponentsInChildren<Renderer> ().Last().material;
+
+		Transform parent = playerHit.transform;
+		while (parent.parent != null) {
+			parent = parent.parent;
+		}
+		Debug.Log (parent.name);
+		Material ragdollMat = parent.Find("wrapper").Find("PlayerModel").GetComponent<Renderer> ().material;
 
 		// deparent the lance
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
