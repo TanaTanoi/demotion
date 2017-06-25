@@ -49,10 +49,10 @@ public class PlayerItemController : MonoBehaviour {
 	// On collision with a powerup, add it
 	void OnTriggerEnter(Collider other) {
 		ItemController item = other.gameObject.GetComponent<ItemController>();
-		if ( item != null && chargeLeft <= 0) {
-            currentItem = item.type;
-            chargeLeft = stats.TOTAL_ITEM_CHARGE;
-            item.Pickup(gameObject);
+		if (item != null) {
+			currentItem = item.type;
+			chargeLeft = stats.TOTAL_ITEM_CHARGE;
+			item.Pickup (gameObject);
 		}
 	}
 
