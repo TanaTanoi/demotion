@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerHitDetection : MonoBehaviour {
@@ -37,6 +38,7 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// Get the playerhit and the number of players involved in the collision
 		GameObject playerHit = other.gameObject;
+
 		Debug.Log ("Player hit = " + playerHit);
 
 		//float dotDir = Vector3.Dot (transform.forward, playerHit.transform.forward);
@@ -67,14 +69,21 @@ public class PlayerHitDetection : MonoBehaviour {
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
+		Material ragdollMat = playerHit.GetComponentsInChildren<Renderer> ().Last().material; // TODO change once the hat is detached, just grab the first one
+
         // Call the Onhit mehtod and destroy the other player and replace with ragdoll
         if (gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID))
         {
             GameObject destroyThis = playerHit.transform.parent.gameObject;
-            Destroy(destroyThis);
-			Quaternion q = Quaternion.Euler(-other.transform.forward);
 
-            GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, q);
+			GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, Quaternion.identity);
+			// rotation of the player, 180 degrees around Y axis
+			ragDoll.transform.rotation = Quaternion.Euler (playerHit.transform.rotation.eulerAngles + (Vector3.up * 180));
+
+			ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+			
+				
+			Destroy(destroyThis);
 
 			Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
 			Rigidbody killerb = GetComponentInParent<Rigidbody> ();
