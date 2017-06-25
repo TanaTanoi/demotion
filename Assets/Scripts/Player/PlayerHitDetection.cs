@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerHitDetection : MonoBehaviour {
@@ -38,6 +39,7 @@ public class PlayerHitDetection : MonoBehaviour {
 		// Get the playerhit and the number of players involved in the collision
 		GameObject playerHit = other.gameObject;
 
+		Debug.Log ("Player hit = " + playerHit);
 
 		//float dotDir = Vector3.Dot (transform.forward, playerHit.transform.forward);
 		Vector3 dif = (playerHit.transform.position - transform.position);
@@ -55,36 +57,13 @@ public class PlayerHitDetection : MonoBehaviour {
 				thisPlayerMove.SpinPlayer (Random.Range (-100, 100));
 				otherPlayerMove.SpinPlayer (Random.Range (-100, 100));
 				return;
-			//}
+
 		}
-        // Get the lance and chair and unparent them so they remain in the game scene
 
-        Transform chair = playerHit.transform.Find ("chairA");
-		chair.parent = null;
-		chair.gameObject.AddComponent<Rigidbody> ();
-		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		Destroy (lance.GetComponent<PlayerHitDetection> ());
-		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
-		lance.AddComponent<Rigidbody> ();
+		// If it reaches here it means the player should be demoted so OnHit is called
 
-        // Call the Onhit mehtod and destroy the other player and replace with ragdoll
-        if (gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID))
-        {
-            GameObject destroyThis = playerHit.transform.parent.gameObject;
-            Destroy(destroyThis);
-			Quaternion q = Quaternion.Euler(-other.transform.forward);
-
-            GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, q);
-
-			Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
-			Rigidbody killerb = GetComponentInParent<Rigidbody> ();
-			foreach (Rigidbody rb in ragdollrb) {
-				rb.AddForce (killerb.velocity * 50);
-			}
-
-
-            vulnerablility = Time.time + invulnerabilityDuration; // Should be controlled by settings probably
-        }
+		gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID, playerHit);
+        
       
     }
 

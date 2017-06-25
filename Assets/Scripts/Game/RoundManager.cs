@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public abstract class RoundManager : MonoBehaviour {
 	
@@ -37,7 +38,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public abstract void OnHit (int hitter, int hitee);
+	public abstract void OnHit (int hitter, int hitee, GameObject playerHit);
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -60,6 +61,11 @@ public abstract class RoundManager : MonoBehaviour {
     public abstract void Respawn(int playerNum);
 
 	/**
+	 * Handle when a player falls off the map
+	 */ 
+	public abstract void Suicide (GameObject player);
+
+	/**
 	 * Call this method whenever the scoreboard UI needs to be updated 
 	 **/
 	protected void updateScoreBoard(){
@@ -80,5 +86,36 @@ public abstract class RoundManager : MonoBehaviour {
 			}
 		}
 
+	}
+
+	protected void RagDoll(GameObject playerHit){
+
+		// check to see if the game object passed in is the wrapper or the parent gameObject && deparent the chair
+		Transform wrapper = playerHit.transform.Find ("wrapper");
+		if (wrapper != null) {
+			Transform chair = wrapper.Find ("chairA");
+			chair.parent = null;
+			chair.gameObject.AddComponent<Rigidbody> ();
+		} else {
+			Transform chair = playerHit.transform.Find ("chairA");
+			chair.parent = null;
+			chair.gameObject.AddComponent<Rigidbody> ();
+		}
+		// get the material
+		Material ragdollMat = playerHit.GetComponentsInChildren<Renderer> ().Last().material;
+
+		// deparent the lance
+		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
+		Destroy (lance.GetComponent<PlayerHitDetection> ());
+		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
+		lance.AddComponent<Rigidbody> ();
+
+		// destroy the old payer model
+		Destroy(playerHit);
+		// create the ragdoll, position it and apply the material
+		Quaternion q = Quaternion.Euler(-playerHit.transform.forward);
+		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), playerHit.transform.position, q);
+		ragDoll.transform.rotation = Quaternion.Euler (playerHit.transform.rotation.eulerAngles + (Vector3.up * 180));
+		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
 	}
 }

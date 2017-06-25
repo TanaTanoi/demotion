@@ -229,7 +229,7 @@ public class GameController : MonoBehaviour {
      * Will lose lives or increase score depending on the game mode.
      * Returns true if the players are on different teams and is therefore a valid hit
      */
-    public bool OnHit(int hitter, int hitee)
+	public bool OnHit(int hitter, int hitee, GameObject playerHit)
     {
         if (!OpposingTeam(hitter, hitee)) return false;
 
@@ -239,7 +239,7 @@ public class GameController : MonoBehaviour {
 		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
 		StartCoroutine (FocusOnPoint (mid));
-		roundManager.OnHit(hitter, hitee);
+		roundManager.OnHit(hitter, hitee, playerHit);
         return true;
     }
 
@@ -248,19 +248,7 @@ public class GameController : MonoBehaviour {
      */
     public void Kill(GameObject player)
     {	
-		Transform chair = player.transform.Find ("chairA");
-		chair.parent = null;
-		chair.gameObject.AddComponent<Rigidbody> ();
-		GameObject lance = player.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		Destroy (lance.GetComponent<PlayerHitDetection> ());
-		player.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
-		lance.AddComponent<Rigidbody> ();
-		Destroy(player);
-		Quaternion q = Quaternion.Euler(-player.transform.forward);
-
-		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), player.transform.position, q);
-		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
-        //Something about losing points here
+		roundManager.Suicide (player);
     }
 
 
