@@ -75,16 +75,14 @@ public class PlayerHitDetection : MonoBehaviour {
         if (gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID))
         {
             GameObject destroyThis = playerHit.transform.parent.gameObject;
-			Quaternion q = Quaternion.Euler(-other.transform.forward);
 
-            GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, q);
+			GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), other.transform.position, Quaternion.identity);
+			// rotation of the player, 180 degrees around Y axis
+			ragDoll.transform.rotation = Quaternion.Euler (playerHit.transform.rotation.eulerAngles + (Vector3.up * 180));
 
-			Renderer[] renderers = ragDoll.GetComponentsInChildren<Renderer> ();
-			foreach (Renderer r in renderers) {
-				Debug.Log ("What the frick frack");
-				r.material = ragdollMat;
-			}
-			GetComponentInChildren<Renderer> ().material = ragdollMat;
+			ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+			
+				
 			Destroy(destroyThis);
 
 			Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
