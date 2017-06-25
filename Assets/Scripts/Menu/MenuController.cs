@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour {
     public GameObject DefaultPanel;
     private GameObject selectedPanel;
     private bool isPaused;
+	public List<Text> readys;
 
 	// Use this for initialization
 	void Start () {
@@ -73,4 +74,6 @@ public class MenuController : MonoBehaviour {
 	public void HideQuitMenu(Canvas quitMenu){
 		quitMenu.enabled = false;
 	}
+		
+
 }
