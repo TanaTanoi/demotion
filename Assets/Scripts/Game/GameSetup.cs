@@ -70,6 +70,7 @@ public class GameSetup : MonoBehaviour {
 	private ArenaGenerator generator;  // Arena generator, could this be moved to the game controller?
     private bool settingUp = false;  // Setting up boolean so players can set teams
 	private SkinIndexs[] skins = null;
+	private SkinIndexs[] tempSkins = null;
 
     // Use this for initialization
     void Awake() {
@@ -97,10 +98,13 @@ public class GameSetup : MonoBehaviour {
     void InitialisePlayers()
     {
         settings.players = new List<PlayerSettings>();
-        if (skins == null) {
+		if (skins == null && tempSkins == null) {
             skins = new SkinIndexs[4];
-            for (int i = 0; i < 4; i++)
-                skins[i] = new SkinIndexs(0, 0, 0);
+			tempSkins = new SkinIndexs[4];
+			for (int i = 0; i < 4; i++) {
+				skins [i] = new SkinIndexs (0, 0, 0);
+				tempSkins [i] = new SkinIndexs (0, 0, 0);
+			}
         }
         int c = 0;  // controller number
 
@@ -123,8 +127,16 @@ public class GameSetup : MonoBehaviour {
 
     }
 
+	public void ApplySkins(){
+		skins = tempSkins;
+
+		Debug.Log ("skins = " + skins.ToString());
+	}
+
 	public void PopulateSkin(int index, SkinIndexs indices){
-		skins [index] = indices;
+		tempSkins [index] = indices;
+
+		Debug.Log ("tempSkins = " + tempSkins.ToString());
 	}
 
 	void OnEnable() {
