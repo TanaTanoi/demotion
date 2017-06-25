@@ -7,8 +7,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
     private Vector3 spawnPosition;
     private GameObject currentItem;
     
-	public GameObject superboostProp;
-	public GameObject bananaProp;
+	public PowerupModelsAtlas atlas;
 
 	void Start () {
         spawnPosition = transform.GetChild(0).transform.position;
@@ -35,17 +34,16 @@ public class ItemSpawnPlatform : MonoBehaviour {
         switch(type) {
             case Item.Type.SUPER_BOOST:
                 // change once we have different models for them etc
-			GameObject boost = Instantiate(superboostProp);
+			GameObject boost = Instantiate(atlas.fireBoostItem);
             boost.AddComponent<ItemController>().type = type;
             return boost;
 		case Item.Type.STICKY_THROWABLE:
                 // change once we have different models for them etc
-				GameObject throwable = GameObject.CreatePrimitive (PrimitiveType.Sphere);
-				throwable.transform.localScale = Vector3.one * 0.5f;
+				GameObject throwable = Instantiate(atlas.snowballItem);
                 throwable.AddComponent<ItemController>().type = type;
                 return throwable;
 		case Item.Type.BANANA_THROWABLE:
-			GameObject banana = Instantiate(bananaProp);
+			GameObject banana = Instantiate(atlas.bananaItem);
 			banana.AddComponent<ItemController>().type = type;
 			return banana;
             default:

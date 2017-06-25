@@ -15,9 +15,7 @@ public class PowerupSpawner : MonoBehaviour {
     [Tooltip ("Delay before the first powerup")]
     public float delayBeforeFirstPowerup = 0f;
 
-	public GameObject boostModel;
-	public GameObject powerModel;
-	public GameObject shieldModel;
+	public PowerupModelsAtlas atlas;
 
 	public ParticleSystem spawnEffect;
 
@@ -82,13 +80,13 @@ public class PowerupSpawner : MonoBehaviour {
 		GameObject powerup;
 		switch(type){
 		case Powerup.Type.BOOST:
-			powerup = boostModel;
+			powerup = null;
 			break;
 		case Powerup.Type.POWER:
-			powerup = powerModel;
+			powerup = atlas.coffee;
 			break;
 		case Powerup.Type.SHIELD:
-			powerup = shieldModel;
+			powerup = atlas.shield;
 			break;
 		default:
 			powerup = null;

@@ -10,13 +10,12 @@ namespace Item {
 
 public class PlayerItemController : MonoBehaviour {
 
-    public GameObject throwableItem;
 	private PlayerStats stats;
 
 	public PlayerModelController playerAnimator;
     public Transform throwingHand;
 
-	public GameObject throwableBanana;
+	public PowerupModelsAtlas atlas;
 
     private Item.Type currentItem;
     private float chargeLeft = 0; // How much usage is left in this powerup
@@ -60,14 +59,14 @@ public class PlayerItemController : MonoBehaviour {
         particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
 		case Item.Type.STICKY_THROWABLE:
-			GameObject sticky = Instantiate (throwableItem);
+			GameObject sticky = Instantiate (atlas.snowballThrowable);
 			sticky.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
 			IEnumerator stickyC = ThrowItem(sticky);
 			StartCoroutine(stickyC);
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
 		case Item.Type.BANANA_THROWABLE:
-			GameObject banana = Instantiate (throwableBanana);
+			GameObject banana = Instantiate (atlas.bananaThrowable);
 			banana.AddComponent<PowerupController> ().type = Powerup.Type.BANANA;
 			banana.AddComponent<Rigidbody> ().isKinematic = false;
 			IEnumerator bananaC = ThrowItem(banana);
