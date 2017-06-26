@@ -11,9 +11,15 @@ public class DeathMatchRoundManager : RoundManager {
 
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
-		for (int i = 0; i <= numOfPlayers; i++) {
-			playerScores.Add (i, 0);
-		}
+		playerKills = new Dictionary<int, int> ();
+		playerDeaths = new Dictionary<int, int> ();
+		playerSuicides = new Dictionary<int, int> ();
+		playerSprees = new Dictionary<int, int> ();
+		bestSprees = new Dictionary<int, int> ();
+//		for (int i = 0; i <= numOfPlayers; i++) {
+//			playerScores.Add (i, 0);
+//		}
+		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
 		targetScore = 5;
@@ -31,10 +37,27 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 	public override void OnHit(int hitter, int hitee, GameObject playerHit){
 		Debug.Log ("Player " + hitter + " hit Player " + hitee);
+		Debug.Log (playerKills [hitter]);
 		RagDoll (playerHit);
 		int oldScore = playerScores [hitter];
+		int oldKills = playerKills [hitter];
+		int oldDeaths = playerDeaths [hitee];
+		int spree = playerSprees [hitter];
 		playerScores.Remove (hitter);
+		playerKills.Remove (hitter);
+		playerDeaths.Remove (hitee);
+		playerSprees.Remove (hitter);
+		playerSprees.Remove (hitee);
 		playerScores.Add (hitter, oldScore + scoreIncrement);
+		playerKills.Add (hitter, oldKills + 1);
+		playerDeaths.Add (hitee, oldDeaths + 1);
+		playerSprees.Add (hitter, spree + 1);
+		playerSprees.Add (hitee, 0);
+		if (playerSprees [hitter] > bestSprees [hitter]) {
+			bestSprees.Remove (hitter);
+			bestSprees.Add (hitter, playerSprees [hitter]);
+		}
+		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
 		updateScoreBoard ();
 		Respawn (hitee);
 	}
@@ -80,8 +103,14 @@ public class DeathMatchRoundManager : RoundManager {
 		PlayerSettings playerSettings  = player.GetComponentInParent<PlayerMovement>().settings;
 		int playerNum = playerSettings.playerID;
 		int oldScore = playerScores [playerNum];
+		int oldSuicides = playerSuicides [playerNum];
+		int oldDeaths = playerDeaths [playerNum];
 		playerScores.Remove (playerNum);
+		playerSuicides.Remove (playerNum);
+		playerDeaths.Remove (playerNum);
 		playerScores.Add (playerNum, oldScore - scoreIncrement);
+		playerSuicides.Add (playerNum, oldSuicides + 1);
+		playerDeaths.Add (playerNum, oldDeaths + 1);
 		updateScoreBoard ();
 
 		// make the player ragdoll
