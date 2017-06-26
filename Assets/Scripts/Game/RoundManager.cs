@@ -90,8 +90,12 @@ public abstract class RoundManager : MonoBehaviour {
 
 	protected void RagDoll(GameObject playerHit){
 
+		Transform parent = playerHit.transform;
+		while (parent.parent != null) {
+			parent = parent.parent;
+		}
 		// check to see if the game object passed in is the wrapper or the parent gameObject && deparent the chair
-		Transform wrapper = playerHit.transform.Find ("wrapper");
+		Transform wrapper = parent.transform.Find ("wrapper");
 		if (wrapper != null) {
 			Transform chair = wrapper.Find ("chairA");
 			chair.parent = null;
@@ -103,12 +107,7 @@ public abstract class RoundManager : MonoBehaviour {
 		}
 		// get the material
 
-		Transform parent = playerHit.transform;
-		while (parent.parent != null) {
-			parent = parent.parent;
-		}
-		Debug.Log (parent.name);
-		Material ragdollMat = parent.Find("wrapper").Find("PlayerModel").GetComponent<Renderer> ().material;
+		Material ragdollMat = wrapper.Find("PlayerModel").GetComponent<Renderer> ().material;
 
 		// deparent the lance
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
