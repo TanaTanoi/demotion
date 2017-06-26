@@ -14,13 +14,9 @@ public class DestoryObjects : MonoBehaviour {
 
     void OnTriggerEnter(Collider other){
 		if (other.gameObject.tag == "Player") {
-			
-			//GameObject player = other.gameObject.transform.parent.gameObject;
-            control.Kill(other.gameObject);
-			
-			//int playerNum = player.GetComponentInChildren<PlayerMovement> ().GetPlayerNum ();
-			//Destroy (player);
-			//rm.respawn (playerNum);
+			control.Kill (other.gameObject);
+		} else {
+			Destroy (other.gameObject);
 		}
 	}
 }
