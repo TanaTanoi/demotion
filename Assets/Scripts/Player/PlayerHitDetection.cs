@@ -39,7 +39,7 @@ public class PlayerHitDetection : MonoBehaviour {
 		// Get the playerhit and the number of players involved in the collision
 		GameObject playerHit = other.gameObject;
 
-		Debug.Log ("Player hit = " + playerHit);
+		// Debug.Log ("Player hit = " + playerHit);
 
 		//float dotDir = Vector3.Dot (transform.forward, playerHit.transform.forward);
 		Vector3 dif = (playerHit.transform.position - transform.position);
@@ -47,7 +47,7 @@ public class PlayerHitDetection : MonoBehaviour {
 		float dotDif = Vector2.Dot (dir, new Vector2(playerHit.transform.forward.x, playerHit.transform.forward.z).normalized);
 
 
-		Debug.Log(dir + " : " + dotDif + " : " + transform.forward);
+	//	Debug.Log(dir + " : " + dotDif + " : " + transform.forward);
 		
 		// If the direction of the hit is from the front of the player, both get spun.
 		//if (Vector3.Dot (transform.forward, playerHit.transform.forward) < blockAngleThreshold) {
