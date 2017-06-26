@@ -20,22 +20,12 @@ public class PlayerCreator : MonoBehaviour {
      */
     public GameObject CreatePlayer(Vector3 pos, PlayerSettings settings)
     {
-		//skins.outfits;
-        //This will change to use the player customisation
-        //string matPath = "Assets/Materials&Textures/Player/player" + settings.playerID + ".mat";
-
-        //Material newMat = (Material)AssetDatabase.LoadAssetAtPath(matPath, typeof(Material));
-
-
-        // TODO reimplement this mat thing but getting around the unity editor issue
-        //GameObject CurrentPrefab = (GameObject)Instantiate(Resources.Load("Player"), new Vector3(-5,1,-3), new Quaternion(0,0,0,1));
-        //GameObject CurrentPrefab2 = (GameObject)Instantiate(Resources.Load("Lance"), new Vector3(-4,1,-3), new Quaternion(0,0,0,1));
-
 
         // Create the player
         GameObject player = Instantiate(prefab, pos, Quaternion.identity);
 		PlayerLimbs limbs = player.GetComponent<PlayerLimbs> ();
 
+		// Setting the player customisation using player limbs
 		GameObject hat = skins.hats [settings.indices.hatIndex];
 		GameObject playerHat = Instantiate (hat, limbs.head.transform.position, limbs.head.transform.rotation);
 		playerHat.transform.parent = limbs.head.transform;
@@ -44,14 +34,9 @@ public class PlayerCreator : MonoBehaviour {
 		Mesh playerLance = Instantiate (lance);
 		limbs.lance.GetComponent<MeshFilter> ().sharedMesh = playerLance;
 
-
-		//playerLance.transform.parent = limbs.lance.transform;
-		//playerLance.transform.position
-		//playerLance.transform.localScale = Vector3.one;
-
-
 		player.GetComponent<PlayerLimbs> ().character.GetComponent<Renderer> ().material = skins.outfits [settings.indices.outfitIndex];
 	
+
 		PlayerInput input = new InputKeyboard();
 		switch(settings.input)
 		{
@@ -67,10 +52,6 @@ public class PlayerCreator : MonoBehaviour {
 				(input as InputController).RefreshInputs(settings.controllerID);
 	            break;
         }
-
-
-
-
 
         // Tell the movement script to add the appropriate input type
         PlayerMovement m = player.GetComponentInChildren<PlayerMovement>();
