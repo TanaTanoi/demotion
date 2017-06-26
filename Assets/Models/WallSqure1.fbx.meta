@@ -8,15 +8,25 @@ ModelImporter:
     100000: WallBase
     100002: WallNear
     100004: //RootNode
+    100006: WallBase.001
+    100008: WallFar
     400000: WallBase
     400002: WallNear
     400004: //RootNode
+    400006: WallBase.001
+    400008: WallFar
     2300000: WallBase
     2300002: WallNear
+    2300004: WallBase.001
+    2300006: WallFar
     3300000: WallBase
     3300002: WallNear
+    3300004: WallBase.001
+    3300006: WallFar
     4300000: WallNear
     4300002: WallBase
+    4300004: WallBase.001
+    4300006: WallFar
   materials:
     importMaterials: 1
     materialName: 0
