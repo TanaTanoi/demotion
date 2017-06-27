@@ -353,4 +353,8 @@ public class GameController : MonoBehaviour {
 	public PlayerSkins GetSkins(){
 		return skins;
 	}
+
+	public GameSettings GetSettings() {
+		return settings;
+	}
 }

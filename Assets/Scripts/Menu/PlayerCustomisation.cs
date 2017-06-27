@@ -5,10 +5,6 @@ using System.Linq;
 
 public class PlayerCustomisation : MonoBehaviour {
 
-//	public List<Material> skins.skins.outfits;
-//	public List<GameObject> skins.skins.hats;
-//	public List<GameObject> skins.lances;
-//
 	public GameObject setupObject;
 	private PlayerSkins skins;
 	private GameSetup setup;
@@ -30,22 +26,24 @@ public class PlayerCustomisation : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
 		skins = setupObject.GetComponent<PlayerSkins> ();
 		setup = setupObject.GetComponent<GameSetup> ();
 		CustomisationSetup();
 	}
 
+	/**
+     * find the positions where to set the hat and lance.
+     * instantiates all customisation models and hides all
+     * of them but one.
+     */
 	void CustomisationSetup(){
+		
 		// get positions for the models
-
-			
 		Vector3 playerPosition = this.gameObject.transform.position;
 		Transform[] children = this.gameObject.GetComponentsInChildren<Transform>();
 
 		Transform character = null;
 		Transform head = null;
-		//Vector3 lancePosition = new Vector3(0,0,0);
 		Transform lancePosition = null;
 
 		foreach (Transform child in children) {
@@ -53,7 +51,6 @@ public class PlayerCustomisation : MonoBehaviour {
 				character = child;
 			}
 			if(child.CompareTag("LanceLocation")){
-				//lancePosition = child.position;
 				lancePosition = child;
 			}
 			if(child.CompareTag("Head")){
@@ -91,16 +88,13 @@ public class PlayerCustomisation : MonoBehaviour {
 		hatObjects[hatIndex].SetActive(true);
 		lanceObjects[lanceIndex].SetActive(true);
 
-
-
 		Debug.Log (character);
 		// setting the first out
 		newMat = skins.outfits[outfitIndex] as Material;
 		characterObject.GetComponent<Renderer> ().material = newMat;
 
 	}
-
-
+		
 	/*
 	 *  Applies customisation to player using index
 	 */
@@ -124,7 +118,6 @@ public class PlayerCustomisation : MonoBehaviour {
 			currentLance = lanceObjects [lance];
 			currentLance.SetActive (true);
 		}
-			
 	}
 
 	/*
@@ -188,6 +181,10 @@ public class PlayerCustomisation : MonoBehaviour {
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
 
+	/**
+     * Called from the UI. Populates specfic player 
+     * indexs in Temp array in GameSetup.
+     */
 	public void PlayerReady(){
 		setup.PopulateSkin (playerNo, new SkinIndexs (outfitIndex, hatIndex, lanceIndex));
 
