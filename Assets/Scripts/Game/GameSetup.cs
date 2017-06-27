@@ -146,7 +146,6 @@ public class GameSetup : MonoBehaviour {
 
 	public void PopulateSkin(int index, SkinIndexs indices){
 		tempSkins [index] = indices;
-
 		Debug.Log ("tempSkins = " + tempSkins.ToString());
 	}
 
