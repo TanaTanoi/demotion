@@ -125,16 +125,9 @@ public class ArenaGenerator : MonoBehaviour {
 	void GenerateCarpetTiles(){
 		List<GameObject> tiles = new List<GameObject>();
 
-		//int count = tileCarpetLocations.Count;
-
-		//int crackedCount = tileCarpetLocations.Count - count;
-
-		//int tileClearCount = (tileCarpetLocations.Count)/2;
-		//count -= tileClearCount;
-
-		int tileClearCount = (int)(tileCarpetLocations.Count * 0.8);
-
-		int crackedTileCount = tileCarpetLocations.Count - tileClearCount;
+		int tileClearCount = (int)(tileCarpetLocations.Count * 0.5);
+		int tileClutteredCount = (int)(tileCarpetLocations.Count * 0.3);
+		int crackedTileCount = tileCarpetLocations.Count - (tileClearCount + tileClutteredCount);
 
 //		// adding "clear" carpet objects
 //		for (int i = 0; i < count; i++) {
@@ -156,7 +149,15 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
-			prefabObject.transform.transform.parent = Arena.transform;
+			prefabObject.transform.parent = Arena.transform;
+		}
+
+		// adding "cluttered" carpet objects
+		for (int i = 0; i < tileClutteredCount; i++) { 
+			int randomIndex = Random.Range (0, tileCarpetClutteredPrefabs.Length);
+			GameObject prefabObject = Instantiate (tileCarpetClutteredPrefabs [randomIndex]) as GameObject;
+			tiles.Add (prefabObject);
+			prefabObject.transform.parent = Arena.transform;
 		}
 			
 		//int crackedTileCount = count / 4;
@@ -175,7 +176,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetCrackedPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetCrackedPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
-			prefabObject.transform.transform.parent = Arena.transform;
+			prefabObject.transform.parent = Arena.transform;
 		}
 			
 		int tilesNum = tiles.Count;
@@ -270,4 +271,13 @@ public class ArenaGenerator : MonoBehaviour {
 		return toReturn;
 	}
 
+	public void SetMusicToObjectsOfTile(GameObject tile){
+		
+		Transform tileTransform = tile.transform;
+
+		foreach (Transform child in tileTransform) {
+			// add the music script
+			//child.addComponent<Script>();
+		}
+	}
 }

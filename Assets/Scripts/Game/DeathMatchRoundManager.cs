@@ -7,7 +7,7 @@ public class DeathMatchRoundManager : RoundManager {
 	private int scoreIncrement = 1;
 	private int numOfPlayers = 4;
 	private Transform spawnPoints;
-	
+	private float RespawnDelay;
 
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
@@ -22,7 +22,8 @@ public class DeathMatchRoundManager : RoundManager {
 		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
-		targetScore = 2;
+		targetScore = 10;
+		RespawnDelay = GameController.instance.GetSettings ().respawnTime;
 	}
 	
 	// Update is called once per frame
@@ -34,33 +35,18 @@ public class DeathMatchRoundManager : RoundManager {
 
 	/**
 	 * Handles what should happen when a player hit another player
+	 * Returns the ragdoll that is hit
 	 **/
-	public override void OnHit(int hitter, int hitee, GameObject playerHit){
-		Debug.Log ("Player " + hitter + " hit Player " + hitee);
-		Debug.Log (playerKills [hitter]);
-		RagDoll (playerHit);
-		int oldScore = playerScores [hitter];
-		int oldKills = playerKills [hitter];
-		int oldDeaths = playerDeaths [hitee];
-		int spree = playerSprees [hitter];
-		playerScores.Remove (hitter);
-		playerKills.Remove (hitter);
-		playerDeaths.Remove (hitee);
-		playerSprees.Remove (hitter);
-		playerSprees.Remove (hitee);
-		playerScores.Add (hitter, oldScore + scoreIncrement);
-		playerKills.Add (hitter, oldKills + 1);
-		playerDeaths.Add (hitee, oldDeaths + 1);
-		playerSprees.Add (hitter, spree + 1);
-		playerSprees.Add (hitee, 0);
-		if (playerSprees [hitter] > bestSprees [hitter]) {
-			bestSprees.Remove (hitter);
-			bestSprees.Add (hitter, playerSprees [hitter]);
-		}
-		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
+
+	public override GameObject OnHit(int hitter, int hitee, GameObject playerHit){
+		
+		GameObject ragdoll = RagDoll (playerHit);
+		UpdateStats (hitter, hitee);
 		updateScoreBoard ();
-		Respawn (hitee);
+		StartCoroutine(Respawn (hitee));
+		return ragdoll;
 	}
+		
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -86,13 +72,20 @@ public class DeathMatchRoundManager : RoundManager {
 	protected override void endRound(){
 		Debug.Log ("The round has ended");
 		updateStatBoard ();
+		StartCoroutine (ShowScoreboard (2f));
+	}
+
+	private IEnumerator ShowScoreboard(float delay){
+		yield return new WaitForSeconds (delay);
 		GameController.instance.DisplayStatBoard ();
+		Time.timeScale = 0;
 	}
 
 	/**
 	 * Manages Respawning of players
 	 **/
-	public override void Respawn (int playerNum){
+	public override IEnumerator Respawn (int playerNum){
+		yield return new WaitForSeconds (RespawnDelay);
 		GameController.instance.Respawn (playerNum);
 	}
 
@@ -119,6 +112,6 @@ public class DeathMatchRoundManager : RoundManager {
 		RagDoll(player);
 
 		// respawn
-		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
+		StartCoroutine(Respawn(playerNum));
 	}
 }

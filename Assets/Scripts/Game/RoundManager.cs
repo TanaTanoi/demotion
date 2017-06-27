@@ -5,7 +5,10 @@ using UnityEngine.UI;
 using System.Linq;
 
 public abstract class RoundManager : MonoBehaviour {
-	
+
+	private int scoreIncrement = 1;
+	private int numOfPlayers = 4;
+
 	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
 
 	protected Dictionary<int,int> playerKills;
@@ -57,7 +60,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public abstract void OnHit (int hitter, int hitee, GameObject playerHit);
+	public abstract GameObject OnHit (int hitter, int hitee, GameObject playerHit);
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -77,7 +80,7 @@ public abstract class RoundManager : MonoBehaviour {
     /**
      * Handle respawning of players
      */
-    public abstract void Respawn(int playerNum);
+	public abstract IEnumerator Respawn(int playerNum);
 
 	/**
 	 * Handle when a player falls off the map
@@ -105,6 +108,28 @@ public abstract class RoundManager : MonoBehaviour {
 			}
 		}
 
+	}
+		
+	protected void UpdateStats(int hitter, int hitee){
+		int oldScore = playerScores [hitter];
+		int oldKills = playerKills [hitter];
+		int oldDeaths = playerDeaths [hitee];
+		int spree = playerSprees [hitter];
+		playerScores.Remove (hitter);
+		playerKills.Remove (hitter);
+		playerDeaths.Remove (hitee);
+		playerSprees.Remove (hitter);
+		playerSprees.Remove (hitee);
+		playerScores.Add (hitter, oldScore + scoreIncrement);
+		playerKills.Add (hitter, oldKills + 1);
+		playerDeaths.Add (hitee, oldDeaths + 1);
+		playerSprees.Add (hitter, spree + 1);
+		playerSprees.Add (hitee, 0);
+		if (playerSprees [hitter] > bestSprees [hitter]) {
+			bestSprees.Remove (hitter);
+			bestSprees.Add (hitter, playerSprees [hitter]);
+		}
+		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
 	}
 
 	/**
@@ -145,13 +170,10 @@ public abstract class RoundManager : MonoBehaviour {
 
 	}
 
-	protected void RagDoll(GameObject playerHit){
+	protected GameObject RagDoll(GameObject playerHit){
 
-		// Get the top level of the player prefab
-		Transform parent = playerHit.transform;
-		while (parent.parent != null) {
-			parent = parent.parent;
-		}
+
+		Transform parent = playerHit.transform.root;
 
 		// get the wrapper as this has the chair and material as chidlren
 		Transform wrapper = parent.transform.Find ("wrapper");
@@ -166,17 +188,35 @@ public abstract class RoundManager : MonoBehaviour {
 
 		// deparent the lance
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		Destroy (lance.GetComponent<PlayerHitDetection> ());
+        lance.GetComponent<PlayerHitDetection>().enabled = false;
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
-		// destroy the old payer model
-		Destroy(playerHit);
+
+        // Disable the renderer for the player and make all colliders triggers
+        playerHit.GetComponentInChildren<Renderer>().enabled = false;
+        foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
+        {
+            c.isTrigger = true;
+        }
+
+		// deparent the hat
+		GameObject hat = playerHit.GetComponentInChildren<Hat> ().gameObject;
+		hat.transform.parent = null;
+		//hat.AddComponent<Rigidbody> ();
+		//hat.AddComponent<SphereCollider> ();
+
+//		// destroy the old payer model
+//		Destroy(parent);
 
 		// create the ragdoll, position it and apply the material
-		Quaternion q = Quaternion.Euler(-parent.transform.forward);
-		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, q);
-		ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
+		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
+		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
+		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+
+		// destroy the old payer model
+		Destroy(parent.gameObject);
+		return ragDoll;
 	}
 }
