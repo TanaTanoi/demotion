@@ -192,12 +192,22 @@ public abstract class RoundManager : MonoBehaviour {
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
+
         // Disable the renderer for the player and make all colliders triggers
         playerHit.GetComponentInChildren<Renderer>().enabled = false;
         foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
         {
             c.isTrigger = true;
         }
+
+		// deparent the hat
+		GameObject hat = playerHit.GetComponentInChildren<Hat> ().gameObject;
+		hat.transform.parent = null;
+		hat.AddComponent<Rigidbody> ();
+		hat.AddComponent<Collider> ();
+
+		// destroy the old payer model
+		Destroy(playerHit);
 
 		// create the ragdoll, position it and apply the material
 		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
