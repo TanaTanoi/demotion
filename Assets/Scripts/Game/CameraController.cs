@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
 	private Vector3 desiredPos;
 
 	private float zoomSpeed = 0.08f;
-	private float baseZoom = 0;
+	private float baseZoom = 0f;
 	public float desiredBaseZoom = 0;
 	void Start(){
 		original = transform.position;
@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour {
 		focalPoint += (desiredFocalPoint - focalPoint) * 0.1f;
 		transform.position = Vector3.Lerp (focalPoint + (offsetDir * 20), focalPoint, baseZoom + zoomAmount);
 		if (zooming) {
-			zoomAmount = Mathf.Min (0.5f, baseZoom + zoomAmount + zoomSpeed);
+			zoomAmount = Mathf.Min (0.5f, baseZoom + zoomAmount + zoomSpeed); // cap at 0.5
 		} else {
 			zoomAmount = Mathf.Max (0,  zoomAmount - zoomSpeed);
 		}
