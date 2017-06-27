@@ -17,7 +17,8 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
-
+fmod.log
+fmod_editor.log
 
 # Unity3D generated meta files
 *.pidb.meta
