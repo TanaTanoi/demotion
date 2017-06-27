@@ -147,11 +147,8 @@ public abstract class RoundManager : MonoBehaviour {
 
 	protected void RagDoll(GameObject playerHit){
 
-		// Get the top level of the player prefab
-		Transform parent = playerHit.transform;
-		while (parent.parent != null) {
-			parent = parent.parent;
-		}
+
+		Transform parent = playerHit.transform.root;
 
 		// get the wrapper as this has the chair and material as chidlren
 		Transform wrapper = parent.transform.Find ("wrapper");
@@ -166,17 +163,21 @@ public abstract class RoundManager : MonoBehaviour {
 
 		// deparent the lance
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		Destroy (lance.GetComponent<PlayerHitDetection> ());
+        lance.GetComponent<PlayerHitDetection>().enabled = false;
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
-		// destroy the old payer model
-		Destroy(playerHit);
+        // Disable the renderer for the player and make all colliders triggers
+        playerHit.GetComponentInChildren<Renderer>().enabled = false;
+        foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
+        {
+            c.isTrigger = true;
+        }
 
 		// create the ragdoll, position it and apply the material
-		Quaternion q = Quaternion.Euler(-parent.transform.forward);
-		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, q);
-		ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
+		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
+		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
+		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
 	}
 }

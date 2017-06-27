@@ -93,6 +93,7 @@ public class DeathMatchRoundManager : RoundManager {
 	 * Manages Respawning of players
 	 **/
 	public override void Respawn (int playerNum){
+        // TODO check if the player has lives left or something
 		GameController.instance.Respawn (playerNum);
 	}
 
@@ -119,6 +120,6 @@ public class DeathMatchRoundManager : RoundManager {
 		RagDoll(player);
 
 		// respawn
-		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
+		Respawn(playerNum);
 	}
 }
