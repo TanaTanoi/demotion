@@ -63,6 +63,7 @@ public class PlayerCustomisation : MonoBehaviour {
 		// instantiate all skins.hats and hide them
 		foreach (GameObject hat in skins.hats) {
 			currentHat = Instantiate (hat) as GameObject;
+			currentHat.transform.Rotate (0, 180, 0); // should really set to rotation of player but fast and loose/wont be changed - lewis
 			currentHat.transform.position = playerPosition;
 			currentHat.transform.parent = head;
 			currentHat.transform.localScale = Vector3.one;
