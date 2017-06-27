@@ -7,7 +7,7 @@ public class DeathMatchRoundManager : RoundManager {
 	private int scoreIncrement = 1;
 	private int numOfPlayers = 4;
 	private Transform spawnPoints;
-	
+	private float RespawnDelay;
 
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
@@ -22,7 +22,8 @@ public class DeathMatchRoundManager : RoundManager {
 		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
-		targetScore = 2;
+		targetScore = 10;
+		RespawnDelay = GameController.instance.GetSettings ().respawnTime;
 	}
 	
 	// Update is called once per frame
@@ -42,7 +43,7 @@ public class DeathMatchRoundManager : RoundManager {
 		GameObject ragdoll = RagDoll (playerHit);
 		UpdateStats (hitter, hitee);
 		updateScoreBoard ();
-		Respawn (hitee);
+		StartCoroutine(Respawn (hitee));
 		return ragdoll;
 	}
 		
@@ -77,12 +78,14 @@ public class DeathMatchRoundManager : RoundManager {
 	private IEnumerator ShowScoreboard(float delay){
 		yield return new WaitForSeconds (delay);
 		GameController.instance.DisplayStatBoard ();
+		Time.timeScale = 0;
 	}
 
 	/**
 	 * Manages Respawning of players
 	 **/
-	public override void Respawn (int playerNum){
+	public override IEnumerator Respawn (int playerNum){
+		yield return new WaitForSeconds (RespawnDelay);
 		GameController.instance.Respawn (playerNum);
 	}
 
@@ -109,6 +112,6 @@ public class DeathMatchRoundManager : RoundManager {
 		RagDoll(player);
 
 		// respawn
-		Respawn(player.GetComponentInParent<PlayerMovement>().settings.playerID);
+		StartCoroutine(Respawn(playerNum));
 	}
 }

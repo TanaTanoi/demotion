@@ -4,19 +4,11 @@ using UnityEngine;
 
 public class DestoryObjects : MonoBehaviour {
 
-    private GameController control;
-    
-
-    private void Start()
-    {
-        control = GameController.instance;
-    }
-
+    //If anything gets here it should be destroyed
     void OnTriggerEnter(Collider other){
-		if (other.gameObject.tag == "Player") {
-			control.Kill (other.gameObject);
-		} else {
-			Destroy (other.gameObject);
-		}
+        GameObject obj = other.gameObject;
+        if (other.transform.root.gameObject.CompareTag("Ragdoll"))
+            obj = other.transform.root.gameObject;
+        Destroy (obj);
 	}
 }

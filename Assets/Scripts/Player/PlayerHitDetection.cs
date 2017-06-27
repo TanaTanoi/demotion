@@ -24,8 +24,8 @@ public class PlayerHitDetection : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {	
 		// Do nothing if not hit with a lance or is still invulnerable
-		if (!other.GetComponent<Collider>().CompareTag("Player")) return;
-		if (Time.time < vulnerablility) return;
+		if (!other.GetComponent<Collider>().CompareTag("Player") || Time.time < vulnerablility)
+            return;
 
         // Get the Settings and Movement scripts from this and the other player
 		PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerMovement>().settings;
