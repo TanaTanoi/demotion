@@ -280,10 +280,14 @@ public class ArenaGenerator : MonoBehaviour {
 		foreach (Rigidbody rb in bodies) {
 			FMODUnity.StudioEventEmitter x = rb.gameObject.AddComponent<FMODUnity.StudioEventEmitter> ();
 			x.PlayEvent = FMODUnity.EmitterGameEvent.CollisionEnter;
-			if (Random.Range (0, 2) == 0) {
+			int i = Random.Range (0, 3);
+			if (i == 0) {
 				x.Event = "event:/FX/player/player_collision_impact";
-			} else {
+			} else if (i == 1){
 				x.Event = "event:/FX/powerups/powerup_spawn";
+			} else {
+				//x.Event = "event:/FX/environment/furniture_destruction";
+				x.Event = "event:/FX/player/player_collision_impact";
 			}
 		}
 

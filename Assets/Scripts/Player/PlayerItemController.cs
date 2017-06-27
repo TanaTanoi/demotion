@@ -25,6 +25,7 @@ public class PlayerItemController : MonoBehaviour {
     private PlayerParticleController particleController;
 
 	public FMODUnity.StudioEventEmitter fireSound;
+	public FMODUnity.StudioEventEmitter throwSound;
 
     private int itemsActivated = 0;
 
@@ -61,6 +62,7 @@ public class PlayerItemController : MonoBehaviour {
         particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
 		case Item.Type.STICKY_THROWABLE:
+			throwSound.Play ();
 			GameObject sticky = Instantiate (atlas.snowballThrowable);
 			sticky.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
 			IEnumerator stickyC = ThrowItem(sticky);
@@ -68,6 +70,7 @@ public class PlayerItemController : MonoBehaviour {
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
 		case Item.Type.BANANA_THROWABLE:
+			throwSound.Play ();
 			GameObject banana = Instantiate (atlas.bananaThrowable);
 			banana.AddComponent<PowerupController> ().type = Powerup.Type.BANANA;
 			banana.AddComponent<Rigidbody> ().isKinematic = false;
