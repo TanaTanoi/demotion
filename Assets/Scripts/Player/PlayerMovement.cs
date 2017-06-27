@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Spins the player some amount
 	public void SpinPlayer(float power){
-		chairRigidbody.AddForce (Vector3.up * power * 2);
+		chairRigidbody.AddForce (Vector3.up * power / 2);
 		chairRigidbody.AddRelativeTorque (Vector3.up * power, ForceMode.VelocityChange);
 	}
 		

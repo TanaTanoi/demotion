@@ -23,7 +23,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
             return false;
         } else {
             currentItem = CreateItem(type);
-			currentItem.transform.localScale = Vector3.one * 2;
+			currentItem.transform.localScale = currentItem.transform.localScale * 2;
             currentItem.transform.position = spawnPosition;
             return true;
         }
@@ -32,16 +32,14 @@ public class ItemSpawnPlatform : MonoBehaviour {
     private GameObject CreateItem(Item.Type type) {
         spawnEffect.Play();
         switch(type) {
-            case Item.Type.SUPER_BOOST:
-                // change once we have different models for them etc
+        case Item.Type.SUPER_BOOST:
 			GameObject boost = Instantiate(atlas.fireBoostItem);
             boost.AddComponent<ItemController>().type = type;
             return boost;
 		case Item.Type.STICKY_THROWABLE:
-                // change once we have different models for them etc
-				GameObject throwable = Instantiate(atlas.snowballItem);
-                throwable.AddComponent<ItemController>().type = type;
-                return throwable;
+			GameObject throwable = Instantiate(atlas.snowballItem);
+            throwable.AddComponent<ItemController>().type = type;
+            return throwable;
 		case Item.Type.BANANA_THROWABLE:
 			GameObject banana = Instantiate(atlas.bananaItem);
 			banana.AddComponent<ItemController>().type = type;
