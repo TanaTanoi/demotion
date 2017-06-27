@@ -138,7 +138,7 @@ public class PlayerCustomisation : MonoBehaviour {
 	 */
 	public void LeftButtonOutfit(){
 
-		outfitIndex = (outfitIndex <= 3) ? skins.outfits.Count - 4 : outfitIndex - (skins.outfits.Count - 4);
+		outfitIndex = (outfitIndex <= 3) ? skins.outfits.Count - (4 - playerNo) : outfitIndex - 4;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
