@@ -33,7 +33,7 @@ public class PlayerHitDetection : MonoBehaviour {
         PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
 
-		GetComponent<FMODUnity.StudioEventEmitter>().Play();
+		//GetComponent<FMODUnity.StudioEventEmitter>().Play(); // Re add once sound is ready
 
         if (thisPlayerMove == null)
 			return;
