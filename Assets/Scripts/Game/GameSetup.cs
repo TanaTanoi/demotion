@@ -158,7 +158,7 @@ public class GameSetup : MonoBehaviour {
 	}
 
     public void NewGame() {
-		
+		Debug.Log ("A new Game has been called");
         // Get the game controller
         controller = GameController.instance.gameObject;
         control = controller.GetComponent<GameController>();

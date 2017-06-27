@@ -227,20 +227,18 @@ public class GameController : MonoBehaviour {
     /**
      * Called from a player when they hit another player.
      * Will lose lives or increase score depending on the game mode.
-     * Returns true if the players are on different teams and is therefore a valid hit
+     * Returns the ragdoll of the losing player
      */
-	public bool OnHit(int hitter, int hitee, GameObject playerHit)
+	public GameObject OnHit(int hitter, int hitee, GameObject playerHit)
     {
-        if (!OpposingTeam(hitter, hitee)) return false;
-
 		GameObject loser = players [hitee];
 		GameObject winner = players [hitter];
 		
 		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
 		StartCoroutine (FocusOnPoint (mid));
-		roundManager.OnHit(hitter, hitee, playerHit);
-        return true;
+		return roundManager.OnHit(hitter, hitee, playerHit);
+       
     }
 
     /**
@@ -262,12 +260,14 @@ public class GameController : MonoBehaviour {
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
+
 		float v = Time.timeScale;
 		for(int i = 0; i < 10; i++)
 		{
 			Time.timeScale = Mathf.Lerp(v, 1, i / 10f);
 		}
 		zooming = false;
+
 	}
 
 

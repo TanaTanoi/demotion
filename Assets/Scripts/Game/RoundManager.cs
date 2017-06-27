@@ -5,7 +5,10 @@ using UnityEngine.UI;
 using System.Linq;
 
 public abstract class RoundManager : MonoBehaviour {
-	
+
+	private int scoreIncrement = 1;
+	private int numOfPlayers = 4;
+
 	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
 
 	protected Dictionary<int,int> playerKills;
@@ -57,7 +60,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public abstract void OnHit (int hitter, int hitee, GameObject playerHit);
+	public abstract GameObject OnHit (int hitter, int hitee, GameObject playerHit);
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -106,6 +109,28 @@ public abstract class RoundManager : MonoBehaviour {
 		}
 
 	}
+		
+	protected void UpdateStats(int hitter, int hitee){
+		int oldScore = playerScores [hitter];
+		int oldKills = playerKills [hitter];
+		int oldDeaths = playerDeaths [hitee];
+		int spree = playerSprees [hitter];
+		playerScores.Remove (hitter);
+		playerKills.Remove (hitter);
+		playerDeaths.Remove (hitee);
+		playerSprees.Remove (hitter);
+		playerSprees.Remove (hitee);
+		playerScores.Add (hitter, oldScore + scoreIncrement);
+		playerKills.Add (hitter, oldKills + 1);
+		playerDeaths.Add (hitee, oldDeaths + 1);
+		playerSprees.Add (hitter, spree + 1);
+		playerSprees.Add (hitee, 0);
+		if (playerSprees [hitter] > bestSprees [hitter]) {
+			bestSprees.Remove (hitter);
+			bestSprees.Add (hitter, playerSprees [hitter]);
+		}
+		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
+	}
 
 	/**
 	 * Call this method whenever the stats board needs updating
@@ -145,7 +170,7 @@ public abstract class RoundManager : MonoBehaviour {
 
 	}
 
-	protected void RagDoll(GameObject playerHit){
+	protected GameObject RagDoll(GameObject playerHit){
 
 
 		Transform parent = playerHit.transform.root;
@@ -179,5 +204,6 @@ public abstract class RoundManager : MonoBehaviour {
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
 		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+		return ragDoll;
 	}
 }
