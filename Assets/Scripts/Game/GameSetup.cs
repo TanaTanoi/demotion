@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour {
-
+    private static GameSetup instance = null;
     //Game type enums
     public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
     /**
@@ -75,6 +75,14 @@ public class GameSetup : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         DontDestroyOnLoad(gameObject);
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
 
 		Text[] slidersText = settingsPanel.GetComponentsInChildren<Text> (true);
 		roundsText = slidersText [2];
@@ -151,9 +159,10 @@ public class GameSetup : MonoBehaviour {
 	}
 
 	public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
+        
         if (scene != SceneManager.GetSceneByName("GameScene")) return;
 
-		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
+		//SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
 		NewGame ();
 	}
 

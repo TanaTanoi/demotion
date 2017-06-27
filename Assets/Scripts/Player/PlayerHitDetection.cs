@@ -24,14 +24,16 @@ public class PlayerHitDetection : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {	
 		// Do nothing if not hit with a lance or is still invulnerable
-		if (!other.GetComponent<Collider>().CompareTag("Player")) return;
-		if (Time.time < vulnerablility) return;
+		if (!other.GetComponent<Collider>().CompareTag("Player") || Time.time < vulnerablility)
+            return;
 
         // Get the Settings and Movement scripts from this and the other player
 		PlayerSettings thisPlayerSettings = gameObject.GetComponentInParent<PlayerMovement>().settings;
 		PlayerSettings otherPlayerSettings = other.gameObject.GetComponentInParent<PlayerMovement>().settings;
         PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
+
+		//GetComponent<FMODUnity.StudioEventEmitter>().Play(); // Re add once sound is ready
 
         if (thisPlayerMove == null)
 			return;
@@ -62,9 +64,15 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// If it reaches here it means the player should be demoted so OnHit is called
 
-		gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID, playerHit);
-        
-      
+		GameObject ragDoll = gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID, playerHit);
+
+		Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
+		Rigidbody killerb = GetComponentInParent<Rigidbody> ();
+		foreach (Rigidbody rb in ragdollrb) {
+			rb.AddForce (killerb.velocity * 50);
+		}
+
+
     }
 
 
