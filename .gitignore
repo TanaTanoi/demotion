@@ -30,3 +30,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 .DS_STORE
+Assets/Scene/MainMenu.unity
+Assets/Scene/MainMenu.unity
+Assets/Materials&Textures/Plant/PLANTNEW.mat
+Assets/Materials&Textures/Posters/Materials/Painting4.mat
