@@ -33,6 +33,8 @@ public class PlayerHitDetection : MonoBehaviour {
         PlayerMovement thisPlayerMove = gameObject.GetComponentInParent<PlayerMovement> ();
 		PlayerMovement otherPlayerMove = other.gameObject.GetComponentInParent<PlayerMovement> ();
 
+		GetComponent<FMODUnity.StudioEventEmitter>().Play();
+
         if (thisPlayerMove == null)
 			return;
 
@@ -62,9 +64,15 @@ public class PlayerHitDetection : MonoBehaviour {
 
 		// If it reaches here it means the player should be demoted so OnHit is called
 
-		gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID, playerHit);
-        
-      
+		GameObject ragDoll = gameControl.OnHit(thisPlayerSettings.playerID, otherPlayerSettings.playerID, playerHit);
+
+		Rigidbody[] ragdollrb = ragDoll.GetComponentsInChildren<Rigidbody> ();
+		Rigidbody killerb = GetComponentInParent<Rigidbody> ();
+		foreach (Rigidbody rb in ragdollrb) {
+			rb.AddForce (killerb.velocity * 50);
+		}
+
+
     }
 
 

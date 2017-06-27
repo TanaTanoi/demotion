@@ -56,7 +56,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Handles what should happen when a player hit another player
 	 **/
-	public abstract void OnHit (int hitter, int hitee, GameObject playerHit);
+	public abstract GameObject OnHit (int hitter, int hitee, GameObject playerHit);
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -106,7 +106,7 @@ public abstract class RoundManager : MonoBehaviour {
 
 	}
 
-	protected void RagDoll(GameObject playerHit){
+	protected GameObject RagDoll(GameObject playerHit){
 
 		// Get the top level of the player prefab
 		Transform parent = playerHit.transform;
@@ -139,5 +139,6 @@ public abstract class RoundManager : MonoBehaviour {
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, q);
 		ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+		return ragDoll;
 	}
 }

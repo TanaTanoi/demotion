@@ -34,11 +34,12 @@ public class DeathMatchRoundManager : RoundManager {
 
 	/**
 	 * Handles what should happen when a player hit another player
+	 * Returns the ragdoll that is hit
 	 **/
-	public override void OnHit(int hitter, int hitee, GameObject playerHit){
+	public override GameObject OnHit(int hitter, int hitee, GameObject playerHit){
 		Debug.Log ("Player " + hitter + " hit Player " + hitee);
 		Debug.Log (playerKills [hitter]);
-		RagDoll (playerHit);
+		GameObject ragdoll = RagDoll (playerHit);
 		int oldScore = playerScores [hitter];
 		int oldKills = playerKills [hitter];
 		int oldDeaths = playerDeaths [hitee];
@@ -60,6 +61,7 @@ public class DeathMatchRoundManager : RoundManager {
 		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
 		updateScoreBoard ();
 		Respawn (hitee);
+		return ragdoll;
 	}
 
 	/**

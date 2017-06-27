@@ -15,6 +15,9 @@ public class CameraController : MonoBehaviour {
 	private float zoomSpeed = 0.08f;
 	private float baseZoom = 0f;
 	public float desiredBaseZoom = 0;
+
+	private float cameraDistance = 17f;
+
 	void Start(){
 		original = transform.position;
 		offsetDir = -transform.forward;
@@ -27,7 +30,7 @@ public class CameraController : MonoBehaviour {
 		transform.rotation = Quaternion.RotateTowards (transform.rotation, Quaternion.LookRotation (desiredFocalPoint - transform.position), 0.4f);
 		// Move towards focal point
 		focalPoint += (desiredFocalPoint - focalPoint) * 0.1f;
-		transform.position = Vector3.Lerp (focalPoint + (offsetDir * 20), focalPoint, baseZoom + zoomAmount);
+		transform.position = Vector3.Lerp (focalPoint + (offsetDir * cameraDistance), focalPoint, baseZoom + zoomAmount);
 		if (zooming) {
 			zoomAmount = Mathf.Min (0.5f, baseZoom + zoomAmount + zoomSpeed); // cap at 0.5
 		} else {
