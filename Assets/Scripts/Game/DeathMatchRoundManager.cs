@@ -77,6 +77,7 @@ public class DeathMatchRoundManager : RoundManager {
 	private IEnumerator ShowScoreboard(float delay){
 		yield return new WaitForSeconds (delay);
 		GameController.instance.DisplayStatBoard ();
+		Time.timeScale = 0;
 	}
 
 	/**
