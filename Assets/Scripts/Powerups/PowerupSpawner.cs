@@ -57,6 +57,12 @@ public class PowerupSpawner : MonoBehaviour {
 
 
     private GameObject CreatePowerup(Powerup.Type type, Vector3 location) {
+
+		FMODUnity.StudioEventEmitter sound = GetComponent<FMODUnity.StudioEventEmitter> ();
+		if (sound != null) {
+			sound.Play ();
+		}
+
 		GameObject powerup = PowerupModel (type);
 		powerup.transform.localScale = Vector3.one * 2;
         powerup.transform.position = location + transform.position;

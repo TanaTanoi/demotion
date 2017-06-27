@@ -214,6 +214,11 @@ public class GameController : MonoBehaviour {
 		rb.isKinematic = false;
 		rb.useGravity = true;
 
+		// Plays break sound idk lol
+		FMODUnity.StudioEventEmitter sound = rb.transform.gameObject.AddComponent<FMODUnity.StudioEventEmitter> ();
+		sound.Event = "event:/FX/environment/floor_destruction";
+		sound.Play ();
+
 	}
 
     /**

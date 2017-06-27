@@ -6,7 +6,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
     private ParticleSystem spawnEffect;
     private Vector3 spawnPosition;
     private GameObject currentItem;
-    
+
 	public PowerupModelsAtlas atlas;
 
 	void Start () {
@@ -31,6 +31,10 @@ public class ItemSpawnPlatform : MonoBehaviour {
 
     private GameObject CreateItem(Item.Type type) {
         spawnEffect.Play();
+		FMODUnity.StudioEventEmitter x = GetComponent<FMODUnity.StudioEventEmitter> ();
+		if (x != null) {
+			x.Play ();
+		}
         switch(type) {
         case Item.Type.SUPER_BOOST:
 			GameObject boost = Instantiate(atlas.fireBoostItem);

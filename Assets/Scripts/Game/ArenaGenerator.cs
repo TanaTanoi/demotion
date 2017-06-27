@@ -251,6 +251,7 @@ public class ArenaGenerator : MonoBehaviour {
 		tile.transform.Rotate (0, rotateBy, 0);
 
 		tile.transform.position = TilePointReference (carpetTile);
+		SetMusicToObjectsOfTile (tile);
 	}
 
 	/**
@@ -275,9 +276,16 @@ public class ArenaGenerator : MonoBehaviour {
 		
 		Transform tileTransform = tile.transform;
 
-		foreach (Transform child in tileTransform) {
-			// add the music script
-			//child.addComponent<Script>();
+		Rigidbody[] bodies = tileTransform.GetComponentsInChildren<Rigidbody>();
+		foreach (Rigidbody rb in bodies) {
+			FMODUnity.StudioEventEmitter x = rb.gameObject.AddComponent<FMODUnity.StudioEventEmitter> ();
+			x.PlayEvent = FMODUnity.EmitterGameEvent.CollisionEnter;
+			if (Random.Range (0, 2) == 0) {
+				x.Event = "event:/FX/player/player_collision_impact";
+			} else {
+				x.Event = "event:/FX/powerups/powerup_spawn";
+			}
 		}
+
 	}
 }

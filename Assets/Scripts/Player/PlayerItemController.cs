@@ -24,6 +24,8 @@ public class PlayerItemController : MonoBehaviour {
     private PlayerInput playerInput;
     private PlayerParticleController particleController;
 
+	public FMODUnity.StudioEventEmitter fireSound;
+
     private int itemsActivated = 0;
 
     void Start() {
@@ -73,10 +75,11 @@ public class PlayerItemController : MonoBehaviour {
 			StartCoroutine(bananaC);
 			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
 			break;
-        case Item.Type.SUPER_BOOST:
-			SetItemCooldown(stats.SUPER_BOOST_COOLDOWN);
-			playerMovement.Boost(stats.SUPER_BOOST_POWER);
+		case Item.Type.SUPER_BOOST:
+			SetItemCooldown (stats.SUPER_BOOST_COOLDOWN);
+			playerMovement.Boost (stats.SUPER_BOOST_POWER);
 			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.SUPER_BOOST_USES;
+			fireSound.Play ();
             break;
         }
     }

@@ -34,3 +34,10 @@ Assets/Scene/MainMenu.unity
 Assets/Scene/MainMenu.unity
 Assets/Materials&Textures/Plant/PLANTNEW.mat
 Assets/Materials&Textures/Posters/Materials/Painting4.mat
+
+Assets/StreamingAssets*
+Assets/FMOD Build*
+Assets/Plugins*
+Assets/Editor*
+Assets/GoogleVR*
+Assets/Gizmos*
