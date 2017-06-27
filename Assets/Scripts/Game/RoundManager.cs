@@ -5,7 +5,10 @@ using UnityEngine.UI;
 using System.Linq;
 
 public abstract class RoundManager : MonoBehaviour {
-	
+
+	private int scoreIncrement = 1;
+	private int numOfPlayers = 4;
+
 	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
 
 	protected Dictionary<int,int> playerKills;
@@ -105,6 +108,28 @@ public abstract class RoundManager : MonoBehaviour {
 			}
 		}
 
+	}
+
+	protected void UpdateStats(int hitter, int hitee){
+		int oldScore = playerScores [hitter];
+		int oldKills = playerKills [hitter];
+		int oldDeaths = playerDeaths [hitee];
+		int spree = playerSprees [hitter];
+		playerScores.Remove (hitter);
+		playerKills.Remove (hitter);
+		playerDeaths.Remove (hitee);
+		playerSprees.Remove (hitter);
+		playerSprees.Remove (hitee);
+		playerScores.Add (hitter, oldScore + scoreIncrement);
+		playerKills.Add (hitter, oldKills + 1);
+		playerDeaths.Add (hitee, oldDeaths + 1);
+		playerSprees.Add (hitter, spree + 1);
+		playerSprees.Add (hitee, 0);
+		if (playerSprees [hitter] > bestSprees [hitter]) {
+			bestSprees.Remove (hitter);
+			bestSprees.Add (hitter, playerSprees [hitter]);
+		}
+		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
 	}
 
 	/**
