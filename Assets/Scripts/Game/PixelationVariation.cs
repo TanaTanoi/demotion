@@ -21,14 +21,14 @@ public class PixelationVariation : MonoBehaviour {
 		}
 		if (time2Pxl > 1) {
 			time2Pxl--;
-			this.rendGame.material.SetFloat("_PxlSize", 7);	
+			this.rendGame.material.SetFloat("_PxlSize", 5);	
 		}
 		if (time2Pxl == 1 && pxlTime == 0) {
 			pxlTime = Random.Range (10, 20);
 		}
 		if (time2Pxl == 1 && pxlTime > 0) {
 			pxlTime--;
-			this.rendGame.material.SetFloat("_PxlSize", 15);	
+			this.rendGame.material.SetFloat("_PxlSize", 9);	
 			if(pxlTime==0){
 				time2Pxl=0;
 			}
