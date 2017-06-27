@@ -22,6 +22,7 @@ public class ArenaGenerator : MonoBehaviour {
 
 	GameObject DestoryPlane;
 	GameObject SpawnPoints;
+	GameObject Arena;
 
 	void Start() {
 		
@@ -29,7 +30,9 @@ public class ArenaGenerator : MonoBehaviour {
 
 	public void Generate () {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
+		Arena = GameObject.Find ("Arena");
 
+		SpawnPoints.transform.parent = Arena.transform;
 		PopulateLists ();
 		GenerateArena ();
 		GenerateStartPoints ();
@@ -101,7 +104,8 @@ public class ArenaGenerator : MonoBehaviour {
 
 		int randomIndex2 = Random.Range (0, walls.Count);
 		arenaOutline = walls [randomIndex2];
-	
+		arenaOutline.transform.parent = Arena.transform;
+
 		string carpetLocationTag = "tileLocation";
 		string woodLocationTag = "woodTileLocation";
 
@@ -152,6 +156,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 			
 		//int crackedTileCount = count / 4;
@@ -170,6 +175,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetCrackedPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetCrackedPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 			
 		int tilesNum = tiles.Count;
@@ -199,6 +205,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		int crackedTileCount = count / 4;
@@ -210,6 +217,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodClutteredPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodClutteredPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		// adding "cracked" wood objects
@@ -217,6 +225,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodCrackedPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodCrackedPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		int tilesNum = tiles.Count;

@@ -309,6 +309,10 @@ public class GameController : MonoBehaviour {
     }
     /*=== END PAUSE LOGIC ===*/
 
+	public void DisplayStatBoard(){
+		menuControl.StatBoard ();
+	}
+
     // Remove this, only game controller should access the round manager directly
 	public RoundManager GetRoundManager(){
 		return this.roundManager;
