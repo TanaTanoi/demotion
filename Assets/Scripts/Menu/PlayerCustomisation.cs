@@ -26,6 +26,7 @@ public class PlayerCustomisation : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		outfitIndex = playerNo;
 		skins = setupObject.GetComponent<PlayerSkins> ();
 		setup = setupObject.GetComponent<GameSetup> ();
 		CustomisationSetup();
@@ -127,7 +128,7 @@ public class PlayerCustomisation : MonoBehaviour {
 	public void RightButtonOutfit()
 	{
 
-		outfitIndex = (outfitIndex + 1)%skins.outfits.Count;
+		outfitIndex = (outfitIndex + 4)%skins.outfits.Count;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
@@ -137,7 +138,7 @@ public class PlayerCustomisation : MonoBehaviour {
 	 */
 	public void LeftButtonOutfit(){
 
-		outfitIndex = (outfitIndex == 0) ? skins.outfits.Count - 1 : outfitIndex - 1;
+		outfitIndex = (outfitIndex <= 3) ? skins.outfits.Count - (4 - playerNo) : outfitIndex - 4;
 
 		EditPlayer (outfitIndex, hatIndex, lanceIndex);
 	}
