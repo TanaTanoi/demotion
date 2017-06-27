@@ -90,7 +90,7 @@ public class PlayerMovement : MonoBehaviour {
      */
     public void Boost(float power)
     {
-		// GetComponent<FMODUnity.StudioEventEmitter>().Play();// re add once sound done
+		GetComponent<FMODUnity.StudioEventEmitter>().Play();// re add once sound done
 		playerAnimator.Push ();
         chairRigidbody.AddRelativeForce(new Vector3(0.0f, 0.0f, power));
     }

@@ -33,10 +33,13 @@ sysinfo.txt
 Assets/Scene/MainMenu.unity
 Assets/Scene/MainMenu.unity
 Assets/Materials&Textures/Plant/PLANTNEW.mat
+
 Assets/Materials&Textures/Posters/Materials/Painting4.mat
 
+Assets/FMODStudioCache.asset
 Assets/Resources/FMODStudioSettings.asset*
-Assets/FMODStudioCache.asset*
+Assets/FMODStudioCache*
+
 Assets/StreamingAssets*
 Assets/Plugins*
 Assets/Editor*
