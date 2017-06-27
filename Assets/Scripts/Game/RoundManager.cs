@@ -22,6 +22,7 @@ public abstract class RoundManager : MonoBehaviour {
 	protected int maxRoundDuration;
 	protected Canvas hud;
 
+
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
 		playerKills = new Dictionary<int, int> ();
@@ -101,6 +102,44 @@ public abstract class RoundManager : MonoBehaviour {
 			}
 			if(text[i].name.Equals("Player4Score")){
 				text [i].text = playerScores[3].ToString();
+			}
+		}
+
+	}
+
+	/**
+	 * Call this method whenever the stats board needs updating
+	 **/
+	protected void updateStatBoard(){
+
+		Text[] text = hud.GetComponentsInChildren<Text> ();
+		for(int i = 0; i < text.Length; i++){
+			for (int j = 1; j <= 4; j++) {
+
+				if (text [i].name.Equals ("Player " + j + " Score")) {
+					text [i].text = playerScores [j-1].ToString ();
+					Debug.Log ("Player score updated");
+				}
+
+				if (text [i].name.Equals ("Player " + j + " Promotions")) {
+					text [i].text = playerKills [j-1].ToString ();
+				}
+
+				if (text [i].name.Equals ("Player " + j + " Work Place Accidents")) {
+					text [i].text = playerSuicides [j-1].ToString ();
+				}
+
+				if (text [i].name.Equals ("Player " + j + " Work Place Accidents")) {
+					text [i].text = playerSuicides [j-1].ToString ();
+				}
+
+				if (text [i].name.Equals ("Player " + j + " Demotions")) {
+					text [i].text = playerDeaths [j-1].ToString ();
+				}
+
+				if (text [i].name.Equals ("Player " + j + " Spree")) {
+					text [i].text = bestSprees [j-1].ToString ();
+				}
 			}
 		}
 

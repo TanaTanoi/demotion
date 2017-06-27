@@ -40,6 +40,10 @@ public class MenuController : MonoBehaviour {
         SwitchMenu(this.transform.Find("HUD").gameObject);
     }
 
+	public void StatBoard(){
+		SwitchMenu (this.transform.Find ("EndGame").gameObject);
+	}
+
     /**
      * If we become enabled reset to defaults
      */

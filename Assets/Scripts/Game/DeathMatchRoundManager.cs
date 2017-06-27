@@ -22,7 +22,7 @@ public class DeathMatchRoundManager : RoundManager {
 		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
-		targetScore = 5;
+		targetScore = 2;
 	}
 	
 	// Update is called once per frame
@@ -85,6 +85,8 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 	protected override void endRound(){
 		Debug.Log ("The round has ended");
+		updateStatBoard ();
+		GameController.instance.DisplayStatBoard ();
 	}
 
 	/**
