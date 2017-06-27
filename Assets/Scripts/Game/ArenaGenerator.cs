@@ -31,12 +31,14 @@ public class ArenaGenerator : MonoBehaviour {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
 
 		PopulateLists ();
-
 		GenerateArena ();
 		GenerateStartPoints ();
 		gameObject.AddComponent<ItemSpawnController> ();
 	}
 
+	/**
+     * populates the lists of tiles. gets tiles from the resources folder.
+     */
 	void PopulateLists()
 	{
 		wallPrefabs = Resources.LoadAll<GameObject>("Walls");
@@ -50,6 +52,9 @@ public class ArenaGenerator : MonoBehaviour {
 		tileWoodCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/WoodCracked");
 	}
 
+	/**
+     * finds and sets spawn points in the game.
+     */
 	void GenerateStartPoints()
 	{
 		List<Vector3> spawnLocations = new List<Vector3>();
@@ -70,12 +75,18 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
+	/**
+     * calls all methods to create the arena
+     */
 	void GenerateArena(){
 		GenerateOutline ();
 		GenerateCarpetTiles ();
 		GenerateWoodTiles ();
 	}
 
+	/**
+     * instantiates the wall for the arena and gets all the locations for the tiles.
+     */
 	void GenerateOutline(){
 		List<GameObject> walls = new List<GameObject> ();
 
@@ -103,7 +114,10 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
-	// generate all the carpet tile objects
+	/**
+     * randomly instantiates the correct amount of carpet tiles for the arena and
+     * adds them to a list.
+     */
 	void GenerateCarpetTiles(){
 		List<GameObject> tiles = new List<GameObject>();
 
@@ -169,7 +183,10 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
-	// generate all the wood tile objects
+	/**
+     * randomly instantiates the correct amount of wood tiles for the arena and
+     * adds them to a list.
+     */
 	void GenerateWoodTiles(){
 		List<GameObject> tiles = new List<GameObject>();
 
@@ -213,7 +230,9 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 		
-
+	/**
+     * places a tile at a random tile location in the arena
+     */
 	void PlaceTile(GameObject tile, bool isCarpet){
 		bool carpetTile = isCarpet;
 
@@ -224,6 +243,9 @@ public class ArenaGenerator : MonoBehaviour {
 		tile.transform.position = TilePointReference (carpetTile);
 	}
 
+	/**
+     * gets the random tile location in the arena
+     */
 	Vector3 TilePointReference(bool isCarpet){
 		Vector3 toReturn;
 		if (isCarpet) {

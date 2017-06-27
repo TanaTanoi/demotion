@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+* populated from unity editor. Used to get arrays of player customisation
+* models and materials.
+*/
 public class PlayerSkins : MonoBehaviour{
 
 	/* Player skins */
