@@ -258,13 +258,14 @@ public class GameController : MonoBehaviour {
 		mainCamera.ZoomIn (point);
 		for(int i = 0; i < 10; i++) // Should remove these magic numbers
 		{
-			Time.timeScale -= 0.05f;
+			Time.timeScale *= 0.9f;
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
+		float v = Time.timeScale;
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale += 0.05f;
+			Time.timeScale = Mathf.Lerp(v, 1, i / 10f);
 		}
 		zooming = false;
 	}

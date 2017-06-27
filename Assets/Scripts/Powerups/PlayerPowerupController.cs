@@ -37,11 +37,14 @@ public class PlayerPowerupController : MonoBehaviour {
 
 	}
 
+	// Shield active ability occurs here
 	void OnTriggerStay(Collider other){
 		if (ShieldActive () && !other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Powerup")) {
 			Rigidbody rb = other.gameObject.GetComponent<Rigidbody> ();
 			if (rb != null) {
-				rb.AddForce ((other.transform.position - transform.position) * stats.SHIELD_PUSH_POWER);
+				Vector3 dir = (other.transform.position - transform.position);
+				float power = stats.SHIELD_PUSH_POWER * (1 / dir.magnitude);
+				rb.AddForce (dir.normalized * power);
 			}
 		}
 	}
@@ -134,7 +137,7 @@ public class PlayerPowerupController : MonoBehaviour {
 			rb.AddForce (rb.velocity * -0.95f);
 			break;
 		case Type.SHIELD:
-			RefreshPowerupTime (type, stats.SHIELD_DURATION);
+			AddPowerupTime (type, stats.SHIELD_DURATION);
 			break;
 		}
 	}
