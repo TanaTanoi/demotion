@@ -72,6 +72,12 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 	public override void endRound(){
 		playing = false;
+		StartCoroutine (ShowScoreboard (6f));
+	}
+
+	private IEnumerator ShowScoreboard(float delay){
+
+		yield return new WaitForSeconds (2);
 		GameController gc = FindObjectOfType<GameController>();
 		List<int> playerIds = new List<int> ();
 		playerIds.AddRange (playerScores.Keys);
@@ -85,10 +91,6 @@ public class DeathMatchRoundManager : RoundManager {
 		FindObjectOfType<GameFinished> ().FinishGame (topThree, gc.GetPlayerSettings()); 
 
 		updateStatBoard ();
-		StartCoroutine (ShowScoreboard (6f));
-	}
-
-	private IEnumerator ShowScoreboard(float delay){
 		yield return new WaitForSeconds (delay);
 		GameController.instance.DisplayStatBoard ();
 		Time.timeScale = 0;

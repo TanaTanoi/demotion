@@ -30,10 +30,9 @@ public class GameFinished : MonoBehaviour{
 		Camera ccamera = currentCamera.GetComponent<Camera> ();
 
 		GameObject finishedCamera = GameObject.Find("FinishedCamera");
-		Camera fcamera = finishedCamera.GetComponent<Camera> ();
 
 		ccamera.enabled = false;
-		fcamera.enabled = true;
+		finishedCamera.transform.GetChild (0).gameObject.SetActive (true);
 
 	}
 
@@ -48,7 +47,9 @@ public class GameFinished : MonoBehaviour{
 		Debug.Log ("Applying " + playerID + " To pos " + tier);
 		GameObject player = FindObjectOfType<GameController>().MakePlayer(Vector3.up * 10, playerID);
 		PlayerModelController playerAnimator = player.GetComponentInChildren<PlayerModelController>();
-		player.GetComponent<PlayerMovement> ().SetRotationSpeed (0); // disables input
+		player.GetComponentInChildren<PlayerMovement> ().SetRotationSpeed (0); // disables input
+		Vector3 campos = Camera.main.transform.position;
+		player.transform.rotation.SetLookRotation (campos - player.transform.position);
 		if(tier == 0){
 			// move the player
 			player.transform.position = locationOne.transform.position;
