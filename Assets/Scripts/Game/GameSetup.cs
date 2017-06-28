@@ -84,12 +84,9 @@ public class GameSetup : MonoBehaviour {
         }
 
 		Text[] slidersText = settingsPanel.GetComponentsInChildren<Text> (true);
-		roundsText = slidersText [2];
-		durationText = slidersText [3];
-		respawnText = slidersText [4];
-		livesText = slidersText [5];
-		targetKillsText = slidersText [6];
-		targetScoreText = slidersText [7];
+		durationText = slidersText [0];
+		respawnText = slidersText [1];
+		targetScoreText = slidersText [2];
 		InitialisePlayers();
     }
 		
