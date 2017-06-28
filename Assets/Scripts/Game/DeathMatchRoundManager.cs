@@ -76,8 +76,7 @@ public class DeathMatchRoundManager : RoundManager {
 	}
 
 	private IEnumerator ShowScoreboard(float delay){
-
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (1);
 		GameController gc = FindObjectOfType<GameController>();
 		List<int> playerIds = new List<int> ();
 		playerIds.AddRange (playerScores.Keys);
@@ -90,9 +89,9 @@ public class DeathMatchRoundManager : RoundManager {
 		}
 		FindObjectOfType<GameFinished> ().FinishGame (topThree, gc.GetPlayerSettings()); 
 
-		updateStatBoard ();
 		yield return new WaitForSeconds (delay);
 		GameController.instance.DisplayStatBoard ();
+		updateStatBoard ();
 		Time.timeScale = 0;
 	}
 

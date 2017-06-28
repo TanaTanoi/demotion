@@ -151,7 +151,7 @@ public abstract class RoundManager : MonoBehaviour {
 	 * Call this method whenever the stats board needs updating
 	 **/
 	protected void updateStatBoard(){
-
+		Debug.Log ("Updating Stat Board");
 		Text[] text = hud.GetComponentsInChildren<Text> ();
 		for(int i = 0; i < text.Length; i++){
 			for (int j = 1; j <= 4; j++) {
