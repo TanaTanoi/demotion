@@ -223,14 +223,14 @@ public class GameSetup : MonoBehaviour {
 
     public void SetTargetScore(float score)
     {
-		float interval = 100f;
+		float interval = 1f;
 		settings.targetScore = (int)(Mathf.CeilToInt(score/interval) * interval);
 		targetScoreText.text = "Target Score: " + settings.targetScore;
     }
 
     public void SetTargetKills(float kills)
     {
-		float interval = 2f;
+		float interval = 1f;
 		settings.targetKills = (int)(Mathf.CeilToInt(kills/interval) * interval);
 		targetKillsText.text = "Target Demotions: " + settings.targetKills;
     }
