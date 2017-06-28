@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour {
 	private int drop = 0;
 
 	private float countDown = 3.0f;
+	public Text countDownText;
 
 	/*== CAMERA SETTINGS ==*/
 	private bool zooming = false;
@@ -131,6 +132,10 @@ public class GameController : MonoBehaviour {
 			ShowCountDown (countDown);
 		}
     }
+
+	void ShowCountDown(float timeleft){
+		
+	}
 
     private void Update()
     {

@@ -16,13 +16,12 @@ public class GameFinished : MonoBehaviour {
 	private PlayerModelController playerAnimator;
 
 	// Use this for initialization
-	void Start () {
-		PopulateTopThree ();
+	void Start(){
+		GameController gc;
 	}
 
 	public void PopulateTopThree(){
-		topThree = new List<GameObject> { playerFirst, playerSecond, playerThird } ();
-
+		topThree = new List<GameObject> (){ playerFirst, playerSecond, playerThird };
 		// set top 3 players
 
 	}
@@ -37,7 +36,7 @@ public class GameFinished : MonoBehaviour {
 		Camera fcamera = finishedCamera.GetComponent<Camera> ();
 
 		ccamera.enabled = false;
-		fcamera = true;
+		fcamera.enabled = true;
 
 	}
 
