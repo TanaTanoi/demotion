@@ -62,6 +62,9 @@ public class PlayerHitDetection : MonoBehaviour {
 				return;
 
 		}
+			
+		GameObject demoteSpawner = (GameObject)Instantiate(Resources.Load("DemoteSpawner"));
+		demoteSpawner.transform.position = other.transform.position + Vector3.up * 2.5f;
 
 		// If it reaches here it means thve player should be demoted so OnHit is called
 

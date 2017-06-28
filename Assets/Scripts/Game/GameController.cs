@@ -268,9 +268,9 @@ public class GameController : MonoBehaviour {
 	{
 		zooming = true;
 		mainCamera.ZoomIn (point);
-		for(int i = 0; i < 10; i++) // Should remove these magic numbers
+		for(int i = 0; i < 6; i++) // Should remove these magic numbers
 		{
-			Time.timeScale *= 0.9f;
+			Time.timeScale *= 0.8f;
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
