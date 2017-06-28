@@ -69,7 +69,7 @@ public class DeathMatchRoundManager : RoundManager {
 	/**
 	 * Called when the round is over, facilitates starting the next round
 	 **/
-	protected override void endRound(){
+	public override void endRound(){
 		Debug.Log ("The round has ended");
 		updateStatBoard ();
 		StartCoroutine (ShowScoreboard (2f));
