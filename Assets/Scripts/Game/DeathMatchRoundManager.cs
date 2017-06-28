@@ -23,8 +23,9 @@ public class DeathMatchRoundManager : RoundManager {
 		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
-		targetScore = 2;
+		targetScore = GameController.instance.GetSettings().targetScore;
 		RespawnDelay = GameController.instance.GetSettings ().respawnTime;
+		Debug.Log ("target Score: " + targetScore);
 	}
 	
 	// Update is called once per frame
