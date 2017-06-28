@@ -177,7 +177,7 @@ public class GameSetup : MonoBehaviour {
         generator = controller.GetComponent<ArenaGenerator>();
         generator.Generate();
         control.CrackedCenterSetup();
-		control.SetGameSettings(settings, GetComponent<PlayerSkins>());
+		control.SetGameSettings(this, settings, GetComponent<PlayerSkins>());
 	}
 
     public void ExitGame()
@@ -263,8 +263,5 @@ public class GameSetup : MonoBehaviour {
 		int playerNumber = playerInputButton.playerNumber;
 		settings.players [playerNumber].input = playerInputButton.input;
 	}
-
-	public void NoBugs() {
-		Destroy (gameObject);
-	}
+		
 }
