@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         float horizontalInput = Input.GetAxis(playerIn.horizontal);
         float verticalInput = Input.GetAxis(playerIn.vertical);
-		horizontalInput = Mathf.Abs (horizontalInput) == 1 ? horizontalInput : 0; // allows more precise movement, less drag
+
 		if (rotationSpeed > 0) {
 			//gyroscope back to the correct orientation
 			transform.rotation = Quaternion.Euler (0.0f, transform.rotation.eulerAngles.y, 0.0f);
