@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour {
 	private bool playing = false;
     private GameSettings settings;
 	private RoundManager roundManager;
+	private GameSetup setup;
 
 	/*== MENU SETTINGS ==*/
 	public GameObject menu;  // MenuController handles all the UI elements
@@ -60,8 +61,9 @@ public class GameController : MonoBehaviour {
 		mainCamera = FindObjectOfType<CameraController> ();
     }
 
-	public void SetGameSettings(GameSettings gameSettings, PlayerSkins newSkins)
+	public void SetGameSettings(GameSetup setup, GameSettings gameSettings, PlayerSkins newSkins)
     {
+		this.setup = setup;
         settings = gameSettings;
 		skins = newSkins;
 		Debug.Log ("setup");
@@ -104,10 +106,24 @@ public class GameController : MonoBehaviour {
 
 	void StartCountDown(){
 		// count down code
+		menuControl.CountDown();
 		SpawnAllPlayers();
-		StartRound (1);
+		StartCoroutine (CountDown ());
+
 	}
 
+	IEnumerator CountDown(){
+		menuControl.CountDown();
+		yield return new WaitForSeconds(1);
+		countDownText.text = "2";
+		yield return new WaitForSeconds(1);
+		countDownText.text = "1";
+		yield return new WaitForSeconds(1);
+		countDownText.text = "GO!";
+		yield return new WaitForSeconds(1);
+		menuControl.DisableCountDown();
+		StartRound (1);
+	}
     /**
 	 * The start of a new round
 	 */
@@ -123,12 +139,16 @@ public class GameController : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
+		Debug.Log ("Fixed Updte");
+		Debug.Log (countDown);
+		Debug.Log (playing);
 		if (playing && !paused) {
 			UpdateTime ();
 			FocusCamera ();
 		}
 		if (!playing && countDown > -1) {
 			countDown -= Time.fixedDeltaTime;
+			Debug.Log (countDown);
 			ShowCountDown (countDown);
 		}
     }
@@ -382,5 +402,10 @@ public class GameController : MonoBehaviour {
 
 	public GameSettings GetSettings() {
 		return settings;
+	}
+
+	public void ReturnToMenu() {
+		Destroy (setup.gameObject);
+		menuControl.SwitchScene ("MainMenu");
 	}
 }

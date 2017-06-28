@@ -44,6 +44,14 @@ public class MenuController : MonoBehaviour {
 		SwitchMenu (this.transform.Find ("EndGame").gameObject);
 	}
 
+	public void CountDown(){
+		SwitchMenu (this.transform.Find ("CountDown").gameObject);
+	}
+
+	public void DisableCountDown(){
+		Destroy(this.transform.Find ("CountDown").gameObject);
+	}
+
     /**
      * If we become enabled reset to defaults
      */
