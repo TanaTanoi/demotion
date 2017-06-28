@@ -16,10 +16,9 @@ public class GameFinished : MonoBehaviour{
 		playerCreator = GameObject.FindObjectOfType<GameController> ().playerCreator;
 	}
 
-	public void FinishGame(int first, int second, int third, PlayerSettings[] playerSettings){
-		Debug.Log ("GAME FINISHED, WINNER IS " + first);
+	public void FinishGame(List<int> winners, PlayerSettings[] playerSettings){
 		this.playerSettings = playerSettings;
-		topThree = new List<int> (){ first, second, third };
+		topThree = winners;
 		SetPlayers ();
 		ShowPodium ();
 	}
@@ -39,7 +38,7 @@ public class GameFinished : MonoBehaviour{
 	}
 
 	public void SetPlayers(){
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3 && i < topThree.Count; i++) {
 			ApplyPlayerPosition (topThree [i], i);
 		}
 
@@ -49,10 +48,9 @@ public class GameFinished : MonoBehaviour{
 		Debug.Log ("Applying " + playerID + " To pos " + tier);
 		GameObject player = FindObjectOfType<GameController>().MakePlayer(Vector3.up * 10, playerID);
 		PlayerModelController playerAnimator = player.GetComponentInChildren<PlayerModelController>();
-
+		player.GetComponent<PlayerMovement> ().SetRotationSpeed (0); // disables input
 		if(tier == 0){
 			// move the player
-			Debug.Log("why no move pos");
 			player.transform.position = locationOne.transform.position;
 			// apply the animation
 			playerAnimator.First();

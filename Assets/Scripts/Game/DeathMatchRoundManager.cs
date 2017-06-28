@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DeathMatchRoundManager : RoundManager {
@@ -31,7 +32,6 @@ public class DeathMatchRoundManager : RoundManager {
 	// Update is called once per frame
 	void Update () {
 		if (isRoundOver () && playing) {
-			playing = false;
 			endRound ();
 		}
 	}
@@ -42,14 +42,12 @@ public class DeathMatchRoundManager : RoundManager {
 	 **/
 
 	public override GameObject OnHit(int hitter, int hitee, GameObject playerHit){
-		
 		GameObject ragdoll = RagDoll (playerHit);
 		UpdateStats (hitter, hitee);
 		updateScoreBoard ();
 		StartCoroutine(Respawn (hitee));
 		return ragdoll;
 	}
-		
 
 	/**
 	 * Checks to see if the current round is still playing
@@ -73,9 +71,18 @@ public class DeathMatchRoundManager : RoundManager {
 	 * Called when the round is over, facilitates starting the next round
 	 **/
 	public override void endRound(){
-		Debug.Log ("The round has ended");
+		playing = false;
 		GameController gc = FindObjectOfType<GameController>();
-		FindObjectOfType<GameFinished> ().FinishGame (0,1,2, gc.GetPlayerSettings()); 
+		List<int> playerIds = new List<int> ();
+		playerIds.AddRange (playerScores.Keys);
+		playerIds = playerIds.OrderBy( x =>  playerScores[x] ).ToList();
+		playerIds.Reverse ();
+		List<int> topThree = new List<int> ();
+		for (int i = 0; i < 3; i++) {
+			if (playerScores [playerIds [i]] > 0)
+				topThree.Add (playerIds [i]);
+		}
+		FindObjectOfType<GameFinished> ().FinishGame (topThree, gc.GetPlayerSettings()); 
 
 		updateStatBoard ();
 		StartCoroutine (ShowScoreboard (6f));
