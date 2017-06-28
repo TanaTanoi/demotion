@@ -97,17 +97,7 @@ public class DeathMatchRoundManager : RoundManager {
 		// get the player number and reduce their score
 		PlayerSettings playerSettings  = player.GetComponentInParent<PlayerMovement>().settings;
 		int playerNum = playerSettings.playerID;
-		int oldScore = playerScores [playerNum];
-		int oldSuicides = playerSuicides [playerNum];
-		int oldDeaths = playerDeaths [playerNum];
-		playerScores.Remove (playerNum);
-		playerSuicides.Remove (playerNum);
-		playerDeaths.Remove (playerNum);
-		playerScores.Add (playerNum, oldScore - scoreIncrement);
-		playerSuicides.Add (playerNum, oldSuicides + 1);
-		playerDeaths.Add (playerNum, oldDeaths + 1);
-		updateScoreBoard ();
-
+		UpdateStatsSuicide (playerNum);
 		// make the player ragdoll
 		RagDoll(player);
 

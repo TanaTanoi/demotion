@@ -132,6 +132,21 @@ public abstract class RoundManager : MonoBehaviour {
 		Debug.Log ("Player " + hitter + " is on a " + playerSprees [hitter] + " kill spree");
 	}
 
+	protected void UpdateStatsSuicide(int playerNum){
+		int oldScore = playerScores [playerNum];
+		int oldSuicides = playerSuicides [playerNum];
+		int oldDeaths = playerDeaths [playerNum];
+		playerScores.Remove (playerNum);
+		playerSuicides.Remove (playerNum);
+		playerDeaths.Remove (playerNum);
+		playerSprees.Remove (playerNum);
+		playerScores.Add (playerNum, oldScore - scoreIncrement);
+		playerSuicides.Add (playerNum, oldSuicides + 1);
+		playerDeaths.Add (playerNum, oldDeaths + 1);
+		playerSprees.Add (playerNum, 0);
+		updateScoreBoard ();
+	}
+
 	/**
 	 * Call this method whenever the stats board needs updating
 	 **/
@@ -192,28 +207,41 @@ public abstract class RoundManager : MonoBehaviour {
 		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
-
-        // Disable the renderer for the player and make all colliders triggers
-        playerHit.GetComponentInChildren<Renderer>().enabled = false;
-        foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
-        {
-            c.isTrigger = true;
-        }
+//
+//        // Disable the renderer for the player and make all colliders triggers
+//        parent.GetComponentInChildren<Renderer>().enabled = false;
+//        foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
+//        {
+//            c.isTrigger = true;
+//        }
 
 		// deparent the hat
-		GameObject hat = playerHit.GetComponentInChildren<Hat> ().gameObject;
-		hat.transform.parent = null;
-		//hat.AddComponent<Rigidbody> ();
-		//hat.AddComponent<SphereCollider> ();
+
+
+	//	hat.AddComponent<Rigidbody> ();
+//		hat.GetComponent<Rigidbody> ().mass = 0.1f;
+//		hat.AddComponent<BoxCollider> ();
 
 //		// destroy the old payer model
 //		Destroy(parent);
-
-		// create the ragdoll, position it and apply the material
-		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
 		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+
+		PlayerLimbs limbs = ragDoll.GetComponent<PlayerLimbs> ();
+
+		// Setting the player customisation using player limbs
+		GameObject hat = parent.GetComponentInChildren<Hat> ().gameObject;
+		//GameObject playerHat = Instantiate (hat, limbs.head.transform.position, limbs.head.transform.rotation);
+		hat.transform.position = limbs.head.transform.position;
+		hat.transform.rotation = limbs.head.transform.rotation;
+		hat.transform.parent = limbs.head.transform;
+
+		// create the ragdoll, position it and apply the material
+		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
+//		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
+//		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
+//		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
 
 		// destroy the old payer model
 		Destroy(parent.gameObject);
