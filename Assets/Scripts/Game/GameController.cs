@@ -108,6 +108,7 @@ public class GameController : MonoBehaviour {
 		// count down code
 		menuControl.CountDown();
 		SpawnAllPlayers();
+		FocusCamera ();
 		StartCoroutine (CountDown ());
 
 	}
@@ -139,17 +140,9 @@ public class GameController : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-		Debug.Log ("Fixed Updte");
-		Debug.Log (countDown);
-		Debug.Log (playing);
 		if (playing && !paused) {
 			UpdateTime ();
 			FocusCamera ();
-		}
-		if (!playing && countDown > -1) {
-			countDown -= Time.fixedDeltaTime;
-			Debug.Log (countDown);
-			ShowCountDown (countDown);
 		}
     }
 
