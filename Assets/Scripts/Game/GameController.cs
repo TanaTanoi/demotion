@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour {
 	private bool playing = false;
     private GameSettings settings;
 	private RoundManager roundManager;
+	private GameSetup setup;
 
 	/*== MENU SETTINGS ==*/
 	public GameObject menu;  // MenuController handles all the UI elements
@@ -60,8 +61,9 @@ public class GameController : MonoBehaviour {
 		mainCamera = FindObjectOfType<CameraController> ();
     }
 
-	public void SetGameSettings(GameSettings gameSettings, PlayerSkins newSkins)
+	public void SetGameSettings(GameSetup setup, GameSettings gameSettings, PlayerSkins newSkins)
     {
+		this.setup = setup;
         settings = gameSettings;
 		skins = newSkins;
 		Debug.Log ("setup");
@@ -382,5 +384,10 @@ public class GameController : MonoBehaviour {
 
 	public GameSettings GetSettings() {
 		return settings;
+	}
+
+	public void ReturnToMenu() {
+		Destroy (setup.gameObject);
+		menuControl.SwitchScene ("MainMenu");
 	}
 }
