@@ -35,6 +35,8 @@ public class GameController : MonoBehaviour {
     public int dropInterval = 20;
 	private int drop = 0;
 
+	private float countDown = 3.0f;
+
 	/*== CAMERA SETTINGS ==*/
 	private bool zooming = false;
 
@@ -95,9 +97,15 @@ public class GameController : MonoBehaviour {
      */
     void StartGame()
     {
-		StartRound (1);
+		StartCountDown ();
 
     }
+
+	void StartCountDown(){
+		// count down code
+		SpawnAllPlayers();
+		StartRound (1);
+	}
 
     /**
 	 * The start of a new round
@@ -108,7 +116,6 @@ public class GameController : MonoBehaviour {
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
 		drop = (int)currentRoundDuration - 20;
 		Debug.Log ("hello");
-        SpawnAllPlayers();
 		playing = true;
 		paused = false;
 	}
@@ -118,6 +125,10 @@ public class GameController : MonoBehaviour {
 		if (playing && !paused) {
 			UpdateTime ();
 			FocusCamera ();
+		}
+		if (!playing && countDown > -1) {
+			countDown -= Time.fixedDeltaTime;
+			ShowCountDown (countDown);
 		}
     }
 
@@ -135,12 +146,12 @@ public class GameController : MonoBehaviour {
     void UpdateTime()
 	{
         // TODO change this to not be called if round duration is infinite
-		currentRoundDuration -= Time.deltaTime;
+		currentRoundDuration -= Time.fixedDeltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
             // TODO end round here
-			PauseGame();
+			roundManager.endRound();
 		}
 
 		if ((int)currentRoundDuration == drop) {

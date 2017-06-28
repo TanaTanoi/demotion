@@ -75,7 +75,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Called when the round is over, facilitates starting the next round
 	 **/
-	protected abstract void endRound ();
+	public abstract void endRound ();
 
     /**
      * Handle respawning of players
@@ -185,6 +185,9 @@ public abstract class RoundManager : MonoBehaviour {
 
 	}
 
+	/**
+	 * makes a ragdoll and unparents the lance and chair
+	 **/
 	protected GameObject RagDoll(GameObject playerHit){
 
 		// The top level of the player prefab, this ensures we are dealing with the parent object everytime
@@ -195,7 +198,7 @@ public abstract class RoundManager : MonoBehaviour {
 
 		// deparent the lance
 		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-		lance.GetComponent<PlayerHitDetection>().enabled = false;
+		Destroy (lance.GetComponent<PlayerHitDetection> ());
 		lance.transform.parent = null;
 		lance.AddComponent<Rigidbody> ();
 
