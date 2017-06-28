@@ -237,13 +237,6 @@ public class GameController : MonoBehaviour {
 
 	}
 
-    /**
-     * Returns true if the players are on opposing teams
-     */
-    private bool OpposingTeam(int player1, int player2)
-    {
-		return (settings.players[player1].teamID != settings.players[player2].teamID);
-    }
 
     /**
      * Called from a player when they hit another player.
