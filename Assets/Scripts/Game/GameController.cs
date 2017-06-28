@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour {
 		menuControl = menu.GetComponent<MenuController> ();
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
-		mainCamera = FindObjectOfType<CameraController> ();
+		mainCamera = GameObject.Find ("Main Camera");
     }
 
 	public void SetGameSettings(GameSettings gameSettings, PlayerSkins newSkins)
