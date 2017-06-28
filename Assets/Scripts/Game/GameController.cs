@@ -106,7 +106,7 @@ public class GameController : MonoBehaviour {
 
 	void StartCountDown(){
 		// count down code
-		menuControl.CountDown();
+		//menuControl.CountDown();
 		SpawnAllPlayers();
 		FocusCamera ();
 		StartCoroutine (CountDown ());
@@ -114,7 +114,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator CountDown(){
-		menuControl.CountDown();
+		//menuControl.CountDown();
 		yield return new WaitForSeconds(1);
 		countDownText.text = "2";
 		yield return new WaitForSeconds(1);
