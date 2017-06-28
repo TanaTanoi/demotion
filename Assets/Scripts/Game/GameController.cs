@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour {
 	private GameObject[] players;
 
 	private PlayerSkins skins;
-    private PlayerCreator playerCreator;
+    public PlayerCreator playerCreator;
     private Transform spawnPoints;
 
     /*== GAME STATUS ==*/
@@ -357,8 +357,12 @@ public class GameController : MonoBehaviour {
 		}
 		int i = Random.Range (0, goodSpawns.Count);
         // Wait for respawn time here
-		players[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, settings.players[playerNum]);
+		players[playerNum] = MakePlayer(goodSpawns[i].position, playerNum);
 
+	}
+
+	public GameObject MakePlayer(Vector3 position, int playerNum){
+		return playerCreator.CreatePlayer (position, settings.players[playerNum]);
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
@@ -378,6 +382,9 @@ public class GameController : MonoBehaviour {
 
 	public PlayerSkins GetSkins(){
 		return skins;
+	}
+	public PlayerSettings[] GetPlayerSettings(){
+		return playerSettings;
 	}
 
 	public GameSettings GetSettings() {
