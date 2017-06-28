@@ -9,7 +9,7 @@ public abstract class RoundManager : MonoBehaviour {
 	private int scoreIncrement = 1;
 	private int numOfPlayers = 4;
 
-	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score -- change to be handled by the concrete version
+	protected Dictionary<int,int> playerScores; // dictionary of player numbers to player score
 
 	protected Dictionary<int,int> playerKills;
 	protected Dictionary<int,int> playerDeaths;
@@ -75,7 +75,7 @@ public abstract class RoundManager : MonoBehaviour {
 	/**
 	 * Called when the round is over, facilitates starting the next round
 	 **/
-	protected abstract void endRound ();
+	public abstract void endRound ();
 
     /**
      * Handle respawning of players
@@ -185,13 +185,22 @@ public abstract class RoundManager : MonoBehaviour {
 
 	}
 
+	/**
+	 * makes a ragdoll and unparents the lance and chair
+	 **/
 	protected GameObject RagDoll(GameObject playerHit){
 
-
+		// The top level of the player prefab, this ensures we are dealing with the parent object everytime
 		Transform parent = playerHit.transform.root;
 
 		// get the wrapper as this has the chair and material as chidlren
 		Transform wrapper = parent.transform.Find ("wrapper");
+
+		// deparent the lance
+		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
+		Destroy (lance.GetComponent<PlayerHitDetection> ());
+		lance.transform.parent = null;
+		lance.AddComponent<Rigidbody> ();
 
 		// unparent the chair
 		Transform chair = wrapper.Find ("chairA");
@@ -201,29 +210,8 @@ public abstract class RoundManager : MonoBehaviour {
 		// get the material
 		Material ragdollMat = wrapper.Find("PlayerModel").GetComponent<Renderer> ().material;
 
-		// deparent the lance
-		GameObject lance = playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject;
-        lance.GetComponent<PlayerHitDetection>().enabled = false;
-		playerHit.GetComponentInChildren<PlayerHitDetection> ().gameObject.transform.parent = null;
-		lance.AddComponent<Rigidbody> ();
-
-//
-//        // Disable the renderer for the player and make all colliders triggers
-//        parent.GetComponentInChildren<Renderer>().enabled = false;
-//        foreach(Collider c in playerHit.GetComponentsInChildren<Collider>())
-//        {
-//            c.isTrigger = true;
-//        }
-
-		// deparent the hat
-
-
-	//	hat.AddComponent<Rigidbody> ();
-//		hat.GetComponent<Rigidbody> ().mass = 0.1f;
-//		hat.AddComponent<BoxCollider> ();
-
-//		// destroy the old payer model
-//		Destroy(parent);
+		// create the ragdoll, position it and apply the material
+		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
 		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
 		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
 		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
@@ -236,12 +224,7 @@ public abstract class RoundManager : MonoBehaviour {
 		hat.transform.position = limbs.head.transform.position;
 		hat.transform.rotation = limbs.head.transform.rotation;
 		hat.transform.parent = limbs.head.transform;
-
-		// create the ragdoll, position it and apply the material
-		//Quaternion q = Quaternion.Euler(-parent.transform.forward);
-//		GameObject ragDoll = (GameObject)Instantiate(Resources.Load("Ragdoll - final"), parent.transform.position, parent.transform.rotation);
-//		//ragDoll.transform.rotation = Quaternion.Euler (parent.transform.rotation.eulerAngles);
-//		ragDoll.GetComponentInChildren<Renderer> ().materials = new Material[] { ragdollMat, ragdollMat};
+	
 
 		// destroy the old payer model
 		Destroy(parent.gameObject);
