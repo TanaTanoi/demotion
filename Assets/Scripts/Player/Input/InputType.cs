@@ -7,6 +7,5 @@ public enum InputType
 {
     Controller,
     Keyboard,
-	Keyboard2,
     Mouse
 }

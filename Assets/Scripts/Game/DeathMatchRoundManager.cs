@@ -8,6 +8,7 @@ public class DeathMatchRoundManager : RoundManager {
 	private int numOfPlayers = 4;
 	private Transform spawnPoints;
 	private float RespawnDelay;
+	private bool playing  = true;
 
 	void Start () {
 		playerScores = new Dictionary<int, int> ();
@@ -22,13 +23,14 @@ public class DeathMatchRoundManager : RoundManager {
 		initPlayers(4);
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
 		hud = GameObject.Find ("Menu").GetComponent<Canvas> ();
-		targetScore = 10;
+		targetScore = 2;
 		RespawnDelay = GameController.instance.GetSettings ().respawnTime;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (isRoundOver ()) {
+		if (isRoundOver () && playing) {
+			playing = false;
 			endRound ();
 		}
 	}
@@ -69,10 +71,13 @@ public class DeathMatchRoundManager : RoundManager {
 	/**
 	 * Called when the round is over, facilitates starting the next round
 	 **/
-	protected override void endRound(){
+	public override void endRound(){
 		Debug.Log ("The round has ended");
+		GameController gc = FindObjectOfType<GameController>();
+		FindObjectOfType<GameFinished> ().FinishGame (0,1,2, gc.GetPlayerSettings()); 
+
 		updateStatBoard ();
-		StartCoroutine (ShowScoreboard (2f));
+		StartCoroutine (ShowScoreboard (6f));
 	}
 
 	private IEnumerator ShowScoreboard(float delay){

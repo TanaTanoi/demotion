@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour {
 	private GameObject[] players;
 
 	private PlayerSkins skins;
-    private PlayerCreator playerCreator;
+    public PlayerCreator playerCreator;
     private Transform spawnPoints;
 
     /*== GAME STATUS ==*/
@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour {
 	public List<GameObject> crackedTiles;
     public int dropInterval = 20;
 	private int drop = 0;
+
+	private float countDown = 3.0f;
+	public Text countDownText;
 
 	/*== CAMERA SETTINGS ==*/
 	private bool zooming = false;
@@ -95,9 +98,15 @@ public class GameController : MonoBehaviour {
      */
     void StartGame()
     {
-		StartRound (1);
+		StartCountDown ();
 
     }
+
+	void StartCountDown(){
+		// count down code
+		SpawnAllPlayers();
+		StartRound (1);
+	}
 
     /**
 	 * The start of a new round
@@ -108,7 +117,6 @@ public class GameController : MonoBehaviour {
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
 		drop = (int)currentRoundDuration - 20;
 		Debug.Log ("hello");
-        SpawnAllPlayers();
 		playing = true;
 		paused = false;
 	}
@@ -119,7 +127,15 @@ public class GameController : MonoBehaviour {
 			UpdateTime ();
 			FocusCamera ();
 		}
+		if (!playing && countDown > -1) {
+			countDown -= Time.fixedDeltaTime;
+			ShowCountDown (countDown);
+		}
     }
+
+	void ShowCountDown(float timeleft){
+		
+	}
 
     private void Update()
     {
@@ -135,12 +151,12 @@ public class GameController : MonoBehaviour {
     void UpdateTime()
 	{
         // TODO change this to not be called if round duration is infinite
-		currentRoundDuration -= Time.deltaTime;
+		currentRoundDuration -= Time.fixedDeltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
             // TODO end round here
-			PauseGame();
+			roundManager.endRound();
 		}
 
 		if ((int)currentRoundDuration == drop) {
@@ -221,13 +237,6 @@ public class GameController : MonoBehaviour {
 
 	}
 
-    /**
-     * Returns true if the players are on opposing teams
-     */
-    private bool OpposingTeam(int player1, int player2)
-    {
-		return (settings.players[player1].teamID != settings.players[player2].teamID);
-    }
 
     /**
      * Called from a player when they hit another player.
@@ -341,8 +350,12 @@ public class GameController : MonoBehaviour {
 		}
 		int i = Random.Range (0, goodSpawns.Count);
         // Wait for respawn time here
-		players[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, settings.players[playerNum]);
+		players[playerNum] = MakePlayer(goodSpawns[i].position, playerNum);
 
+	}
+
+	public GameObject MakePlayer(Vector3 position, int playerNum){
+		return playerCreator.CreatePlayer (position, settings.players[playerNum]);
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
@@ -362,6 +375,9 @@ public class GameController : MonoBehaviour {
 
 	public PlayerSkins GetSkins(){
 		return skins;
+	}
+	public PlayerSettings[] GetPlayerSettings(){
+		return playerSettings;
 	}
 
 	public GameSettings GetSettings() {

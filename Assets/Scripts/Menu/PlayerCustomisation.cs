@@ -71,8 +71,7 @@ public class PlayerCustomisation : MonoBehaviour {
 			currentHat.SetActive (false);
 			hatObjects.Add (currentHat);
 		}
-
-		Debug.Log (hatObjects.Count);
+			
 		// instantiate all skins.lances and hide them
 		foreach (GameObject lance in skins.lances) {
 			currentLance = Instantiate (lance) as GameObject;
@@ -189,8 +188,6 @@ public class PlayerCustomisation : MonoBehaviour {
      */
 	public void PlayerReady(){
 		setup.PopulateSkin (playerNo, new SkinIndexs (outfitIndex, hatIndex, lanceIndex));
-
-		Debug.Log (playerNo + "Ready");
 	}
 
 }
