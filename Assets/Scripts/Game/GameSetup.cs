@@ -96,7 +96,7 @@ public class GameSetup : MonoBehaviour {
      */
     void InitialisePlayers()
     {
-		Debug.Log ("INITINGSLLSFSDFS PLAYRESSS SANDASD  ");
+
         settings.players = new List<PlayerSettings>();
         skins = new SkinIndexs[4];
 		for (int i = 0; i < 4; i++) {
