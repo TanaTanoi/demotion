@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour {
 	private float baseZoom = 0f;
 	public float desiredBaseZoom = 0;
 
-	private float cameraDistance = 17f;
+	private float cameraDistance = 19f;
 
 	void Start(){
 		original = transform.position;
