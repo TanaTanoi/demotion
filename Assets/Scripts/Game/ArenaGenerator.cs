@@ -22,6 +22,7 @@ public class ArenaGenerator : MonoBehaviour {
 
 	GameObject DestoryPlane;
 	GameObject SpawnPoints;
+	GameObject Arena;
 
 	void Start() {
 		
@@ -29,14 +30,18 @@ public class ArenaGenerator : MonoBehaviour {
 
 	public void Generate () {
 		SpawnPoints = GameObject.Find ("SpawnPoints");
+		Arena = GameObject.Find ("Arena");
 
+		SpawnPoints.transform.parent = Arena.transform;
 		PopulateLists ();
-
 		GenerateArena ();
 		GenerateStartPoints ();
 		gameObject.AddComponent<ItemSpawnController> ();
 	}
 
+	/**
+     * populates the lists of tiles. gets tiles from the resources folder.
+     */
 	void PopulateLists()
 	{
 		wallPrefabs = Resources.LoadAll<GameObject>("Walls");
@@ -50,6 +55,9 @@ public class ArenaGenerator : MonoBehaviour {
 		tileWoodCrackedPrefabs = Resources.LoadAll<GameObject>("FloorTiles/WoodCracked");
 	}
 
+	/**
+     * finds and sets spawn points in the game.
+     */
 	void GenerateStartPoints()
 	{
 		List<Vector3> spawnLocations = new List<Vector3>();
@@ -70,12 +78,18 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
+	/**
+     * calls all methods to create the arena
+     */
 	void GenerateArena(){
 		GenerateOutline ();
 		GenerateCarpetTiles ();
 		GenerateWoodTiles ();
 	}
 
+	/**
+     * instantiates the wall for the arena and gets all the locations for the tiles.
+     */
 	void GenerateOutline(){
 		List<GameObject> walls = new List<GameObject> ();
 
@@ -85,12 +99,13 @@ public class ArenaGenerator : MonoBehaviour {
 //		}
 
 		int randomIndex = Random.Range (0, wallPrefabs.Length);
-		GameObject prefabObject = Instantiate(wallPrefabs[randomIndex], Vector3.zero, Quaternion.identity) as GameObject; 
+		GameObject prefabObject = Instantiate(wallPrefabs[1], Vector3.zero, Quaternion.identity) as GameObject; 
 		walls.Add (prefabObject);
 
 		int randomIndex2 = Random.Range (0, walls.Count);
 		arenaOutline = walls [randomIndex2];
-	
+		arenaOutline.transform.parent = Arena.transform;
+
 		string carpetLocationTag = "tileLocation";
 		string woodLocationTag = "woodTileLocation";
 
@@ -103,20 +118,16 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
-	// generate all the carpet tile objects
+	/**
+     * randomly instantiates the correct amount of carpet tiles for the arena and
+     * adds them to a list.
+     */
 	void GenerateCarpetTiles(){
 		List<GameObject> tiles = new List<GameObject>();
 
-		//int count = tileCarpetLocations.Count;
-
-		//int crackedCount = tileCarpetLocations.Count - count;
-
-		//int tileClearCount = (tileCarpetLocations.Count)/2;
-		//count -= tileClearCount;
-
-		int tileClearCount = (int)(tileCarpetLocations.Count * 0.8);
-
-		int crackedTileCount = tileCarpetLocations.Count - tileClearCount;
+		int tileClearCount = (int)(tileCarpetLocations.Count * 0.5);
+		int tileClutteredCount = (int)(tileCarpetLocations.Count * 0.3);
+		int crackedTileCount = tileCarpetLocations.Count - (tileClearCount + tileClutteredCount);
 
 //		// adding "clear" carpet objects
 //		for (int i = 0; i < count; i++) {
@@ -138,6 +149,15 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.parent = Arena.transform;
+		}
+
+		// adding "cluttered" carpet objects
+		for (int i = 0; i < tileClutteredCount; i++) { 
+			int randomIndex = Random.Range (0, tileCarpetClutteredPrefabs.Length);
+			GameObject prefabObject = Instantiate (tileCarpetClutteredPrefabs [randomIndex]) as GameObject;
+			tiles.Add (prefabObject);
+			prefabObject.transform.parent = Arena.transform;
 		}
 			
 		//int crackedTileCount = count / 4;
@@ -156,6 +176,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileCarpetCrackedPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileCarpetCrackedPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.parent = Arena.transform;
 		}
 			
 		int tilesNum = tiles.Count;
@@ -169,7 +190,10 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 
-	// generate all the wood tile objects
+	/**
+     * randomly instantiates the correct amount of wood tiles for the arena and
+     * adds them to a list.
+     */
 	void GenerateWoodTiles(){
 		List<GameObject> tiles = new List<GameObject>();
 
@@ -182,6 +206,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		int crackedTileCount = count / 4;
@@ -193,6 +218,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodClutteredPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodClutteredPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		// adding "cracked" wood objects
@@ -200,6 +226,7 @@ public class ArenaGenerator : MonoBehaviour {
 			int randomIndex = Random.Range (0, tileWoodCrackedPrefabs.Length);
 			GameObject prefabObject = Instantiate(tileWoodCrackedPrefabs[randomIndex]) as GameObject; 
 			tiles.Add (prefabObject);
+			prefabObject.transform.transform.parent = Arena.transform;
 		}
 
 		int tilesNum = tiles.Count;
@@ -213,7 +240,9 @@ public class ArenaGenerator : MonoBehaviour {
 		}
 	}
 		
-
+	/**
+     * places a tile at a random tile location in the arena
+     */
 	void PlaceTile(GameObject tile, bool isCarpet){
 		bool carpetTile = isCarpet;
 
@@ -222,8 +251,12 @@ public class ArenaGenerator : MonoBehaviour {
 		tile.transform.Rotate (0, rotateBy, 0);
 
 		tile.transform.position = TilePointReference (carpetTile);
+		SetMusicToObjectsOfTile (tile);
 	}
 
+	/**
+     * gets the random tile location in the arena
+     */
 	Vector3 TilePointReference(bool isCarpet){
 		Vector3 toReturn;
 		if (isCarpet) {
@@ -239,4 +272,24 @@ public class ArenaGenerator : MonoBehaviour {
 		return toReturn;
 	}
 
+	public void SetMusicToObjectsOfTile(GameObject tile){
+		
+		Transform tileTransform = tile.transform;
+
+		Rigidbody[] bodies = tileTransform.GetComponentsInChildren<Rigidbody>();
+		foreach (Rigidbody rb in bodies) {
+			FMODUnity.StudioEventEmitter x = rb.gameObject.AddComponent<FMODUnity.StudioEventEmitter> ();
+			x.PlayEvent = FMODUnity.EmitterGameEvent.CollisionEnter;
+			int i = Random.Range (0, 3);
+			if (i == 0) {
+				x.Event = "event:/FX/player/player_collision_impact";
+			} else if (i == 1){
+				x.Event = "event:/FX/powerups/powerup_spawn";
+			} else {
+				//x.Event = "event:/FX/environment/furniture_destruction";
+				x.Event = "event:/FX/player/player_collision_impact";
+			}
+		}
+
+	}
 }

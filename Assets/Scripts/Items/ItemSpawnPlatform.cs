@@ -6,9 +6,8 @@ public class ItemSpawnPlatform : MonoBehaviour {
     private ParticleSystem spawnEffect;
     private Vector3 spawnPosition;
     private GameObject currentItem;
-    
-	public GameObject superboostProp;
-	public GameObject bananaProp;
+
+	public PowerupModelsAtlas atlas;
 
 	void Start () {
         spawnPosition = transform.GetChild(0).transform.position;
@@ -24,7 +23,7 @@ public class ItemSpawnPlatform : MonoBehaviour {
             return false;
         } else {
             currentItem = CreateItem(type);
-			currentItem.transform.localScale = Vector3.one * 2;
+			currentItem.transform.localScale = currentItem.transform.localScale * 2;
             currentItem.transform.position = spawnPosition;
             return true;
         }
@@ -32,20 +31,21 @@ public class ItemSpawnPlatform : MonoBehaviour {
 
     private GameObject CreateItem(Item.Type type) {
         spawnEffect.Play();
+		FMODUnity.StudioEventEmitter x = GetComponent<FMODUnity.StudioEventEmitter> ();
+		if (x != null) {
+			x.Play ();
+		}
         switch(type) {
-            case Item.Type.SUPER_BOOST:
-                // change once we have different models for them etc
-			GameObject boost = Instantiate(superboostProp);
+        case Item.Type.SUPER_BOOST:
+			GameObject boost = Instantiate(atlas.fireBoostItem);
             boost.AddComponent<ItemController>().type = type;
             return boost;
 		case Item.Type.STICKY_THROWABLE:
-                // change once we have different models for them etc
-				GameObject throwable = GameObject.CreatePrimitive (PrimitiveType.Sphere);
-				throwable.transform.localScale = Vector3.one * 0.5f;
-                throwable.AddComponent<ItemController>().type = type;
-                return throwable;
+			GameObject throwable = Instantiate(atlas.snowballItem);
+            throwable.AddComponent<ItemController>().type = type;
+            return throwable;
 		case Item.Type.BANANA_THROWABLE:
-			GameObject banana = Instantiate(bananaProp);
+			GameObject banana = Instantiate(atlas.bananaItem);
 			banana.AddComponent<ItemController>().type = type;
 			return banana;
             default:

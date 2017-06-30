@@ -9,6 +9,11 @@ public class PlayerPowerupController : MonoBehaviour {
 	private PlayerParticleController particleController;
 	private PlayerStats stats;
 
+	public FMODUnity.StudioEventEmitter shieldSound;
+	public FMODUnity.StudioEventEmitter bananaSound;
+	public FMODUnity.StudioEventEmitter snowballSound;
+	public FMODUnity.StudioEventEmitter coffeeSound;
+
 	Dictionary<Powerup.Type, float> PowerupEndtimes = new Dictionary<Powerup.Type, float>();
 
     void Start() {
@@ -34,6 +39,19 @@ public class PlayerPowerupController : MonoBehaviour {
 			ActivatePowerup (powerup.type);
 			powerup.Pickup (gameObject);
 		}
+
+	}
+
+	// Shield active ability occurs here
+	void OnTriggerStay(Collider other){
+		if (ShieldActive () && !other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Powerup")) {
+			Rigidbody rb = other.gameObject.GetComponent<Rigidbody> ();
+			if (rb != null) {
+				Vector3 dir = (other.transform.position - transform.position);
+				float power = stats.SHIELD_PUSH_POWER * (1 / dir.magnitude);
+				rb.AddForce (dir.normalized * power);
+			}
+		}
 	}
 
 	// Checks if any powerups are expired, then removes them
@@ -53,6 +71,7 @@ public class PlayerPowerupController : MonoBehaviour {
 	}
 
 	private float FlashTimeForPowerup(Powerup.Type type){
+		// this method kinda sucks. Ideally it's a fixed time apart from a few special cases where they are short durations?
 		switch (type) {
 		case Type.STICKY:
 			return stats.STICKY_DURATION / 4;
@@ -62,6 +81,8 @@ public class PlayerPowerupController : MonoBehaviour {
 			return stats.BOOST_DURATION / 4;
 		case Type.BANANA:
 			return stats.BANANA_POWER / 2;
+		case Type.SHIELD:
+			return stats.SHIELD_DURATION / 4f;
 		default:
 			return 0;
 		}
@@ -89,6 +110,8 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.SetRotationSpeed (stats.DEFAULT_ROTATION_SPEED);
 			playerMovement.GetComponent<Rigidbody> ().angularDrag = 10;
 			break;
+		case Type.SHIELD:
+			break;
 		}
 	}
 
@@ -96,7 +119,6 @@ public class PlayerPowerupController : MonoBehaviour {
 	private void ActivatePowerup(Type type) {
 		// Enable particle effects for this powerup
 		particleController.SetEffectActive (type, true);
-
 		// Enable gameplay effects
 		switch (type) {
 		case Type.BOOST:
@@ -104,22 +126,34 @@ public class PlayerPowerupController : MonoBehaviour {
 			playerMovement.setBoostCooldown (stats.BOOST_POWERUP_COOLDOWN);
 			break;
 		case Type.POWER:
+			coffeeSound.Play ();
 			RefreshPowerupTime (type, stats.POWER_DURATION);
 			playerMovement.setBoostPower (playerMovement.getBoostPower () + stats.POWER_DELTA);
 			break;
 		case Type.STICKY:
+			snowballSound.Play ();
 			AddPowerupTime (Type.STICKY, stats.STICKY_DURATION);
 			playerMovement.SetRotationSpeed (stats.STICKY_POWERDOWN_ROTATION_SPEED);
 			break;
 		case Type.BANANA:
+			bananaSound.Play ();
 			playerMovement.SetRotationSpeed (0);
 			RefreshPowerupTime (type, stats.BANANA_POWER / 100f);
 			playerMovement.SpinPlayer (stats.BANANA_POWER);
 			Rigidbody rb = playerMovement.GetComponent<Rigidbody> ();
 			rb.AddForce (rb.velocity * -0.95f);
 			break;
+		case Type.SHIELD:
+			shieldSound.Play ();
+			AddPowerupTime (type, stats.SHIELD_DURATION);
+			break;
 		}
 	}
+
+	private bool ShieldActive(){
+		return PowerupEndtimes.ContainsKey(Powerup.Type.SHIELD);
+	}
+
 
 	// Add additional time to a powerup (e.g. picking up two 5s will give 10s)
 	private void AddPowerupTime(Type type, float duration) {
@@ -140,5 +174,5 @@ namespace Powerup {
 	// The enum is declared here (as opposed to PowerupController)
 	// Because it is used more often here
     // (Count is not a powerup, simply used to define the number of item there are (e.g. PowerupPowerup.Type.Count))
-	public enum Type { BOOST, POWER, STICKY, BANANA, Count };
+	public enum Type { BOOST, POWER, STICKY, BANANA, SHIELD, Count };
 }

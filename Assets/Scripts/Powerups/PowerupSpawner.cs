@@ -15,12 +15,13 @@ public class PowerupSpawner : MonoBehaviour {
     [Tooltip ("Delay before the first powerup")]
     public float delayBeforeFirstPowerup = 0f;
 
-	public GameObject boostModel;
-	public GameObject powerModel;
+	public PowerupModelsAtlas atlas;
+
+	public ParticleSystem spawnEffect;
 
     private Powerup.Type[] buffs = new Powerup.Type[] {
-        Powerup.Type.BOOST,
-        Powerup.Type.POWER
+        Powerup.Type.POWER,
+		Powerup.Type.SHIELD
     };
 
     private float startTime; // The time the spawning started
@@ -56,13 +57,28 @@ public class PowerupSpawner : MonoBehaviour {
 
 
     private GameObject CreatePowerup(Powerup.Type type, Vector3 location) {
+
+		FMODUnity.StudioEventEmitter sound = GetComponent<FMODUnity.StudioEventEmitter> ();
+		if (sound != null) {
+			sound.Play ();
+		}
+
 		GameObject powerup = PowerupModel (type);
 		powerup.transform.localScale = Vector3.one * 2;
         powerup.transform.position = location + transform.position;
 		powerup.transform.rotation = Quaternion.Euler (new Vector3 (Random.Range (0, 360), Random.Range (0, 360), Random.Range (0, 360)));
+
+
         powerup.AddComponent<Rigidbody>();
 		powerup.AddComponent<SphereCollider> ();
         powerup.AddComponent<PowerupController>().type = type;
+
+		ParticleSystem ps = Instantiate (spawnEffect);
+		ps.transform.parent = powerup.transform;
+		ps.transform.localPosition = powerup.GetComponent<SphereCollider> ().center;
+		ParticleSystem.MinMaxGradient x = ps.main.startColor;
+		x.color = Color.red;
+
         return powerup;
     }
 
@@ -70,10 +86,13 @@ public class PowerupSpawner : MonoBehaviour {
 		GameObject powerup;
 		switch(type){
 		case Powerup.Type.BOOST:
-			powerup = boostModel;
+			powerup = null;
 			break;
 		case Powerup.Type.POWER:
-			powerup = powerModel;
+			powerup = atlas.coffee;
+			break;
+		case Powerup.Type.SHIELD:
+			powerup = atlas.shield;
 			break;
 		default:
 			powerup = null;

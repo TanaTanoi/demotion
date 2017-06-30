@@ -11,6 +11,10 @@ public abstract class Pickupable : MonoBehaviour {
 
     IEnumerator ShrinkTowards(Transform otherTransform) {
         GetComponent<Collider>().enabled = false;
+		FMODUnity.StudioEventEmitter x = GetComponent<FMODUnity.StudioEventEmitter> ();
+		if(x != null){
+			x.Play ();
+		}
         while(transform.localScale.x > 0.05f) {
             transform.localScale = transform.localScale * 0.7f;
             transform.position += ((otherTransform.position - transform.position) * 0.1f);

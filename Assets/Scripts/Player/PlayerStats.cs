@@ -17,6 +17,9 @@ public class PlayerStats : ScriptableObject {
 	public float BOOST_DURATION = 2.0f;
 	public float BOOST_POWERUP_COOLDOWN = 0.3f;
 
+	public float SHIELD_DURATION = 4f;
+	public float SHIELD_PUSH_POWER = 50f;
+
 	// Increases the boost power. Stacks and refreshes duration
 	public float POWER_DELTA = 800.0f;
 	public float POWER_DURATION = 10.0f;

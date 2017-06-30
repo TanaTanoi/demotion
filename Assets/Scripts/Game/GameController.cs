@@ -9,11 +9,12 @@ public class GameController : MonoBehaviour {
 	private static CameraController mainCamera;
 
     /*== PLAYER SETTINGS ==*/
+   
+	private PlayerSettings[] playerSettings;
+	private GameObject[] players;
 
-    private Dictionary<int, PlayerSettings> playerSettingsDict;  // Dictionary between playerID and player settings
-    private Dictionary<int, GameObject> playerObjectDict;        // Dictionary between playerID and player Gameobject
-    
-    private PlayerCreator playerCreator;
+	private PlayerSkins skins;
+    public PlayerCreator playerCreator;
     private Transform spawnPoints;
 
     /*== GAME STATUS ==*/
@@ -21,6 +22,7 @@ public class GameController : MonoBehaviour {
 	private bool playing = false;
     private GameSettings settings;
 	private RoundManager roundManager;
+	private GameSetup setup;
 
 	/*== MENU SETTINGS ==*/
 	public GameObject menu;  // MenuController handles all the UI elements
@@ -33,6 +35,9 @@ public class GameController : MonoBehaviour {
 	public List<GameObject> crackedTiles;
     public int dropInterval = 20;
 	private int drop = 0;
+
+	private float countDown = 3.0f;
+	public Text countDownText;
 
 	/*== CAMERA SETTINGS ==*/
 	private bool zooming = false;
@@ -51,17 +56,20 @@ public class GameController : MonoBehaviour {
         }
 
 		menuControl = menu.GetComponent<MenuController> ();
-        playerObjectDict = new Dictionary<int, GameObject> ();
-        playerSettingsDict = new Dictionary<int, PlayerSettings>();
-
 		playerCreator = GetComponent<PlayerCreator> ();
 		roundManager = gameObject.AddComponent<DeathMatchRoundManager> ();
 		mainCamera = FindObjectOfType<CameraController> ();
     }
 
-    public void SetGameSettings(GameSettings gameSettings)
+	public void SetGameSettings(GameSetup setup, GameSettings gameSettings, PlayerSkins newSkins)
     {
+		this.setup = setup;
         settings = gameSettings;
+		skins = newSkins;
+		Debug.Log ("setup");
+		playerSettings = new PlayerSettings[settings.playerCount];
+		players = new GameObject[settings.playerCount];
+		playerCreator.Initialise ();
         Restart();
     }
 
@@ -77,11 +85,10 @@ public class GameController : MonoBehaviour {
     void SpawnAllPlayers()
     {
 		spawnPoints = GameObject.Find("SpawnPoints").transform;
-        for(int i = 0; i < settings.players.Count; i++)
+        for(int i = 0; i < settings.playerCount; i++)
         {
             //TODO change the spawn position to be random, change texture to be what the player decided on during customisation
-			playerObjectDict.Add(i, playerCreator.CreatePlayer(spawnPoints.GetChild(i).position, settings.players[i]));
-            playerSettingsDict.Add(i, settings.players[i]);
+			Respawn(i);
         }
     }
 
@@ -93,10 +100,31 @@ public class GameController : MonoBehaviour {
      */
     void StartGame()
     {
-		StartRound (1);
+		StartCountDown ();
 
     }
 
+	void StartCountDown(){
+		// count down code
+		//menuControl.CountDown();
+		SpawnAllPlayers();
+		FocusCamera ();
+		StartCoroutine (CountDown ());
+
+	}
+
+	IEnumerator CountDown(){
+		//menuControl.CountDown();
+		yield return new WaitForSeconds(1);
+		countDownText.text = "2";
+		yield return new WaitForSeconds(1);
+		countDownText.text = "1";
+		yield return new WaitForSeconds(1);
+		countDownText.text = "GO!";
+		yield return new WaitForSeconds(1);
+		menuControl.DisableCountDown();
+		StartRound (1);
+	}
     /**
 	 * The start of a new round
 	 */
@@ -105,7 +133,7 @@ public class GameController : MonoBehaviour {
         Debug.Log(string.Format("Starting round {0}", roundNumber));
         currentRoundDuration = settings.roundDuration;  // Reset the round duration
 		drop = (int)currentRoundDuration - 20;
-        SpawnAllPlayers();
+		Debug.Log ("hello");
 		playing = true;
 		paused = false;
 	}
@@ -117,6 +145,10 @@ public class GameController : MonoBehaviour {
 			FocusCamera ();
 		}
     }
+
+	void ShowCountDown(float timeleft){
+		
+	}
 
     private void Update()
     {
@@ -132,12 +164,12 @@ public class GameController : MonoBehaviour {
     void UpdateTime()
 	{
         // TODO change this to not be called if round duration is infinite
-		currentRoundDuration -= Time.deltaTime;
+		currentRoundDuration -= Time.fixedDeltaTime;
 		timerText.text = "Time: " + (int)currentRoundDuration;
 		if (currentRoundDuration <= 0)
 		{
             // TODO end round here
-			PauseGame();
+			roundManager.endRound();
 		}
 
 		if ((int)currentRoundDuration == drop) {
@@ -167,13 +199,15 @@ public class GameController : MonoBehaviour {
                 biggestDist = Mathf.Max(distance, biggestDist);
             } */
             /* Old dict */
-            foreach (GameObject x in playerObjectDict.Values) {
-				mid += x.transform.position;
+            foreach (GameObject x in players) {
+				if(x != null)
+					mid += x.transform.position;
 			}
 			float biggestDist = 0;
-			mid = mid / playerObjectDict.Count;
+			mid = mid / players.Length;
 
-			foreach (GameObject x in playerObjectDict.Values) {
+			foreach (GameObject x in players) {
+                if (x == null) continue;
 				float d = Vector3.Distance (x.transform.position, mid);
 				biggestDist = Mathf.Max (d, biggestDist);					
 			} 
@@ -209,42 +243,37 @@ public class GameController : MonoBehaviour {
 		rb.isKinematic = false;
 		rb.useGravity = true;
 
+		// Plays break sound idk lol
+		FMODUnity.StudioEventEmitter sound = rb.transform.gameObject.AddComponent<FMODUnity.StudioEventEmitter> ();
+		sound.Event = "event:/FX/environment/floor_destruction";
+		sound.Play ();
+
 	}
 
-    /**
-     * Returns true if the players are on opposing teams
-     */
-    private bool OpposingTeam(int player1, int player2)
-    {
-        return (playerSettingsDict[player1].teamID != playerSettingsDict[player2].teamID);
-    }
 
     /**
      * Called from a player when they hit another player.
      * Will lose lives or increase score depending on the game mode.
-     * Returns true if the players are on different teams and is therefore a valid hit
+     * Returns the ragdoll of the losing player
      */
-    public bool OnHit(int hitter, int hitee)
+	public GameObject OnHit(int hitter, int hitee, GameObject playerHit)
     {
-        if (!OpposingTeam(hitter, hitee)) return false;
-		GameObject loser = playerObjectDict [hitee];
-		GameObject winner = playerObjectDict [hitter];
+		GameObject loser = players [hitee];
+		GameObject winner = players [hitter];
 		
 		Vector3 mid = (winner.transform.position - loser.transform.position) * 0.5f + loser.transform.position;
 
 		StartCoroutine (FocusOnPoint (mid));
-		roundManager.OnHit(hitter, hitee);
-        return true;
+		return roundManager.OnHit(hitter, hitee, playerHit);
+       
     }
 
     /**
      * Kills the given player
      */
     public void Kill(GameObject player)
-    {
-        Destroy(player);
-        Respawn(player.GetComponentInParent<PlayerSettings>().playerID);
-        //Something about losing points here
+    {	
+		roundManager.Suicide (player);
     }
 
 
@@ -252,17 +281,20 @@ public class GameController : MonoBehaviour {
 	{
 		zooming = true;
 		mainCamera.ZoomIn (point);
-		for(int i = 0; i < 10; i++) // Should remove these magic numbers
+		for(int i = 0; i < 6; i++) // Should remove these magic numbers
 		{
-			Time.timeScale -= 0.05f;
+			Time.timeScale *= 0.8f;
 		}
 		yield return new WaitForSeconds(1f);
 		mainCamera.ReturnZoom ();
+
+		float v = Time.timeScale;
 		for(int i = 0; i < 10; i++)
 		{
-			Time.timeScale += 0.05f;
+			Time.timeScale = Mathf.Lerp(v, 1, i / 10f);
 		}
 		zooming = false;
+
 	}
 
 
@@ -304,6 +336,10 @@ public class GameController : MonoBehaviour {
     }
     /*=== END PAUSE LOGIC ===*/
 
+	public void DisplayStatBoard(){
+		menuControl.StatBoard ();
+	}
+
     // Remove this, only game controller should access the round manager directly
 	public RoundManager GetRoundManager(){
 		return this.roundManager;
@@ -313,7 +349,11 @@ public class GameController : MonoBehaviour {
 	 * Manages Respawning of players
 	 **/
 	public void Respawn (int playerNum){
-
+        if(players[playerNum] != null)
+        {
+            Destroy(players[playerNum]);
+            players[playerNum] = null;
+        }
 		List<Transform> goodSpawns = new List<Transform> ();
 		for (int j = 0; j < spawnPoints.transform.childCount; j++) {
 			
@@ -322,24 +362,19 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		int i = Random.Range (0, goodSpawns.Count);
+        // Wait for respawn time here
+		players[playerNum] = MakePlayer(goodSpawns[i].position, playerNum);
 
-        // TODO Add Create player call here
-        playerObjectDict[playerNum] = playerCreator.CreatePlayer(goodSpawns[i].position, playerSettingsDict[playerNum]);
+	}
 
-
-        /* Remove this and use PlayerCreator
-		GameObject newPlayer = (GameObject)Instantiate(Resources.Load("PlayerPrefab - final"), goodSpawns[i].transform.position, goodSpawns[i].transform.rotation);
-        
-		PlayerMovement pm = newPlayer.GetComponentInChildren<PlayerMovement> ();
-		pm.SetPlayerNum (playerNum);
-		playersDict [playerNum] = newPlayer;
-        */
+	public GameObject MakePlayer(Vector3 position, int playerNum){
+		return playerCreator.CreatePlayer (position, settings.players[playerNum]);
 	}
 
 	private bool IsGoodSpawn(int spawnNumber){
 
 		Transform spawn = spawnPoints.GetChild (spawnNumber);
-		foreach(GameObject x in playerObjectDict.Values){
+		foreach(GameObject x in players){
 			if (x != null) {
 				float distance = Vector3.Distance (x.transform.position, spawn.transform.position);
 				if (distance < 10) { // Remove magic numbers please
@@ -349,5 +384,21 @@ public class GameController : MonoBehaviour {
 
 		}
 		return true;
+	}
+
+	public PlayerSkins GetSkins(){
+		return skins;
+	}
+	public PlayerSettings[] GetPlayerSettings(){
+		return playerSettings;
+	}
+
+	public GameSettings GetSettings() {
+		return settings;
+	}
+
+	public void ReturnToMenu() {
+		Destroy (setup.gameObject);
+		menuControl.SwitchScene ("MainMenu");
 	}
 }

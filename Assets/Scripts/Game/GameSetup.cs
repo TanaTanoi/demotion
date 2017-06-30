@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour {
-
+    private static GameSetup instance = null;
     //Game type enums
     public enum GameMode { DEMOTION, HIGHSCORE, LASTWORKERSITTING, FIRSTTOKILLS, FIRSTTOSCORE };
     /**
@@ -66,51 +66,90 @@ public class GameSetup : MonoBehaviour {
 
 	private GameObject controller;  // GameController gameobject
     private GameController control; // GameController script
-    private GameSettings settings;  // Local settings applied via menu
+    public GameSettings settings;  // Local settings applied via menu
 	private ArenaGenerator generator;  // Arena generator, could this be moved to the game controller?
     private bool settingUp = false;  // Setting up boolean so players can set teams
+	private SkinIndexs[] skins = null;
 
     // Use this for initialization
     void Awake() {
         DontDestroyOnLoad(gameObject);
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
 
 		Text[] slidersText = settingsPanel.GetComponentsInChildren<Text> (true);
-		roundsText = slidersText [2];
-		durationText = slidersText [3];
-		respawnText = slidersText [4];
-		livesText = slidersText [5];
-		targetKillsText = slidersText [6];
-		targetScoreText = slidersText [7];
-
+		durationText = slidersText [0];
+		respawnText = slidersText [1];
+		targetScoreText = slidersText [2];
+		InitialisePlayers();
     }
-
-    private void Start()
-    {
-        settings = (GameSettings)ScriptableObject.CreateInstance("GameSettings");
-
-        InitialisePlayerControls();
-        
-    }
-
+		
 
     /**
      * Assigns the initial control inputs to the players
      */
-    void InitialisePlayerControls()
+    void InitialisePlayers()
     {
+
         settings.players = new List<PlayerSettings>();
+        skins = new SkinIndexs[4];
+		for (int i = 0; i < 4; i++) {
+			skins [i] = new SkinIndexs (0, 0, 0);
+
+		}
+
+        int c = 0;  // controller number
         string[] controllers = Input.GetJoystickNames();
-        // There are always at least 2 players, keyboard and mouse, the rest are controllers
-        settings.playerCount = Mathf.Clamp((controllers.Length), 0, 4) + 2;
-        // Add all player settings to player settings list
-        int p = 0; // player number, also used as temporary team number
-        settings.players.Add(new PlayerSettings(InputType.Keyboard, p, p++));
-        settings.players.Add(new PlayerSettings(InputType.Mouse, p, p++));
-        for (int i = 2; i < settings.playerCount; i++)
+
+        // There are always 3 keyboard players, the fourth only exists if there are one or more controllers
+		settings.playerCount = 3 + Mathf.Min(controllers.Length, 1);
+
+		// Add all player settings to player settings list
+		for (int i = 0; i < 3; i++) {
+			settings.players.Add(new PlayerSettings(InputType.Keyboard, i, i+1, skins[i]));
+		}
+        
+        for (int i = 3; i < settings.playerCount; i++)
         {
-            settings.players.Add(new PlayerSettings(InputType.Controller, i, i));
+            // Ensure we're adding a valid controller
+            while (controllers[c++] == null) ;
+			settings.players.Add(new PlayerSettings(InputType.Controller, i, c, skins[i]));
         }
+
     }
+
+	public void ApplyCustomisation(){
+		// input id's
+		int kid = 1;
+		int cid = 1;
+
+		for(int i = 0; i < settings.playerCount; ++i) {
+			// Apply skins
+			settings.players [i].indices = skins [i];
+			// Apply inputs
+			switch (settings.players [i].input) {
+			case InputType.Keyboard:
+				settings.players [i].keyboardID = kid++;
+				settings.players [i].controllerID = -1;
+				break;
+			case InputType.Controller:
+				settings.players [i].controllerID = cid++;
+				settings.players [i].keyboardID = -1;
+				break;
+			}
+
+		}
+	}
+
+	public void PopulateSkin(int playerNumber, SkinIndexs indices){
+		skins [playerNumber] = indices;
+	}
 
 	void OnEnable() {
 		SceneManager.sceneLoaded += OnLevelFinishedLoading;
@@ -121,21 +160,21 @@ public class GameSetup : MonoBehaviour {
 	}
 
 	public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
-        if (scene != SceneManager.GetSceneByName("GameScene")) return;
-
-		SceneManager.MoveGameObjectToScene (gameObject, SceneManager.GetSceneByName("GameScene"));
-		NewGame ();
+		Time.timeScale = 1;
+		if (scene == SceneManager.GetSceneByName ("GameScene")) {
+			NewGame ();
+		}
 	}
 
     public void NewGame() {
-		
+		Debug.Log ("A new Game has been called");
         // Get the game controller
         controller = GameController.instance.gameObject;
         control = controller.GetComponent<GameController>();
         generator = controller.GetComponent<ArenaGenerator>();
         generator.Generate();
         control.CrackedCenterSetup();
-        control.SetGameSettings(settings);
+		control.SetGameSettings(this, settings, GetComponent<PlayerSkins>());
 	}
 
     public void ExitGame()
@@ -144,6 +183,7 @@ public class GameSetup : MonoBehaviour {
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit ();
+        //Its time to go home
 #endif
     }
 
@@ -183,14 +223,14 @@ public class GameSetup : MonoBehaviour {
 
     public void SetTargetScore(float score)
     {
-		float interval = 100f;
+		float interval = 1f;
 		settings.targetScore = (int)(Mathf.CeilToInt(score/interval) * interval);
 		targetScoreText.text = "Target Score: " + settings.targetScore;
     }
 
     public void SetTargetKills(float kills)
     {
-		float interval = 2f;
+		float interval = 1f;
 		settings.targetKills = (int)(Mathf.CeilToInt(kills/interval) * interval);
 		targetKillsText.text = "Target Demotions: " + settings.targetKills;
     }
@@ -212,4 +252,13 @@ public class GameSetup : MonoBehaviour {
     {
         return settings;
     }
+
+	/**
+	 * Changes the input type for the given player, based off the button given.
+	 */
+	public void ChangeInputType(ControlButtonToggle playerInputButton) {
+		int playerNumber = playerInputButton.playerNumber;
+		settings.players [playerNumber].input = playerInputButton.input;
+	}
+		
 }

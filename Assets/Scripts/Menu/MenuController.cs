@@ -7,14 +7,14 @@ using UnityEngine;
 public class MenuController : MonoBehaviour {
 
     public GameObject DefaultPanel;
-
     private GameObject selectedPanel;
     private bool isPaused;
+	public List<Text> readys;
 
 	// Use this for initialization
 	void Start () {
         selectedPanel = DefaultPanel;
-        SwitchMenu(selectedPanel);
+		SwitchMenu (selectedPanel);
     }
 
     private void OnApplicationFocus(bool focus)
@@ -40,6 +40,18 @@ public class MenuController : MonoBehaviour {
         SwitchMenu(this.transform.Find("HUD").gameObject);
     }
 
+	public void StatBoard(){
+		SwitchMenu (this.transform.Find ("EndGame").gameObject);
+	}
+
+	public void CountDown(){
+		SwitchMenu (this.transform.Find ("CountDown").gameObject);
+	}
+
+	public void DisableCountDown(){
+		Destroy(this.transform.Find ("CountDown").gameObject);
+	}
+
     /**
      * If we become enabled reset to defaults
      */
@@ -59,10 +71,21 @@ public class MenuController : MonoBehaviour {
             selectedPanel = menu;
             selectedPanel.SetActive(true);
         }
+		Debug.Log ("clicked");
     }
 
 	public void SwitchScene(string scene)
     {
 		SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
     }
+
+	public void ShowQuitMenu(Canvas quitMenu){
+		quitMenu.enabled = true;
+	}
+
+	public void HideQuitMenu(Canvas quitMenu){
+		quitMenu.enabled = false;
+	}
+		
+
 }

@@ -43,7 +43,7 @@ public class PlayerParticleController : MonoBehaviour {
 		Vector3 offset = -camera.right * ((activeEffectProps.Count - 1) / 2);
 		foreach(KeyValuePair<Powerup.Type, GameObject> pair in activeEffectProps){
 			// Flash based on sine wave of time
-			if (effects.First (x => x.type == pair.Key).status == EffectStatus.FLASHING) {
+			if (GetEfect (pair.Key).status == EffectStatus.FLASHING) {
 				int t = Mathf.RoundToInt((Mathf.Sin (Time.time * 10) * 0.5f) + 0.5f);
 				pair.Value.GetComponent<Renderer> ().enabled = (t == 0);
 			}
@@ -56,7 +56,11 @@ public class PlayerParticleController : MonoBehaviour {
 	// Enable or disable an effect for a particular de/buff
 	public void SetEffectActive(Powerup.Type type, bool setEnabled) {
 		// select the first system of this type
-		Effect effect = effects.First(x => x.type == type);
+		Debug.Log(type);
+		Effect effect = GetEfect (type);
+
+		if (effect == null)
+			return;
 
 		if (setEnabled) {
 			if (effect.status != EffectStatus.ACTIVE) {
@@ -81,7 +85,7 @@ public class PlayerParticleController : MonoBehaviour {
 	}
 
 	public void setPowerupNotifyFlash(Powerup.Type type){
-		Effect effect = effects.First(x => x.type == type);
+		Effect effect = GetEfect (type);
 
 		effect.status = EffectStatus.FLASHING;
 	}
@@ -97,6 +101,16 @@ public class PlayerParticleController : MonoBehaviour {
         }
 
     }
+
+	private Effect GetEfect(Powerup.Type type){
+		Effect effect = null;
+		foreach (Effect e in effects) {
+			if (e.type == type) {
+				effect = e;
+			}
+		}
+		return effect;
+	}
 
 	IEnumerator BoostTrail() {
 		

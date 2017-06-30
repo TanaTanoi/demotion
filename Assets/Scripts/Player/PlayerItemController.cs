@@ -10,13 +10,12 @@ namespace Item {
 
 public class PlayerItemController : MonoBehaviour {
 
-    public GameObject throwableItem;
 	private PlayerStats stats;
 
 	public PlayerModelController playerAnimator;
     public Transform throwingHand;
 
-	public GameObject throwableBanana;
+	public PowerupModelsAtlas atlas;
 
     private Item.Type currentItem;
     private float chargeLeft = 0; // How much usage is left in this powerup
@@ -24,6 +23,9 @@ public class PlayerItemController : MonoBehaviour {
     private PlayerMovement playerMovement;
     private PlayerInput playerInput;
     private PlayerParticleController particleController;
+
+	public FMODUnity.StudioEventEmitter fireSound;
+	public FMODUnity.StudioEventEmitter throwSound;
 
     private int itemsActivated = 0;
 
@@ -49,10 +51,10 @@ public class PlayerItemController : MonoBehaviour {
 	// On collision with a powerup, add it
 	void OnTriggerEnter(Collider other) {
 		ItemController item = other.gameObject.GetComponent<ItemController>();
-		if ( item != null && chargeLeft <= 0) {
-            currentItem = item.type;
-            chargeLeft = stats.TOTAL_ITEM_CHARGE;
-            item.Pickup(gameObject);
+		if (item != null) {
+			currentItem = item.type;
+			chargeLeft = stats.TOTAL_ITEM_CHARGE;
+			item.Pickup (gameObject);
 		}
 	}
 
@@ -60,24 +62,27 @@ public class PlayerItemController : MonoBehaviour {
         particleController.playItemParticleSystem(currentItem);
         switch(currentItem) {
 		case Item.Type.STICKY_THROWABLE:
-			GameObject sticky = Instantiate (throwableItem);
+			throwSound.Play ();
+			GameObject sticky = Instantiate (atlas.snowballThrowable);
 			sticky.AddComponent<PowerupController> ().type = Powerup.Type.STICKY;
 			IEnumerator stickyC = ThrowItem(sticky);
 			StartCoroutine(stickyC);
 				chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
                 break;
 		case Item.Type.BANANA_THROWABLE:
-			GameObject banana = Instantiate (throwableBanana);
+			throwSound.Play ();
+			GameObject banana = Instantiate (atlas.bananaThrowable);
 			banana.AddComponent<PowerupController> ().type = Powerup.Type.BANANA;
 			banana.AddComponent<Rigidbody> ().isKinematic = false;
 			IEnumerator bananaC = ThrowItem(banana);
 			StartCoroutine(bananaC);
 			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.THROW_USES;
 			break;
-        case Item.Type.SUPER_BOOST:
-			SetItemCooldown(stats.SUPER_BOOST_COOLDOWN);
-			playerMovement.Boost(stats.SUPER_BOOST_POWER);
+		case Item.Type.SUPER_BOOST:
+			SetItemCooldown (stats.SUPER_BOOST_COOLDOWN);
+			playerMovement.Boost (stats.SUPER_BOOST_POWER);
 			chargeLeft -= stats.TOTAL_ITEM_CHARGE / stats.SUPER_BOOST_USES;
+			fireSound.Play ();
             break;
         }
     }

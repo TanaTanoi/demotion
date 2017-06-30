@@ -13,6 +13,9 @@ public class TeamSetup : MonoBehaviour {
         if (setup == null) Debug.LogError("GameSetup not attached");
 
         players = setup.GetGameSettings().players;
+        inputs = new Dictionary<int, PlayerInput>();
+
+        InitialiseInputs();
 	}
 	
 	// Update is called once per frame
@@ -35,10 +38,23 @@ public class TeamSetup : MonoBehaviour {
 
     private void InitialiseInputs()
     {
-        foreach(PlayerSettings p in players)
-        {
-            //switch
-        }
+//        foreach(PlayerSettings p in players)
+//        {
+//            switch(p.input)
+//            {
+//			case InputType.Keyboard:
+//				inputs.Add (p.playerID, gameObject.AddComponent<InputKeyboard> () as InputKeyboard);
+//					(inputs[p.playerID] as InputKeyboard).RefreshInputs(p.keyboardID);
+//                    break;
+//                case InputType.Mouse:
+//                    inputs.Add(p.playerID, gameObject.AddComponent<InputMouse>() as InputMouse);
+//                    break;
+//                case InputType.Controller:
+//                    inputs.Add(p.playerID, gameObject.AddComponent<InputController>() as InputController);
+//					(inputs[p.playerID] as InputController).RefreshInputs(p.controllerID);
+//                    break;
+//            }
+//        }
 
     }
 }

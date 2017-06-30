@@ -6,15 +6,22 @@ public class ThrowableItem : MonoBehaviour {
 
 	private Transform target;
 	private Rigidbody rb; 
+
+	private float fuel;
+
+	private const float MAX_FUEL = 1;
+
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
 		target = SelectTargetPlayer ();
+		fuel = Time.time + MAX_FUEL;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		rb.AddForce ((target.position - transform.position).normalized * (rb.velocity.normalized.magnitude * 25));
+
+	void FixedUpdate () {
+		if (fuel > Time.time) {
+			rb.AddForce ((target.position - transform.position).normalized * (rb.velocity.normalized.magnitude * 25));
+		}
 	}
 
 	public Transform SelectTargetPlayer(){
